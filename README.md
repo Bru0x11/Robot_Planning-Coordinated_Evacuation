@@ -11,3 +11,7 @@ Project Robot Planning and its application
 
 Paper for path planning with circles:
 https://www.hindawi.com/journals/mpe/2018/2163278/
+
+Possible solutions:
+![Simple case](https://user-images.githubusercontent.com/58950678/205900992-8efe288c-5048-4d40-9b83-f8033f309111.PNG)
+![More complex case](https://user-images.githubusercontent.com/58950678/205900996-afe85b2a-0b8a-4780-ac5a-139f887d864d.PNG)
