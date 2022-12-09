@@ -4,6 +4,12 @@ Project Robot Planning and its application
 
 # TODO:
 - Path planning -> Performing the "Shortest Path Construction" for the Roadmap (lecture 10), change it with the goal and starting point, Dijkstra path, Circle interpolation, Scheduling 3 robots
+
+# EDO: 
+  - find min distance algoritmh online
+  - implement edge 
+
+
 - Physical implementation
 
 
