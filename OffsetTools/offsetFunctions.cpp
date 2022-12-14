@@ -9,7 +9,7 @@
 
 using namespace Clipper2Lib;
 
-auto createPolygon(const std::vector<::Point>& points){
+auto createPolygon(const std::vector<Point>& points){
   PathsD polygon;
   std::string stringPoint{};
 

@@ -1,17 +1,13 @@
 #ifndef OFFSETFUNCTIONS_H
 #define OFFSETFUNCTIONS_H
 
-struct Point{
-    float x{};
-    float y{};
-    float z{};
-};
+#include "BuildingTools/point.h"
 
 /*
 Given a vector of Point, creates a polygon. The points have to be listed in a clockwise order (from bottom_left onwards).
 Returns a list of Point that describe the polygon.
 */
-auto createPolygon(const std::vector<::Point>& points);
+auto createPolygon(const std::vector<Point>& points);
 
 /*
 Given a polygon and a value, offsets the polygon by that amount. If the parameter isMapContour is set to true, return the frame representing the
