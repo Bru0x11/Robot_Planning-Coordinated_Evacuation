@@ -44,7 +44,6 @@ int main(){
 
     Environment env = Environment(obstacles);
 
-
     Visibility_Graph graph = Visibility_Graph(env, 0);
 
     Point start = Point(3.0, 1.0);
