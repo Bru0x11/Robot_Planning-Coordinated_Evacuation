@@ -13,7 +13,7 @@ auto createPolygon(const std::vector<Point>& points){
   PathsD polygon;
   std::string stringPoint{};
 
-  for (::Point point : points){ //need to format the point in the right way to create the path
+  for (Point point : points){ //need to format the point in the right way to create the path
     stringPoint.append(std::to_string(point.x));
     stringPoint.append(",");
     stringPoint.append(std::to_string(point.y));

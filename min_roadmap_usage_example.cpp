@@ -142,11 +142,11 @@ int main()
     double th0 = 0;
     //Find final angle of first trait
     double m = compute_m(p0,p1);
-    double thf = atan(m);
+    double th1 = atan(m);
 
     double minR = 0.3;
     double Kmax = 1/minR;
-    Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), thf, Kmax);
+    Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
 
     Polyline path; 
     path.push_back(start);
@@ -166,7 +166,19 @@ int main()
         path.push_back(entrance);
     }
 
+    Point pn_1 = shortest_path[path_length-3];
+    Point pn = shortest_path[path_length-2];
+    Point goal = shortest_path[path_length-1];
 
+    double thf = 0;
+    double m_final_segment = compute_m(pn,goal);
+    double thn = atan(m_final_segment);
+
+    Curve last_trait = dubins_shortest_path(goal.x(), goal.y(), th0, pn.x(), pn.y(), thf, Kmax);
+
+
+    cout << "Interpolated path: " << endl;
+    cout << path << endl;
 
     /*
     Point p0_ = Point(0, 0);
