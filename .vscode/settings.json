@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "list": "cpp"
+        "list": "cpp",
+        "iterator": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -2,10 +2,46 @@
 #include <vector>
 #include <iostream>
 #include "dubins.h"
+#include "math.h"
 
 
 using namespace VisiLibity;
 using namespace std;
+
+class Vector{
+public: 
+    double x;
+    double y;
+
+    Vector(int x, int y)
+    {
+        // Constructor
+        this->x = x;
+        this->y = y;
+    }
+
+    double norm(){
+        double n = sqrt(pow(this -> x, 2) + pow(this -> y, 2));
+        return n;
+    }
+};
+
+Point find_entrance(Point p0, Point p1, double distance){
+    double x0 = p0.x();
+    double y0 = p0.y();
+    double x1 = p1.x();
+    double y1 = p1.y();
+
+    Vector v = Vector(x1-x0, y1-y0);
+    double n = v.norm();
+    Vector unit_v = Vector(v.x/n, v.y/n);
+    
+    double x_entrance = x0 + distance*unit_v.x;
+    double y_entrance = y0 + distance*unit_v.y;
+    Point entrance = Point(x_entrance, y_entrance);
+    
+    return entrance;
+};
 
 int main(){
 
@@ -58,6 +94,35 @@ int main(){
     cout<<"Shortest_path: "<<endl;
     cout<<shortest_path<<endl;
 
+    
+    //TO DO: dubins from start point to first point
+
+
+    //for Point in shortest path
+    int path_length = shortest_path.size();
+
+    for(int i = 1; i < path_length; i++){
+        Point p0 = shortest_path[i];
+    }
+
+
+
+    Point p1 = Point(0.0, 0.0);
+    Point p2 = Point(0.0, 5.0);
+
+    double distance = 2;
+    Point p3 = find_entrance(p1, p2, 2.0);
+
+    cout<<"x: "<<p3.x()<<endl;
+    cout<<"y: "<<p3.y()<<endl;
+
+
+
+
+
+
+
+    /*
     vector<Point> poses;
 
     Pos pose_temp;
@@ -73,8 +138,6 @@ int main(){
     vector<Curve> dubins_curves = multipoint_dubins(shortest_path, Kmax);
 
     int npts = 100;
-
-    /*
     Curve c1 = dubins_curves[0];
 
     for (int j=0; j<npts; j++){
