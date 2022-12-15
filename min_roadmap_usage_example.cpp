@@ -5,6 +5,10 @@
 #include "dubins.h"
 #include "math.h"
 
+
+
+#include <fstream>
+
 using namespace VisiLibity;
 using namespace std;
 
@@ -84,13 +88,20 @@ Point find_exit(Point p0, Point p1, double distance)
 int main()
 {
 
+    // Create and open a text file
+    ofstream MyFile("env.csv");
+
     vector<Point> points_obs1;
     points_obs1.push_back(Point(1.0, 2.0));
     points_obs1.push_back(Point(6.0, 7.0));
     points_obs1.push_back(Point(6.0, 2.0));
 
+    MyFile<<"x,y"<<endl;
+    for (Point point : points_obs1){
+        MyFile<<point.x()<<","<<point.y()<<endl;
+    }
+
     Polygon obs1 = Polygon(points_obs1);
-    cout << "obs1 area: " << obs1.area() << endl;
 
     vector<Point> points_obs2;
     points_obs2.push_back(Point(2.0, 9.0));
@@ -98,15 +109,21 @@ int main()
     points_obs2.push_back(Point(8.0, 14.0));
     points_obs2.push_back(Point(8.0, 9.0));
 
-    Polygon obs2 = Polygon(points_obs2);
+    for (Point point : points_obs2){
+        MyFile<<point.x()<<","<<point.y()<<endl;
+    }
 
-    cout << "obs2 area: " << obs2.area() << endl;
+    Polygon obs2 = Polygon(points_obs2);
 
     vector<Point> points_env;
     points_env.push_back(Point(0.0, 0.0));
     points_env.push_back(Point(15.0, 0.0));
     points_env.push_back(Point(15.0, 15.0));
     points_env.push_back(Point(0.0, 15.0));
+
+    //for (Point point : points_env){
+    //    MyFile<<point.x()<<" "<<point.y()<<endl;
+    //}
 
     Polygon poly_env = Polygon(points_env);
 
@@ -133,6 +150,12 @@ int main()
     cout << "Shortest_path: " << endl;
     cout << shortest_path << endl;
 
+
+    for (int i = 0; i<shortest_path.size(); i++){
+        MyFile<<shortest_path[i].x()<<","<<shortest_path[i].y()<<endl;
+    }
+
+
     // for Point in shortest path
     int path_length = shortest_path.size();
     Point start = shortest_path[0];
@@ -151,7 +174,7 @@ int main()
     Polyline path; 
     path.push_back(start);
 
-    for (int i = 1; i < path_length - 2; i++)
+    for (int i = 0; i < path_length - 2; i++)
     {
         Point a = shortest_path[i];
         Point b = shortest_path[i+1];
@@ -179,6 +202,13 @@ int main()
 
     cout << "Interpolated path: " << endl;
     cout << path << endl;
+
+    for (int i = 0; i<path.size(); i++){
+        MyFile<<path[i].x()<<","<<path[i].y()<<endl;
+    }
+
+    // Close the file
+    MyFile.close();
 
     /*
     Point p0_ = Point(0, 0);
