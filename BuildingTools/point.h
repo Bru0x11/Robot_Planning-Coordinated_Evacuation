@@ -4,7 +4,6 @@
 struct Point{
     float x{};
     float y{};
-    float z{};
 };
 
 #endif
