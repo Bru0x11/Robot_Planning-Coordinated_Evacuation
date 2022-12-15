@@ -5,12 +5,12 @@
 #include "dubins.h"
 #include "math.h"
 
-
 using namespace VisiLibity;
 using namespace std;
 
-class Vector{
-public: 
+class Vector
+{
+public:
     double x;
     double y;
 
@@ -21,58 +21,68 @@ public:
         this->y = y;
     }
 
-    double norm(){
-        double n = sqrt(pow(this -> x, 2) + pow(this -> y, 2));
+    double norm()
+    {
+        double n = sqrt(pow(this->x, 2) + pow(this->y, 2));
         return n;
     }
 };
 
-double find_distance(Point p0, Point p1, Point p2, double minR){
-    double m1 = (p1.y() - p0.y()) / (p1.x() - p0.x());
-    double m2 = (p2.y() - p1.y()) / (p2.x() - p2.x());
-
-    cout<<"m1, m2: "<<m1<<" "<<m2<<DBL_MAX<<endl;
-    double tan_angle = (m1-m2) / (1 + (m1*m2));
-
-    cout<<"tan_angle: "<<tan_angle<<endl;
-
-    double angle = atan(tan_angle);
-
-    cout<<"angle: "<<angle<<endl;
-
-    double distance = minR*(1/tan(angle/2));
-
-    return distance;
+double compute_m(Point p0, Point p1){
+    if ((p1.x() - p0.x()) != 0)
+    {
+        return (p1.y() - p0.y()) / (p1.x() - p0.x());
+    }
+    return DBL_MAX;
 }
 
-//given the initial and final points of the segment and a distance, compute the entrance point
-Point find_entrance(Point p0, Point p1, double distance){
+double find_distance(Point p0, Point p1, Point p2, double minR)
+{
+    double m1, m2;
+    // Compute m
+    m1 = compute_m(p0,p1);
+
+    m2 = compute_m(p1,p2);
+
+    double tan_angle = (m1 - m2) / (1 + (m1 * m2));
+    double angle = atan(tan_angle);
+
+    double distance = minR * (1 / tan(angle / 2));
+
+    return abs(distance);
+}
+
+// given the initial and final points of the segment and a distance, compute the entrance point
+Point find_entrance(Point p0, Point p1, double distance)
+{
     double x0 = p0.x();
     double y0 = p0.y();
     double x1 = p1.x();
     double y1 = p1.y();
 
-    Vector v = Vector(x1-x0, y1-y0);
+    Vector v = Vector(x1 - x0, y1 - y0);
     double n = v.norm();
 
-    double unit_v_x = v.x/n;
-    double unit_v_y = v.y/n;
+    double unit_v_x = v.x / n;
+    double unit_v_y = v.y / n;
 
     Vector unit_v = Vector(unit_v_x, unit_v_y);
-    
-    double x_entrance = x0 + distance*unit_v.x;
-    double y_entrance = y0 + distance*unit_v.y;
+
+    double x_entrance = x0 + distance * unit_v.x;
+    double y_entrance = y0 + distance * unit_v.y;
     Point entrance = Point(x_entrance, y_entrance);
-    
+
     return entrance;
 };
 
-Point find_exit(Point p0, Point p1, double distance){
+Point find_exit(Point p0, Point p1, double distance)
+{
     Point exit = find_entrance(p1, p0, distance);
     return exit;
 }
 
-int main(){
+int main()
+{
 
     vector<Point> points_obs1;
     points_obs1.push_back(Point(1.0, 2.0));
@@ -80,7 +90,7 @@ int main(){
     points_obs1.push_back(Point(6.0, 2.0));
 
     Polygon obs1 = Polygon(points_obs1);
-    cout<<"obs1 area: "<<obs1.area()<<endl;
+    cout << "obs1 area: " << obs1.area() << endl;
 
     vector<Point> points_obs2;
     points_obs2.push_back(Point(2.0, 9.0));
@@ -90,7 +100,7 @@ int main(){
 
     Polygon obs2 = Polygon(points_obs2);
 
-    cout<<"obs2 area: "<<obs2.area()<<endl;
+    cout << "obs2 area: " << obs2.area() << endl;
 
     vector<Point> points_env;
     points_env.push_back(Point(0.0, 0.0));
@@ -100,7 +110,7 @@ int main(){
 
     Polygon poly_env = Polygon(points_env);
 
-    //cout<<obs2.area();
+    // cout<<obs2.area();
 
     vector<Polygon> obstacles;
     obstacles.push_back(poly_env);
@@ -111,43 +121,66 @@ int main(){
 
     Visibility_Graph graph = Visibility_Graph(env, 0);
 
-    Point start = Point(3.0, 1.0);
+    Point start_test = Point(3.0, 1.0);
     Point end = Point(9.0, 14.0);
-    Polyline shortest_path = env.shortest_path(start, end, graph, 0.0);
+    Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);
 
-    //cout<<shortest_path.length()<<endl;
+    // cout<<shortest_path.length()<<endl;
 
-    cout<<"Enviroment is valid: "<<env.is_valid()<<endl;
-    //cout<<"\n"<<env<<endl;
+    cout << "Enviroment is valid: " << env.is_valid() << endl;
+    // cout<<"\n"<<env<<endl;
 
-    cout<<"Shortest_path: "<<endl;
-    cout<<shortest_path<<endl;
+    cout << "Shortest_path: " << endl;
+    cout << shortest_path << endl;
 
-    
-    //TO DO: dubins from start point to first point
-
-
-    //for Point in shortest path
+    // for Point in shortest path
     int path_length = shortest_path.size();
+    Point start = shortest_path[0];
+    Point p0 = shortest_path[1];
+    Point p1 = shortest_path[2];
 
-    for(int i = 1; i < path_length; i++){
-        Point p0 = shortest_path[i];
+    double th0 = 0;
+    //Find final angle of first trait
+    double m = compute_m(p0,p1);
+    double thf = atan(m);
+
+    double minR = 0.3;
+    double Kmax = 1/minR;
+    Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), thf, Kmax);
+
+    Polyline path; 
+    path.push_back(start);
+
+    for (int i = 1; i < path_length - 2; i++)
+    {
+        Point a = shortest_path[i];
+        Point b = shortest_path[i+1];
+        Point c = shortest_path[i+2];
+
+        double distance = find_distance(a, b, c, minR);
+
+        Point exit = find_exit(a, b, minR);
+        Point entrance = find_entrance(b, c, minR);
+
+        path.push_back(exit);
+        path.push_back(entrance);
     }
 
-    Point p0 = Point(0,0);
-    Point p1 = Point(4,0);
-    Point p2 = Point(4,4);
-
-    cout<<find_distance(p0,p1,p2,1.0)<<endl;
 
 
     /*
+    Point p0_ = Point(0, 0);
+    Point p1_ = Point(4, 0);
+    Point p2_ = Point(4, 4);
+
+    cout << find_distance(p0_, p1_, p2_, 2.0) << endl;
+
     vector<Point> poses;
 
     Pos pose_temp;
     Point position_temp;
 
-      
+
     //Define problem data
     double th0 = 0;
     double thf = 0;
@@ -173,7 +206,7 @@ int main(){
     }
     */
 
-    //cout<<"poses[0]: "<<poses<<endl;
+    // cout<<"poses[0]: "<<poses<<endl;
 
     return 0;
 }
