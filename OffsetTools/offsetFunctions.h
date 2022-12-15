@@ -1,7 +1,7 @@
 #ifndef OFFSETFUNCTIONS_H
 #define OFFSETFUNCTIONS_H
 
-#include "BuildingTools/point.h"
+#include "../BuildingTools/point.h"
 
 /*
 Given a vector of Point, creates a polygon. The points have to be listed in a clockwise order (from bottom_left onwards).
