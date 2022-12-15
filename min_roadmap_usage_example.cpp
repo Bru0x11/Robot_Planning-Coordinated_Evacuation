@@ -1,6 +1,7 @@
 #include "VisiLibity1/src/visilibity.hpp"
 #include <vector>
 #include <iostream>
+#include <cfloat>
 #include "dubins.h"
 #include "math.h"
 
@@ -13,7 +14,7 @@ public:
     double x;
     double y;
 
-    Vector(int x, int y)
+    Vector(double x, double y)
     {
         // Constructor
         this->x = x;
@@ -26,6 +27,25 @@ public:
     }
 };
 
+double find_distance(Point p0, Point p1, Point p2, double minR){
+    double m1 = (p1.y() - p0.y()) / (p1.x() - p0.x());
+    double m2 = (p2.y() - p1.y()) / (p2.x() - p2.x());
+
+    cout<<"m1, m2: "<<m1<<" "<<m2<<DBL_MAX<<endl;
+    double tan_angle = (m1-m2) / (1 + (m1*m2));
+
+    cout<<"tan_angle: "<<tan_angle<<endl;
+
+    double angle = atan(tan_angle);
+
+    cout<<"angle: "<<angle<<endl;
+
+    double distance = minR*(1/tan(angle/2));
+
+    return distance;
+}
+
+//given the initial and final points of the segment and a distance, compute the entrance point
 Point find_entrance(Point p0, Point p1, double distance){
     double x0 = p0.x();
     double y0 = p0.y();
@@ -34,7 +54,11 @@ Point find_entrance(Point p0, Point p1, double distance){
 
     Vector v = Vector(x1-x0, y1-y0);
     double n = v.norm();
-    Vector unit_v = Vector(v.x/n, v.y/n);
+
+    double unit_v_x = v.x/n;
+    double unit_v_y = v.y/n;
+
+    Vector unit_v = Vector(unit_v_x, unit_v_y);
     
     double x_entrance = x0 + distance*unit_v.x;
     double y_entrance = y0 + distance*unit_v.y;
@@ -42,6 +66,11 @@ Point find_entrance(Point p0, Point p1, double distance){
     
     return entrance;
 };
+
+Point find_exit(Point p0, Point p1, double distance){
+    Point exit = find_entrance(p1, p0, distance);
+    return exit;
+}
 
 int main(){
 
@@ -105,21 +134,11 @@ int main(){
         Point p0 = shortest_path[i];
     }
 
+    Point p0 = Point(0,0);
+    Point p1 = Point(4,0);
+    Point p2 = Point(4,4);
 
-
-    Point p1 = Point(0.0, 0.0);
-    Point p2 = Point(0.0, 5.0);
-
-    double distance = 2;
-    Point p3 = find_entrance(p1, p2, 2.0);
-
-    cout<<"x: "<<p3.x()<<endl;
-    cout<<"y: "<<p3.y()<<endl;
-
-
-
-
-
+    cout<<find_distance(p0,p1,p2,1.0)<<endl;
 
 
     /*
