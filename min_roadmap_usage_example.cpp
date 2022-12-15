@@ -210,29 +210,14 @@ int main()
     // Close the file
     MyFile.close();
 
-    /*
-    Point p0_ = Point(0, 0);
-    Point p1_ = Point(4, 0);
-    Point p2_ = Point(4, 4);
-
-    cout << find_distance(p0_, p1_, p2_, 2.0) << endl;
+    
 
     vector<Point> poses;
 
     Pos pose_temp;
     Point position_temp;
 
-
-    //Define problem data
-    double th0 = 0;
-    double thf = 0;
-    double Kmax = 3.0;
-
-    //Find optimal Dubins solution
-    vector<Curve> dubins_curves = multipoint_dubins(shortest_path, Kmax);
-
-    int npts = 100;
-    Curve c1 = dubins_curves[0];
+    int npts_per_arc = 100;
 
     for (int j=0; j<npts; j++){
 
@@ -246,7 +231,37 @@ int main()
 
         poses.push_back(position_temp);
     }
-    */
+
+
+    for (int j=0; j<npts; j++){
+
+        double s = c1.a1.L/npts * j;
+
+        Pos pose;
+        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
+
+        position_temp.set_x(pose.x);
+        position_temp.set_y(pose.y);
+
+        poses.push_back(position_temp);
+    }
+
+
+    for (int j=0; j<npts; j++){
+
+        double s = c1.a1.L/npts * j;
+
+        Pos pose;
+        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
+
+        position_temp.set_x(pose.x);
+        position_temp.set_y(pose.y);
+
+        poses.push_back(position_temp);
+    }
+
+    
+    
 
     // cout<<"poses[0]: "<<poses<<endl;
 
