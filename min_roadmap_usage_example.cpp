@@ -85,6 +85,72 @@ Point find_exit(Point p0, Point p1, double distance)
     return exit;
 }
 
+
+Polyline get_points_from_arc(Arc a, int npts){
+    
+    Polyline points;
+    Point point;
+    Pos pose;
+
+    for (int j=0; j<npts; j++){
+
+        double s = a.L/npts * j;
+
+        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
+
+        point.set_x(pose.x);
+        point.set_y(pose.y);
+
+        points.push_back(point);
+    }
+
+    return points; 
+}
+
+Polyline get_points_from_curve(Curve c, int npts){
+
+    int npts_arc = (int)(npts/3); 
+
+    Arc a1 = c.a1;
+    Arc a2 = c.a2;
+    Arc a3 = c.a3;
+
+    Polyline line1 = get_points_from_arc(a1, npts_arc);
+    Polyline line2 = get_points_from_arc(a2, npts_arc);
+    Polyline line3 = get_points_from_arc(a3, npts_arc);
+    
+    Polyline tot_line;
+    tot_line.appen(line1);
+    tot_line.appen(line2):
+    tot_line.appen(line3):
+
+    return tot_line;
+}
+
+Arc get_arc_points(Point a, Point b, Point c, double minR, double distance){
+    
+    double distance = find_distance(a, b, c, minR);
+    Point exit = find_exit(a, b, distance);
+    Point entrance = find_entrance(b, c, distance);
+
+    double m1 = compute_m(a,b);
+    double m2 = compute_m(b,c);
+
+    double angle1 = atan(m1);
+    double angle2 = atan(m2);
+    
+    Arc arc;
+
+    arc.x0 = entrance.x();
+    arc.y0 = entrance.y();
+    arc.th0 = angle1;
+    arc.xf = exit.x();
+    arc.yf = exit.y();
+    arc.thf = angle2;
+    arc.k = 1/minR;
+
+}
+
 int main()
 {
 
@@ -182,8 +248,10 @@ int main()
 
         double distance = find_distance(a, b, c, minR);
 
-        Point exit = find_exit(a, b, minR);
-        Point entrance = find_entrance(b, c, minR);
+        Arc a = get_arc(a,b,c, distance, minR);
+
+        Point exit = find_exit(a, b, distance);
+        Point entrance = find_entrance(b, c, distance);
 
         path.push_back(exit);
         path.push_back(entrance);
@@ -210,57 +278,13 @@ int main()
     // Close the file
     MyFile.close();
 
-    
 
-    vector<Point> poses;
-
-    Pos pose_temp;
-    Point position_temp;
-
-    int npts_per_arc = 100;
-
-    for (int j=0; j<npts; j++){
-
-        double s = c1.a1.L/npts * j;
-
-        Pos pose;
-        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
-
-        position_temp.set_x(pose.x);
-        position_temp.set_y(pose.y);
-
-        poses.push_back(position_temp);
-    }
+    Polyline points_final_path;
+    Polyline points_first_trait = get_points_from_curve(first_trait);
+    points_final_path.append(points_first_trait);
 
 
-    for (int j=0; j<npts; j++){
 
-        double s = c1.a1.L/npts * j;
-
-        Pos pose;
-        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
-
-        position_temp.set_x(pose.x);
-        position_temp.set_y(pose.y);
-
-        poses.push_back(position_temp);
-    }
-
-
-    for (int j=0; j<npts; j++){
-
-        double s = c1.a1.L/npts * j;
-
-        Pos pose;
-        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
-
-        position_temp.set_x(pose.x);
-        position_temp.set_y(pose.y);
-
-        poses.push_back(position_temp);
-    }
-
-    
     
 
     // cout<<"poses[0]: "<<poses<<endl;
