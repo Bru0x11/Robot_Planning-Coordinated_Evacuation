@@ -3,17 +3,19 @@ Project Robot Planning and its application
 
 
 # TODO:
-- Path planning -> Performing the "Shortest Path Construction" for the Roadmap (lecture 10), change it with the goal and starting point, Dijkstra path, Circle interpolation, Scheduling 3 robots
-- Physical implementation
+  - script to read info about map and obstacles 
+  - find space traveled in one second
+  - functions to get length and time of path
+  - implement coordination task
+  - function to create map and obstacles given parsed points
+  - 
 
-# EDO todo: 
-  - find min distance algoritmh online
-  - implement edge 
-
-
-
-
-
+# TO ASK
+  - how to compile with colcon (CMake)
+  - how to obtain points
+  - how to obtain the velocity
+  - how to insert more than one robot 
+  - hot to insert obstacles
 
 
 # Possible solutions:
