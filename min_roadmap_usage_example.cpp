@@ -96,7 +96,7 @@ Polyline get_points_from_arc(Arc a, int npts){
 
         double s = a.L/npts * j;
 
-        pose = circline(s, c1.a1.x0, c1.a1.y0, c1.a1.th0, c1.a1.k);
+        pose = circline(s, a.x0, a.y0, a.th0, a.k);
 
         point.set_x(pose.x);
         point.set_y(pose.y);
@@ -120,14 +120,25 @@ Polyline get_points_from_curve(Curve c, int npts){
     Polyline line3 = get_points_from_arc(a3, npts_arc);
     
     Polyline tot_line;
-    tot_line.appen(line1);
-    tot_line.appen(line2):
-    tot_line.appen(line3):
+    tot_line.append(line1);
+    tot_line.append(line2);
+    tot_line.append(line3);
 
     return tot_line;
 }
 
-Arc get_arc_points(Point a, Point b, Point c, double minR, double distance){
+
+double compute_arc_length(Point a, Point b, double minR){
+    
+    double points_distance = sqrt(pow(b.x() - a.x(),2) + pow(b.y() - a.y(),2));
+    double central_angle = acos(1 - (pow(points_distance,2)/(2*pow(minR, 2))));
+
+    double L = minR * central_angle;
+
+    return L;
+}
+
+Arc get_arc(Point a, Point b, Point c, double minR){
     
     double distance = find_distance(a, b, c, minR);
     Point exit = find_exit(a, b, distance);
@@ -148,6 +159,9 @@ Arc get_arc_points(Point a, Point b, Point c, double minR, double distance){
     arc.yf = exit.y();
     arc.thf = angle2;
     arc.k = 1/minR;
+    arc.L = compute_arc_length(entrance, exit, minR);
+
+    return arc;
 
 }
 
@@ -224,6 +238,8 @@ int main()
 
     // for Point in shortest path
     int path_length = shortest_path.size();
+
+    //first 3 vertex
     Point start = shortest_path[0];
     Point p0 = shortest_path[1];
     Point p1 = shortest_path[2];
@@ -237,8 +253,7 @@ int main()
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
 
-    Polyline path; 
-    path.push_back(start);
+    vector<Arc> arc_vector;
 
     for (int i = 0; i < path_length - 2; i++)
     {
@@ -246,17 +261,11 @@ int main()
         Point b = shortest_path[i+1];
         Point c = shortest_path[i+2];
 
-        double distance = find_distance(a, b, c, minR);
-
-        Arc a = get_arc(a,b,c, distance, minR);
-
-        Point exit = find_exit(a, b, distance);
-        Point entrance = find_entrance(b, c, distance);
-
-        path.push_back(exit);
-        path.push_back(entrance);
+        Arc arc = get_arc(a,b,c, minR);
+        arc_vector.push_back(arc);
     }
 
+    //last 3 vertex
     Point pn_1 = shortest_path[path_length-3];
     Point pn = shortest_path[path_length-2];
     Point goal = shortest_path[path_length-1];
@@ -268,20 +277,22 @@ int main()
     Curve last_trait = dubins_shortest_path(goal.x(), goal.y(), th0, pn.x(), pn.y(), thf, Kmax);
 
 
-    cout << "Interpolated path: " << endl;
-    cout << path << endl;
-
-    for (int i = 0; i<path.size(); i++){
-        MyFile<<path[i].x()<<","<<path[i].y()<<endl;
-    }
-
     // Close the file
     MyFile.close();
 
 
     Polyline points_final_path;
-    Polyline points_first_trait = get_points_from_curve(first_trait);
+    Polyline points_first_trait = get_points_from_curve(first_trait, 300);
     points_final_path.append(points_first_trait);
+
+    for(int i = 0; i<arc_vector.size(); i++){
+        Arc arc = arc_vector[i];
+        Polyline arc_points = get_points_from_arc(arc, 100);
+        points_final_path.append(arc_points);
+    }
+
+    Polyline points_last_trait = get_points_from_curve(last_trait, 300);
+
 
 
 
