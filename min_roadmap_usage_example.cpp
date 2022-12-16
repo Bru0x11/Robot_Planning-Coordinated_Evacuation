@@ -170,15 +170,16 @@ int main()
 
     // Create and open a text file
     ofstream MyFile("env.csv");
+    MyFile<<"x,y"<<endl;
 
     vector<Point> points_obs1;
     points_obs1.push_back(Point(1.0, 2.0));
     points_obs1.push_back(Point(6.0, 7.0));
     points_obs1.push_back(Point(6.0, 2.0));
 
-    MyFile<<"x,y"<<endl;
+
     for (Point point : points_obs1){
-        MyFile<<point.x()<<","<<point.y()<<endl;
+       MyFile<<point.x()<<","<<point.y()<<endl;
     }
 
     Polygon obs1 = Polygon(points_obs1);
@@ -249,7 +250,7 @@ int main()
     double m = compute_m(p0,p1);
     double th1 = atan(m);
 
-    double minR = 0.3;
+    double minR = 1;
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
 
@@ -277,8 +278,7 @@ int main()
     Curve last_trait = dubins_shortest_path(goal.x(), goal.y(), th0, pn.x(), pn.y(), thf, Kmax);
 
 
-    // Close the file
-    MyFile.close();
+
 
 
     Polyline points_final_path;
@@ -292,6 +292,20 @@ int main()
     }
 
     Polyline points_last_trait = get_points_from_curve(last_trait, 300);
+    points_final_path.append(points_last_trait);
+
+
+
+
+    for(int i=0; i<points_final_path.size(); i++){
+        double x = points_final_path[i].x();
+        double y = points_first_trait[i].y();
+        MyFile<<x<<","<<y<<endl;
+    }
+
+
+    // Close the file
+    MyFile.close();
 
 
 
