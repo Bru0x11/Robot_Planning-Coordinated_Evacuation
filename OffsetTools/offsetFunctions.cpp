@@ -1,13 +1,13 @@
 #include "offsetFunctions.h"
 
-auto createPolygon(const std::vector<::Point>& points){
+auto createPolygon(const std::vector<VisiLibity::Point>& points){
   PathsD polygon;
   std::string stringPoint{};
 
-  for (::Point point : points){ //need to format the point in the right way to create the path
-    stringPoint.append(std::to_string(point.x));
+  for (VisiLibity::Point point : points){ //need to format the point in the right way to create the path
+    stringPoint.append(std::to_string(point.x()));
     stringPoint.append(",");
-    stringPoint.append(std::to_string(point.y));
+    stringPoint.append(std::to_string(point.y()));
     stringPoint.append(", ");
   }
   
@@ -38,6 +38,16 @@ auto mergePolygons(const PathsD& firstPolygon, const PathsD& secondPolygon){
   return Union(firstPolygon, secondPolygon, FillRule::NonZero);
 }
 
+auto translatePolygon(const PathsD& originalPolygon){
+  std::vector<VisiLibity::Point> listOfPoints {};
+
+  for (PointD point : originalPolygon[0]){
+    listOfPoints.push_back(VisiLibity::Point(point.x, point.y));
+  }
+
+  return listOfPoints;
+}
+
 //FOR PRINTING PURPOSES
 void System(const std::string& filename){
 #ifdef _WIN32
@@ -47,28 +57,39 @@ void System(const std::string& filename){
 #endif
 }
 
-/*
+
 //Example of print
 int main(){
 
-  std::vector<::Point> vectorOfPoints {};
-  ::Point a {50, 50};
-  ::Point b {100, 50};
-  ::Point c {75, 100};
-
-  vectorOfPoints.push_back(a);
-  vectorOfPoints.push_back(b);
-  vectorOfPoints.push_back(c);
+  std::vector<VisiLibity::Point> mapPoints {};
+  mapPoints.push_back(VisiLibity::Point(0.0, 0.0));
+  mapPoints.push_back(VisiLibity::Point(20.0, 0.0));
+  mapPoints.push_back(VisiLibity::Point(20.0, 20.0));
+  mapPoints.push_back(VisiLibity::Point(0.0, 20.0));
 
 
-  PathsD triangle {createPolygon(vectorOfPoints)};
+  std::vector<VisiLibity::Point> trianglePoints {};
+  trianglePoints.push_back(VisiLibity::Point(6.0, 7.0));
+  trianglePoints.push_back(VisiLibity::Point(1.0, 2.0));
+  trianglePoints.push_back(VisiLibity::Point(6.0, 2.0));
+  
+  std::vector<VisiLibity::Point> squarePoints {};
+  squarePoints.push_back(VisiLibity::Point(2.0, 9.0));
+  squarePoints.push_back(VisiLibity::Point(2.0, 14.0));
+  squarePoints.push_back(VisiLibity::Point(8.0, 14.0));
+  squarePoints.push_back(VisiLibity::Point(8.0, 9.0));
 
-  PathsD offsetted_triangle {offsetPolygon(triangle, 30)};
+
+  PathsD triangle {createPolygon(trianglePoints)};
+  PathsD square {createPolygon(squarePoints)};
+  PathsD map {offsetPolygon(createPolygon(mapPoints), 2.0, true)};
+
 
   FillRule fr = FillRule::EvenOdd;
   SvgWriter svg;
   svg.AddPaths(triangle, false, fr, 0x100066FF, 0x400066FF, 1, false);
-  svg.AddPaths(offsetted_triangle, false, fr, 0xFFF066FF, 0xFAB066FF, 1, false);
+  svg.AddPaths(square, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
+  svg.AddPaths(map, false, fr, 0x10FF66FF, 0xFF0066FF, 1, false);
   svg.SaveToFile("triangle_try.svg", 800, 600, 0);
   System("triangle_try.svg");
-}*/
+}

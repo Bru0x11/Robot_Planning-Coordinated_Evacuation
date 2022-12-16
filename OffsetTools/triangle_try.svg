@@ -4,8 +4,10 @@
 
  <svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
-  <path d=" M 267.11 172.73 L 267.11 172.73 L 521.66 172.73 L 394.39 427.27 z"
+  <path d=" M 206.67 230.00 L 206.67 230.00 L 90.00 113.33 L 206.67 113.33 z"
     style="fill:#0066ff; fill-opacity:0.06; fill-rule:evenodd; stroke:#0066ff; stroke-opacity:0.25; stroke-width:1.00;"/>
-  <path d=" M 488.77 580.00 L 488.77 580.00 L 300.00 580.00 L 20.00 20.00 L 768.77 20.00 z"
-    style="fill:#f066ff; fill-opacity:1.00; fill-rule:evenodd; stroke:#b066ff; stroke-opacity:0.98; stroke-width:1.00;"/>
+  <path d=" M 113.33 276.67 L 113.33 276.67 L 113.33 393.33 L 253.33 393.33 L 253.33 276.67 z"
+    style="fill:#aa66ff; fill-opacity:0.06; fill-rule:evenodd; stroke:#0066ff; stroke-opacity:0.67; stroke-width:1.00;"/>
+  <path d=" M 580.00 580.00 L 580.00 580.00 L 20.00 580.00 L 20.00 20.00 L 580.00 20.00 z M 66.67 66.67 L 66.67 66.67 L 66.67 533.33 L 533.33 533.33 L 533.33 66.67 z"
+    style="fill:#ff66ff; fill-opacity:0.06; fill-rule:evenodd; stroke:#0066ff; stroke-opacity:1.00; stroke-width:1.00;"/>
 </svg>
