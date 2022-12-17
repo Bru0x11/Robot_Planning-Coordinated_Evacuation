@@ -1,0 +1,6 @@
+Lenght of an arc
+https://math.stackexchange.com/questions/830413/calculating-the-arc-length-of-a-circle-segment
+
+Intersection 2 lines
+https://www.cuemath.com/geometry/intersection-of-two-lines/
+

@@ -32,6 +32,15 @@ public:
     }
 };
 
+Point find_lines_intersection(double a1, double b1, double c1, double a2, double b2, double c2){
+
+    double x = (b1*c2 - b2*c1)/(a1*b2 - a2*b1);
+    double y = (c1*a2 - c2*a1)/(a1*b2 - a2*b1);
+
+    return Point(x,y);
+}
+
+
 double compute_m(Point p0, Point p1){
 
     //cout<<"sto calcolando m"<<endl;
@@ -54,21 +63,25 @@ double compute_m(Point p0, Point p1){
     return DBL_MAX;
 }
 
-double find_distance(Point p0, Point p1, Point p2, double minR)
+/*double find_distance(Point p0, Point p1, Point p2, double minR)
 {
     double m1, m2;
     // Compute m
     m1 = compute_m(p0,p1);
-
     m2 = compute_m(p1,p2);
+
+    cout<<"m1: "<<m1<<" m2: "<<m2<<endl;
 
     double tan_angle = (m1 - m2) / (1 + (m1 * m2));
     double angle = atan(tan_angle);
+
+    cout<<"angle between 2 lines: "<<angle<<endl;
 
     double distance = minR * (1 / tan(angle / 2));
 
     return abs(distance);
 }
+
 
 // given the initial and final points of the segment and a distance, compute the entrance point
 Point find_entrance(Point p0, Point p1, double distance)
@@ -99,6 +112,59 @@ Point find_exit(Point p0, Point p1, double distance)
     return exit;
 }
 
+*/
+
+Point find_entrance(Point a, Point b, Point c, double minR){
+    //cout<<"a: "<<a<<endl<<"b: "<<b<<endl<<"c: "<<c<<endl;
+    double m1, m2, q1, q2;
+    // Compute m and q
+    m1 = compute_m(a,b);
+    m2 = compute_m(b,c);
+    q1 = a.y() - (m1*a.x());
+    q2 = b.y() - (m2*b.x());
+
+    //cout<<"m1: "<<m1<<" q1: "<<q1<<" m2: "<<m2<<" q2: "<<q2<<endl;
+
+    double a1,a2,b1,b2,c1,c2;
+
+    //coefficients of line in explicit form
+    a1 = -m1;
+    b1 = 1;
+    c1 = -q1;
+
+    a2 = -m2;
+    b2 = 1;
+    c2 = -q2;
+
+    //find parallels at distance minR (only c coefficients because others are the same)
+    // there are more than 1 solution
+    double c1p = c1 - (sqrt(pow(a1,2) + pow(b1,2))) * minR;
+    double c2p = c2 - (sqrt(pow(a2,2) + pow(b2,2))) * minR;
+
+    //cout<<"a1: "<<a1<<" b1: "<<b1<<" c1: "<<c1<<" c1p: "<<c1p<<endl;
+    //cout<<"a2: "<<a2<<" b2: "<<b2<<" c2: "<<c2<<" c2p: "<<c2p<<endl;
+
+    //find intersection of the parallels (center of circle)
+    Point circle_center = find_lines_intersection(a1, b1, c1p, a2, b2, c2p);
+
+    //find perpendicular lines
+    double m1perp = -1/m1;
+    double m2perp = -1/m2;
+    double q1perp = circle_center.y() - (m1perp*circle_center.x());
+    //double q2perp = circle_center.y() - (m2perp*circle_center.x());
+
+    //cout<<"m1perp: "<<m1perp<<" q1perp: "<<q1perp<<" m2perp: "<<m2perp<<" q2perp: "<<q2perp<<endl;
+
+    Point entrance = find_lines_intersection(-m1perp, 1, -q1perp, a1, b1, c1);
+
+    //cout<<"ENTRANCE: "<<entrance<<endl;
+    
+    return entrance;    
+}
+
+Point find_exit(Point a, Point b, Point c, double minR){
+   return find_entrance(c, b, a, minR);
+}
 
 Polyline get_points_from_arc(Arc a, int npts){
     
@@ -147,22 +213,22 @@ Polyline get_points_line(Point p0, Point p1){
     double m = compute_m(p0, p1);
     double q = p0.y() - (m*p0.x());
     
-    cout<<"costruisco segment da punto "<<p0<<endl;
-    cout<<"a punto "<<p1<<endl;
+    //cout<<"costruisco segment da punto "<<p0<<endl;
+    //cout<<"a punto "<<p1<<endl;
 
-    cout<<"m: "<<m<<endl;
-    cout<<"q: "<<q<<endl;
+    //cout<<"m: "<<m<<endl;
+    //cout<<"q: "<<q<<endl;
     double x0 = p0.x();
     double x1 = p1.x();
 
     if(x1>x0){
         for(int i=1; i<100; i++){
             double gamma = i*0.01;
-            cout<<"gamma: "<<gamma<<endl;
+            //cout<<"gamma: "<<gamma<<endl;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
-            cout<<"temp_x: "<<temp_x<<endl;
+            //cout<<"temp_x: "<<temp_x<<endl;
             double temp_y = m*temp_x + q;
-            cout<<"temp_y: "<<temp_y<<endl;
+            //cout<<"temp_y: "<<temp_y<<endl;
 
             Point p = Point(temp_x, temp_y);
 
@@ -178,35 +244,35 @@ Polyline get_points_line(Point p0, Point p1){
 double compute_arc_length(Point a, Point b, double minR){
     
     double points_distance = sqrt(pow(b.x() - a.x(),2) + pow(b.y() - a.y(),2));
+    cout<<"COMPUTE ARC LENGHT of points: "<<a<<" and "<<b<<endl;
+    cout<<"points distance: "<<points_distance<<endl;
     double central_angle = acos(1 - (pow(points_distance,2)/(2*pow(minR, 2))));
-
+    cout<<"central angle: "<<central_angle<<endl;
     double L = minR * central_angle;
 
     return L;
 }
 
-Arc get_arc(Point a, Point b, Point c, double minR){
-    
-    double distance = find_distance(a, b, c, minR);
-    Point exit = find_exit(a, b, distance);
-    Point entrance = find_entrance(b, c, distance);
 
-    double m1 = compute_m(a,b);
-    double m2 = compute_m(b,c);
+double compute_angle(Point a, Point b){
+    double m = compute_m(a, b);
+    return atan(m);
+}
 
-    double angle1 = atan(m1);
-    double angle2 = atan(m2);
+Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit, double minR){
     
     Arc arc;
 
     arc.x0 = entrance.x();
     arc.y0 = entrance.y();
-    arc.th0 = angle1;
+    arc.th0 = angle_entrance;
     arc.xf = exit.x();
     arc.yf = exit.y();
-    arc.thf = angle2;
+    arc.thf = angle_exit;
     arc.k = 1/minR;
     arc.L = compute_arc_length(entrance, exit, minR);
+
+    cout<<"L arc: "<<arc.L<<endl;
 
     return arc;
 
@@ -310,24 +376,46 @@ int main()
     double m = compute_m(p0,p1);
     double th1 = atan(m);
 
-    double minR = 1;
+    double minR = 2;
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
     Polyline points_first_trait = get_points_from_curve(first_trait, 300);
-    points_final_path.append(points_first_trait);
+    //points_final_path.append(points_first_trait);
 
 
 
 
     //BUILD VECTOR WITH ALL ARCS
     vector<Arc> arc_vector;
-    for (int i = 0; i < path_length - 2; i++)
+    for (int i = 0; i < path_length-2; i=i+1)
     {
         Point a = shortest_path[i];
         Point b = shortest_path[i+1];
         Point c = shortest_path[i+2];
 
-        Arc arc = get_arc(a,b,c, minR);
+        //double distance = find_distance(a, b, c, minR);
+        //cout<<"distance: "<<distance<<endl;
+        Point entrance = find_entrance(a, b, c, minR);
+        Point exit = find_exit(a, b, c, minR);
+
+        //cout<<"entrance: "<<entrance<<endl;
+        //cout<<"exit: "<<exit<<endl;
+
+        //FOR PLOTTING
+        Polyline points_first = get_points_line(a, entrance);
+
+        cout<<"add path from "<<a<<" to "<<entrance<<endl; 
+        points_final_path.append(points_first);
+
+        Polyline points_second = get_points_line(exit, c);
+        points_final_path.append(points_second);
+        cout<<"add path from "<<exit<<" to "<<c<<endl; 
+
+        double angle_entrance = compute_angle(a,b);
+        double angle_exit = compute_angle(b,c);
+    
+        Arc arc = get_arc(entrance, exit, angle_entrance, angle_exit, minR);
+
         arc_vector.push_back(arc);
     }
 
@@ -348,13 +436,20 @@ int main()
 
 
     //DO FIRST LINE (from second vertex (i.e. where dubins arrives to third one))
-    Point p_second = shortest_path[]
+    Point p_second = shortest_path[1];
+    double x_third_p = arc_vector[0].x0;
+    double y_third_p = arc_vector[0].y0;
+    Point p_third = Point(x_third_p, y_third_p);
+    Polyline first_line_points = get_points_line(p_second, p_third);
+
+    //points_final_path.append(first_line_points);
+
 
 
     for(int i = 0; i<arc_vector.size(); i++){
         Arc arc = arc_vector[i];
         Polyline arc_points = get_points_from_arc(arc, 100);
-        points_final_path.append(arc_points);
+        points_final_path.append(arc_points);    
     }
 
 
