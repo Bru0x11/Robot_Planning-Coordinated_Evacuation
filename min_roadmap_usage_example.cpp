@@ -33,9 +33,23 @@ public:
 };
 
 double compute_m(Point p0, Point p1){
-    if ((p1.x() - p0.x()) != 0)
+
+    //cout<<"sto calcolando m"<<endl;
+
+    double x1 = p1.x();
+    double x0 = p0.x();
+
+    //cout<<"x0: "<<x0<<endl;
+    //cout<<"x1: "<<x1<<endl;
+
+    if ((x1-x0) != 0)
     {
-        return (p1.y() - p0.y()) / (p1.x() - p0.x());
+        double y1,y0;
+        y1 = p1.y();
+        y0 = p0.y();
+        //cout<<"y0: "<<y0<<endl;
+        //cout<<"y1: "<<y1<<endl;
+        return (y1-y0) / (x1-x0);
     }
     return DBL_MAX;
 }
@@ -127,6 +141,39 @@ Polyline get_points_from_curve(Curve c, int npts){
     return tot_line;
 }
 
+Polyline get_points_line(Point p0, Point p1){
+    
+    Polyline points;
+    double m = compute_m(p0, p1);
+    double q = p0.y() - (m*p0.x());
+    
+    cout<<"costruisco segment da punto "<<p0<<endl;
+    cout<<"a punto "<<p1<<endl;
+
+    cout<<"m: "<<m<<endl;
+    cout<<"q: "<<q<<endl;
+    double x0 = p0.x();
+    double x1 = p1.x();
+
+    if(x1>x0){
+        for(int i=1; i<100; i++){
+            double gamma = i*0.01;
+            cout<<"gamma: "<<gamma<<endl;
+            double temp_x = (1-gamma)*x0 + (gamma*x1);
+            cout<<"temp_x: "<<temp_x<<endl;
+            double temp_y = m*temp_x + q;
+            cout<<"temp_y: "<<temp_y<<endl;
+
+            Point p = Point(temp_x, temp_y);
+
+            points.push_back(p);
+        }
+    }
+
+    return points;
+
+}
+
 
 double compute_arc_length(Point a, Point b, double minR){
     
@@ -178,9 +225,9 @@ int main()
     points_obs1.push_back(Point(6.0, 2.0));
 
 
-    for (Point point : points_obs1){
-       MyFile<<point.x()<<","<<point.y()<<endl;
-    }
+    //for (Point point : points_obs1){
+    //   MyFile<<point.x()<<","<<point.y()<<endl;
+    //}
 
     Polygon obs1 = Polygon(points_obs1);
 
@@ -190,9 +237,9 @@ int main()
     points_obs2.push_back(Point(8.0, 14.0));
     points_obs2.push_back(Point(8.0, 9.0));
 
-    for (Point point : points_obs2){
-        MyFile<<point.x()<<","<<point.y()<<endl;
-    }
+    //for (Point point : points_obs2){
+    //    MyFile<<point.x()<<","<<point.y()<<endl;
+    //}
 
     Polygon obs2 = Polygon(points_obs2);
 
@@ -240,10 +287,23 @@ int main()
     // for Point in shortest path
     int path_length = shortest_path.size();
 
-    //first 3 vertex
+
+    Polyline points_final_path;
+
+
+    //BUILD DUBINS FIRST TRAIT
+    //first 3 vertex (need them to do dubins)
     Point start = shortest_path[0];
     Point p0 = shortest_path[1];
     Point p1 = shortest_path[2];
+
+    //for(int i = 0; i<shortest_path.size()-2; i++){
+    //    Point p0 = shortest_path[i];
+    //    Point p1 = shortest_path[i+1];
+    //
+    //    Polyline line_points = get_points_line(p0, p1);
+    //    points_final_path.append(line_points);
+    //}
 
     double th0 = 0;
     //Find final angle of first trait
@@ -253,9 +313,14 @@ int main()
     double minR = 1;
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
+    Polyline points_first_trait = get_points_from_curve(first_trait, 300);
+    points_final_path.append(points_first_trait);
 
+
+
+
+    //BUILD VECTOR WITH ALL ARCS
     vector<Arc> arc_vector;
-
     for (int i = 0; i < path_length - 2; i++)
     {
         Point a = shortest_path[i];
@@ -266,7 +331,9 @@ int main()
         arc_vector.push_back(arc);
     }
 
-    //last 3 vertex
+
+    //BUILD DUBINS LAST TRAIT
+    //last 3 vertex (need them to build dubins last trait)
     Point pn_1 = shortest_path[path_length-3];
     Point pn = shortest_path[path_length-2];
     Point goal = shortest_path[path_length-1];
@@ -276,14 +343,13 @@ int main()
     double thn = atan(m_final_segment);
 
     Curve last_trait = dubins_shortest_path(goal.x(), goal.y(), th0, pn.x(), pn.y(), thf, Kmax);
+    Polyline points_last_trait = get_points_from_curve(last_trait, 300);
+    //points_final_path.append(points_last_trait);
 
 
+    //DO FIRST LINE (from second vertex (i.e. where dubins arrives to third one))
+    Point p_second = shortest_path[]
 
-
-
-    Polyline points_final_path;
-    Polyline points_first_trait = get_points_from_curve(first_trait, 300);
-    points_final_path.append(points_first_trait);
 
     for(int i = 0; i<arc_vector.size(); i++){
         Arc arc = arc_vector[i];
@@ -291,26 +357,18 @@ int main()
         points_final_path.append(arc_points);
     }
 
-    Polyline points_last_trait = get_points_from_curve(last_trait, 300);
-    points_final_path.append(points_last_trait);
-
 
 
 
     for(int i=0; i<points_final_path.size(); i++){
         double x = points_final_path[i].x();
-        double y = points_first_trait[i].y();
+        double y = points_final_path[i].y();
         MyFile<<x<<","<<y<<endl;
     }
 
 
     // Close the file
     MyFile.close();
-
-
-
-
-    
 
     // cout<<"poses[0]: "<<poses<<endl;
 
