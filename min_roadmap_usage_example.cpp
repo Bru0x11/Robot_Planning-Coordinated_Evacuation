@@ -510,39 +510,7 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
 }
 
 
-
-
-int main()
-{
-
-    // Create and open a text file
-    ofstream MyFile("env.csv");
-    MyFile<<"x,y"<<endl;
-
-    Environment env = get_environment();
-
-    //ROAD MAP
-    Visibility_Graph graph = Visibility_Graph(env, 0);
-
-    //DEFINE ROBOT MIN_CURVATURE_RADIUS
-    double minR = 1.5;
-    //DEFINE START AND END POINTS
-    Point start_test = Point(3.0, 1.0);
-    Point end = Point(4.0, 17.0);
-    //DEFINE START AND END ANGLES 
-    double th0 = 0;
-    double thf = 0;
-
-    //FIND SHORTES PATH
-    Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);
-
-    cout << "Enviroment is valid: " << env.is_valid() << endl;
-    cout << "Shortest_path: " << endl;
-    cout << shortest_path << endl;
-
-    //for (int i = 0; i<shortest_path.size(); i++){
-    //    MyFile<<shortest_path[i].x()<<","<<shortest_path[i].y()<<endl;
-    //}
+Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR){
 
     Polyline points_final_path;
 
@@ -551,7 +519,6 @@ int main()
     Polyline points_first_trait = get_points_from_curve(first_trait, 300);
 
     //DO INTERPOLATION
-    //vector<Arc> arc_vector;
     for (int i = 1; i < shortest_path.size()-3; i=i+1)
     {
         Point a = shortest_path[i];
@@ -584,18 +551,46 @@ int main()
 
     Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
     Polyline points_last_trait = get_points_from_curve(last_trait, 300);
-
-
-    //DO FIRST LINE (from second vertex (i.e. where dubins arrives to third one))
-    //Point p_second = shortest_path[1];
-    //double x_third_p = arc_vector[0].x0;
-    //double y_third_p = arc_vector[0].y0;
-    //Point p_third = Point(x_third_p, y_third_p);
-    //Polyline first_line_points = get_points_line(p_second, p_third);
-
     
     points_final_path.append(points_first_trait);
     points_final_path.append(points_last_trait);
+
+    return points_final_path;
+}
+
+
+
+
+int main()
+{
+
+    // Create and open a text file
+    ofstream MyFile("env.csv");
+    MyFile<<"x,y"<<endl;
+
+    Environment env = get_environment();
+
+    //ROAD MAP
+    Visibility_Graph graph = Visibility_Graph(env, 0);
+
+    //DEFINE ROBOT MIN_CURVATURE_RADIUS
+    double minR = 1.5;
+    //DEFINE START AND END POINTS
+    Point start_test = Point(3.0, 1.0);
+    Point end = Point(4.0, 17.0);
+    //DEFINE START AND END ANGLES 
+    double th0 = 0;
+    double thf = M_PI/2;
+
+    //FIND SHORTES PATH
+    Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);
+
+    cout << "Enviroment is valid: " << env.is_valid() << endl;
+    cout << "Shortest_path: " << endl;
+    cout << shortest_path << endl;
+
+
+    Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
 
 
     for(int i=0; i<points_final_path.size(); i++){
