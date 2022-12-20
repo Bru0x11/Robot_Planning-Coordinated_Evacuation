@@ -32,8 +32,145 @@ public:
     }
 };
 
-Point find_lines_intersection(double a1, double b1, double c1, double a2, double b2, double c2){
+class Line{
+    public:
+    double a;
+    double b;
+    double c;
+    double m;
+    double q;  
+    bool vertical = false;
+    bool horizontal = false;
 
+    friend ostream & operator << (ostream &out, Line l);
+
+    Line(double a, double b, double c){
+        
+        if(b==0){
+            this->vertical = true;
+            this->a = a;
+            this->b = b;
+            this->c = c;
+            this->m = DBL_MAX;
+            this->q = -c/a;
+        }
+        else{
+            if(a==0){
+                this->horizontal = true;
+            }
+            this->a = a;
+            this->b = b;
+            this->c = c;
+            this->m = -a/b;
+            this->q = -c/b;
+        }
+    }
+
+    Line(double m, double q){
+        this->m = m;
+        this->q = q;
+
+
+        if(m==DBL_MAX){
+            this->vertical = true;
+            this->a=1;
+            this->c=-q;
+            this->b=0;
+        }
+        else{
+            if(m==0){
+            this->horizontal = true;
+            }
+            this->a = -m;
+            this->b = 1;
+            this->c = -q;
+        }
+
+    }
+
+    Line find_parallel(double distance){
+        
+        double c_new;
+        if(this->vertical){
+            c_new = this->c + distance;
+            return Line(this->a, this->b, c_new);
+        }
+
+        c_new = this->c - ((sqrt(pow(this->a,2) + pow(this->b,2)))*distance);
+        return Line(this->a, this->b, c_new);
+
+    }
+
+    Line find_perpendicular(Point p){
+
+        if(this->vertical){
+            return Line(0, p.y());
+        }
+        
+        double mp = -1/(this->m);
+        double qp = Line::get_q_from_point(p,mp);
+
+        return Line(mp, qp);
+    }
+
+
+    static Line get_line_from_points(Point p1, Point p2){
+        double m,q;
+        if(p1.x() == p2.x()){
+            m = DBL_MAX;
+            q = p1.y();
+            return Line(m, q);
+        }
+
+        m = compute_m(p1, p2);
+        q = get_q_from_point(p1, m);
+        return Line(m,q);
+    }
+
+    static double get_q_from_point(Point p, double m){
+        if(m==DBL_MAX){
+            return p.x();
+        }
+        else if(m==0){
+            return p.y();
+        }
+
+        return p.y() - m*p.x();
+
+    }
+
+    static double compute_m(Point p0, Point p1){
+        double x1 = p1.x();
+        double x0 = p0.x();
+
+        if ((x1-x0) != 0)
+        {
+            double y1,y0;
+            y1 = p1.y();
+            y0 = p0.y();
+            //cout<<"y0: "<<y0<<endl;
+            //cout<<"y1: "<<y1<<endl;
+            return (y1-y0) / (x1-x0);
+        }
+        return DBL_MAX;
+    }
+
+};
+
+ostream & operator << (ostream &out, Line l){
+    out<<l.a<<"x+"<<l.b<<"y+"<<l.c<<"=0"<<endl;
+    return out;
+}
+
+
+Point find_lines_intersection(Line l1, Line l2){
+    
+    double a1 = l1.a;
+    double b1 = l1.b; 
+    double c1 = l1.c;
+    double a2 = l2.a;
+    double b2 = l2.b;
+    double c2 = l2.c;
     double x = (b1*c2 - b2*c1)/(a1*b2 - a2*b1);
     double y = (c1*a2 - c2*a1)/(a1*b2 - a2*b1);
 
@@ -41,27 +178,7 @@ Point find_lines_intersection(double a1, double b1, double c1, double a2, double
 }
 
 
-double compute_m(Point p0, Point p1){
 
-    //cout<<"sto calcolando m"<<endl;
-
-    double x1 = p1.x();
-    double x0 = p0.x();
-
-    //cout<<"x0: "<<x0<<endl;
-    //cout<<"x1: "<<x1<<endl;
-
-    if ((x1-x0) != 0)
-    {
-        double y1,y0;
-        y1 = p1.y();
-        y0 = p0.y();
-        //cout<<"y0: "<<y0<<endl;
-        //cout<<"y1: "<<y1<<endl;
-        return (y1-y0) / (x1-x0);
-    }
-    return DBL_MAX;
-}
 
 /*double find_distance(Point p0, Point p1, Point p2, double minR)
 {
@@ -116,84 +233,47 @@ Point find_exit(Point p0, Point p1, double distance)
 
 Point find_entrance(Point a, Point b, Point c, double minR){
     cout<<"a: "<<a<<endl<<"b: "<<b<<endl<<"c: "<<c<<endl;
-    double a1,a2,b1,b2,c1,c2;
+    double a1,a2,b1,b2,c1,c2,c1_paral,c2_paral;
     double m1, m2, q1, q2;
-    // Compute m and q
-    m1 = compute_m(a,b);
-    m2 = compute_m(b,c);
+    m1 = Line::compute_m(a,b);
+    m2 = Line::compute_m(b,c);
 
-    if(m2 == DBL_MAX){
-        //q2 = -b.x();
-        
-        a2 = 1;
-        b2 = 0;
-        c2 = -b.x();
+    q1 = Line::get_q_from_point(a, m1);
+    q2 = Line::get_q_from_point(b, m2);
 
-    }
-    else{
-        q2 = b.y() - (m2*b.x());
-        a2 = -m2;
-        b2 = 1;
-        c2 = -q2;
-    }
+    Line l1 = Line(m1, q1);
+    Line l2 = Line(m2, q2);
 
-    if(m1 == DBL_MAX){
-        //q1 = -a.x();
-        
-        a1 = 1;
-        b1 = 0;
-        c1 = -a.x();
-
-    }
-    else{
-        q1 = a.y() - (m1*a.x());
-        a1 = -m1;
-        b1 = 1;
-        c1 = -q1;
-    }
-
-    //cout<<"FIND ENTRANCE"<<endl;
-
-    //cout<<"m1: "<<m1<<" q1: "<<q1<<" m2: "<<m2<<" q2: "<<q2<<endl;
-
-    //find parallels at distance minR (only c coefficients because others are the same)
-    // there are more than 1 solution
-    double c1p = c1 - (sqrt(pow(a1,2) + pow(b1,2))) * minR;
-    double c2p = c2 - (sqrt(pow(a2,2) + pow(b2,2))) * minR;
-
-    //cout<<"a1: "<<a1<<" b1: "<<b1<<" c1: "<<c1<<" c1p: "<<c1p<<endl;
-    //cout<<"a2: "<<a2<<" b2: "<<b2<<" c2: "<<c2<<" c2p: "<<c2p<<endl;
+    Line l1_paral = l1.find_parallel(minR);
+    Line l2_paral = l2.find_parallel(minR);
 
     //find intersection of the parallels (center of circle)
-    Point circle_center = find_lines_intersection(a1, b1, c1p, a2, b2, c2p);
+    Point circle_center = find_lines_intersection(l1_paral, l2_paral);
+
+    cout<<"circle center: "<<circle_center<<endl;
 
     //find perpendicular lines
-    double m1perp;
-    if(m1==DBL_MAX){
-        m1perp = 0;
-    } 
-    else{
-        m1perp = 1/m1;
-    }
+    Line l1_perp = l1.find_perpendicular(circle_center);
+    Line l2_perp = l2.find_perpendicular(circle_center);
 
-    double m2perp;
-    if(m2==DBL_MAX){
-        m2perp = 0;
-    } 
-    else{
-        m2perp = 1/m2;
-    }
+    cout<<endl;
+    cout<<"RETTA 1: ";
+    cout<<l1;
+    cout<<"RETTA 1 paral: ";
+    cout<<l1_paral;
+    cout<<"RETTA 1 perp: ";
+    cout<<l1_perp;
+    cout<<"RETTA 2: ";
+    cout<<l2;
+    cout<<"RETTA 2 paral: ";
+    cout<<l2_paral;
+    cout<<"RETTA 2 perp: ";
+    cout<<l2_perp;    
 
-    double q1perp = circle_center.y() - (m1perp*circle_center.x());
-    //double q2perp = circle_center.y() - (m2perp*circle_center.x());
 
-    //cout<<"m1perp: "<<m1perp<<" q1perp: "<<q1perp<<" m2perp: "<<m2perp<<" q2perp: "<<q2perp<<endl;
-
-    Point entrance = find_lines_intersection(-m1perp, 1, -q1perp, a1, b1, c1);
+    Point entrance = find_lines_intersection(l1_perp, l1);
     cout<<"entrance: "<<entrance<<endl;
 
-    //cout<<"ENTRANCE: "<<entrance<<endl;
-    
     return entrance;    
 }
 
@@ -242,14 +322,16 @@ Polyline get_points_from_curve(Curve c, int npts){
     return tot_line;
 }
 
+
+//TODO: IF X1>X0
 Polyline get_points_line(Point p0, Point p1){
     
     Polyline points;
-    double m = compute_m(p0, p1);
-    double q = p0.y() - (m*p0.x());
+    Line l = Line::get_line_from_points(p0, p1);
+
     
-    //cout<<"costruisco segment da punto "<<p0<<endl;
-    //cout<<"a punto "<<p1<<endl;
+    cout<<"costruisco segment da punto "<<p0<<endl;
+    cout<<"a punto "<<p1<<endl;
 
     //cout<<"m: "<<m<<endl;
     //cout<<"q: "<<q<<endl;
@@ -262,9 +344,40 @@ Polyline get_points_line(Point p0, Point p1){
             //cout<<"gamma: "<<gamma<<endl;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
             //cout<<"temp_x: "<<temp_x<<endl;
-            double temp_y = m*temp_x + q;
+            double temp_y = l.m*temp_x + l.q;
             //cout<<"temp_y: "<<temp_y<<endl;
 
+            Point p = Point(temp_x, temp_y);
+
+            points.push_back(p);
+        }
+    }
+
+    else if(x1<x0){
+        for(int i=1; i<100; i++){
+            double gamma = i*0.01;
+            //cout<<"gamma: "<<gamma<<endl;
+            double temp_x = (1-gamma)*x0 + (gamma*x1);
+            //cout<<"temp_x: "<<temp_x<<endl;
+            double temp_y = l.m*temp_x + l.q;
+            //cout<<"temp_y: "<<temp_y<<endl;
+
+            Point p = Point(temp_x, temp_y);
+
+            points.push_back(p);
+
+            break;
+        }
+    }
+
+    else{
+        double temp_x= p0.x();
+        for(int i=1; i<100; i++){
+            double gamma = i*0.01;
+            //cout<<"gamma: "<<gamma<<endl;
+            double temp_y = (1-gamma)*p0.y() + (gamma*p1.y());
+            //cout<<"temp_x: "<<temp_x<<endl;
+            //cout<<"temp_y: "<<temp_y<<endl;
             Point p = Point(temp_x, temp_y);
 
             points.push_back(p);
@@ -290,7 +403,7 @@ double compute_arc_length(Point a, Point b, double minR){
 
 
 double compute_angle(Point a, Point b){
-    double m = compute_m(a, b);
+    double m = Line::compute_m(a, b);
     return atan(m);
 }
 
@@ -366,7 +479,7 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
     Point p0 = shortest_path[1];
     Point p1 = shortest_path[2];
     //Find final angle of first trait
-    double m = compute_m(p0,p1);
+    double m = Line::compute_m(p0,p1);
     double th1 = atan(m);
 
     double Kmax = 1/minR;
@@ -379,18 +492,19 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
 //TO DO: TH0
 Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
 
+
     //BUILD DUBINS LAST TRAIT
     //last 3 vertex (need them to build dubins last trait)
     Point pn_1 = shortest_path[shortest_path.size() -3];
     Point pn = shortest_path[shortest_path.size() -2];
     Point goal = shortest_path[shortest_path.size() -1];
 
-    double m_final_segment = compute_m(pn_1, pn);
+    double m_final_segment = Line::compute_m(pn_1, pn);
     double th_n = atan(m_final_segment);
 
     double Kmax = 1/minR;
 
-    Curve last_trait = dubins_shortest_path(goal.x(), goal.y(), th_n, goal.x(), goal.y(), thf, Kmax);
+    Curve last_trait = dubins_shortest_path(pn.x(), pn.y(), th_n, goal.x(), goal.y(), thf, Kmax);
 
     return last_trait;
 }
@@ -438,7 +552,7 @@ int main()
 
     //DO INTERPOLATION
     //vector<Arc> arc_vector;
-    for (int i = 1; i < shortest_path.size()-2; i=i+1)
+    for (int i = 1; i < shortest_path.size()-3; i=i+1)
     {
         Point a = shortest_path[i];
         Point b = shortest_path[i+1];
