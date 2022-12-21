@@ -19,6 +19,12 @@ include_directories(
 
 add_executable(offset_node
  src/offsetFunctions.cpp
+ src/ClipFileLoad.o
+ src/ClipFileSave.o
+ src/clipper.engine.o
+ src/clipper.offset.o
+ src/clipper.rectclip.o
+ src/clipper.svg.o
 )
 
 
