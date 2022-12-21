@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(OffsetTools)
+project(Interpolation)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -17,19 +17,8 @@ include_directories(
     ../VisiLibity1
 )
 
-add_executable(offset_node
- src/offsetFunctions.cpp
-include/CPP/Clipper2Lib/src/clipper.engine.cpp 
-include/CPP/Clipper2Lib/src/clipper.offset.cpp 
-include/CPP/Clipper2Lib/src/clipper.rectclip.cpp
-include/CPP/Utils/ClipFileLoad.cpp
-include/CPP/Utils/ClipFileSave.cpp
-include/CPP/Utils/clipper.svg.cpp
-)
-
 
 install(TARGETS
-  offset_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
