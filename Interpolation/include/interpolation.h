@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cfloat>
-#include "src/dubins.h"
+#include "include/dubins.h"
 #include "math.h"
 
 #include <fstream>
