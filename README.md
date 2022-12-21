@@ -3,16 +3,10 @@ Project Robot Planning and its application
 
 
 # TODO:
-  - script to read info about map and obstacles 
-  - find space traveled in one second
-  - functions to get length and time of path
-  - implement coordination task
-  - function to create map and obstacles given parsed points
-  - 
+  - create executable to test a example map on docker 
+
+  - EDO -> create executable to test on rviz2 -> print on rviz2
+  - BRU -> create an example to obtain points
+  - ASH -> adaptive offset  
 
 # TO ASK
-  - how to compile with colcon (CMake)
-  - how to obtain points
-  - how to obtain the velocity
-  - how to insert more than one robot 
-  - hot to insert obstacles
