@@ -95,7 +95,7 @@ Line Line::find_perpendicular(Point p){
     double mp = -1/(this->m);
     //double qp = Line::get_q_from_point(p,mp);
 
-    return get_line_from_m_and_p(p,mp);
+    return Line::get_line_from_m_and_p(p,mp);
 }
 
 
