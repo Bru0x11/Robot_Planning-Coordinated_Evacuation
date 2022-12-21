@@ -18,7 +18,7 @@ int main()
     ofstream MyFile("env.csv");
     MyFile<<"x,y"<<endl;
 
-    Environment env = get_environment();
+    Environment env = get_environment1();
 
     //ROAD MAP
     Visibility_Graph graph = Visibility_Graph(env, 0);

@@ -79,7 +79,7 @@ class Line{
         }
         else{
             if(m==0){
-            this->horizontal = true;
+                this->horizontal = true;
             }
             this->a = -m;
             this->b = 1;
@@ -106,11 +106,15 @@ class Line{
         if(this->vertical){
             return Line(0, p.y());
         }
+
+        if(this->horizontal){
+            return Line(1, 0, -p.x());
+        }
         
         double mp = -1/(this->m);
-        double qp = Line::get_q_from_point(p,mp);
+        //double qp = Line::get_q_from_point(p,mp);
 
-        return Line(mp, qp);
+        return get_line_from_m_and_p(p,mp);
     }
 
 
@@ -123,15 +127,29 @@ class Line{
         }
 
         m = compute_m(p1, p2);
-        q = get_q_from_point(p1, m);
+
+        //q = get_q_from_point(p1, m);
+        return get_line_from_m_and_p(p1,m);
+    }
+
+    static Line get_line_from_m_and_p(Point p, double m){
+        if(m==DBL_MAX){
+            return Line(1, 0, -p.x());
+        }
+        if(m==0){
+            return Line(0, 1, -p.y());
+        }
+
+        double q = p.y() - m*p.x();
         return Line(m,q);
     }
+
 
     static double get_q_from_point(Point p, double m){
         if(m==DBL_MAX){
             return p.x();
         }
-        else if(m==0){
+        if(m==0){
             return p.y();
         }
 
@@ -238,11 +256,13 @@ Point find_entrance(Point a, Point b, Point c, double minR){
     m1 = Line::compute_m(a,b);
     m2 = Line::compute_m(b,c);
 
-    q1 = Line::get_q_from_point(a, m1);
-    q2 = Line::get_q_from_point(b, m2);
+    Line l1 = Line::get_line_from_m_and_p(a,m1);
+    Line l2 = Line::get_line_from_m_and_p(b,m2);
 
-    Line l1 = Line(m1, q1);
-    Line l2 = Line(m2, q2);
+    // q1 = Line::get_q_from_point(a, m1);
+    // q2 = Line::get_q_from_point(b, m2);
+    // Line l1 = Line(m2, q2);
+    // Line l2 = Line(m2, q2);
 
     Line l1_paral = l1.find_parallel(minR);
     Line l2_paral = l2.find_parallel(minR);
@@ -425,11 +445,58 @@ Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit
 
 }
 
-Environment get_environment(){
+Environment get_environment1(){
     vector<Point> points_obs1;
     points_obs1.push_back(Point(1.0, 2.0));
     points_obs1.push_back(Point(6.0, 7.0));
     points_obs1.push_back(Point(6.0, 2.0));
+
+
+    //for (Point point : points_obs1){
+    //   MyFile<<point.x()<<","<<point.y()<<endl;
+    //}
+
+    Polygon obs1 = Polygon(points_obs1);
+
+    vector<Point> points_obs2;
+    points_obs2.push_back(Point(2.0, 9.0));
+    points_obs2.push_back(Point(2.0, 14.0));
+    points_obs2.push_back(Point(8.0, 14.0));
+    points_obs2.push_back(Point(8.0, 9.0));
+
+    //for (Point point : points_obs2){
+    //    MyFile<<point.x()<<","<<point.y()<<endl;
+    //}
+
+    Polygon obs2 = Polygon(points_obs2);
+
+    vector<Point> points_env;
+    points_env.push_back(Point(0.0, 0.0));
+    points_env.push_back(Point(20.0, 0.0));
+    points_env.push_back(Point(20.0, 20.0));
+    points_env.push_back(Point(0.0, 20.0));
+
+    //for (Point point : points_env){
+    //    MyFile<<point.x()<<" "<<point.y()<<endl;
+    //}
+
+    Polygon poly_env = Polygon(points_env);
+
+    // cout<<obs2.area();
+
+    vector<Polygon> obstacles;
+    obstacles.push_back(poly_env);
+    obstacles.push_back(obs1);
+    obstacles.push_back(obs2);
+
+    return Environment(obstacles);
+}
+
+Environment get_environment2(){
+    vector<Point> points_obs1;
+    points_obs1.push_back(Point(1.0, 2.0));
+    points_obs1.push_back(Point(9.0, 7.0));
+    points_obs1.push_back(Point(9.0, 2.0));
 
 
     //for (Point point : points_obs1){
