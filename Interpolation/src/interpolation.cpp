@@ -9,168 +9,151 @@
 using namespace VisiLibity;
 using namespace std;
 
-class Vector
-{
-public:
-    double x;
-    double y;
-
-    Vector(double x, double y)
-    {
+Vector::Vector(double x, double y){
         // Constructor
         this->x = x;
         this->y = y;
     }
 
-    double norm()
-    {
+double Vector::norm(){
         double n = sqrt(pow(this->x, 2) + pow(this->y, 2));
         return n;
     }
-};
 
-class Line{
-    public:
-    double a;
-    double b;
-    double c;
-    double m;
-    double q;  
-    bool vertical = false;
-    bool horizontal = false;
 
-    friend ostream & operator << (ostream &out, Line l);
 
-    Line(double a, double b, double c){
-        
-        if(b==0){
-            this->vertical = true;
-            this->a = a;
-            this->b = b;
-            this->c = c;
-            this->m = DBL_MAX;
-            this->q = -c/a;
+
+//friend ostream & operator << (ostream &out, Line l);
+
+Line::Line(double a, double b, double c){
+    
+    if(b==0){
+        this->vertical = true;
+        this->a = a;
+        this->b = b;
+        this->c = c;
+        this->m = DBL_MAX;
+        this->q = -c/a;
+    }
+    else{
+        if(a==0){
+            this->horizontal = true;
         }
-        else{
-            if(a==0){
-                this->horizontal = true;
-            }
-            this->a = a;
-            this->b = b;
-            this->c = c;
-            this->m = -a/b;
-            this->q = -c/b;
+        this->a = a;
+        this->b = b;
+        this->c = c;
+        this->m = -a/b;
+        this->q = -c/b;
+    }
+}
+
+Line::Line(double m, double q){
+    this->m = m;
+    this->q = q;
+
+
+    if(m==DBL_MAX){
+        this->vertical = true;
+        this->a=1;
+        this->c=-q;
+        this->b=0;
+    }
+    else{
+        if(m==0){
+            this->horizontal = true;
         }
+        this->a = -m;
+        this->b = 1;
+        this->c = -q;
     }
 
-    Line(double m, double q){
-        this->m = m;
-        this->q = q;
+}
 
-
-        if(m==DBL_MAX){
-            this->vertical = true;
-            this->a=1;
-            this->c=-q;
-            this->b=0;
-        }
-        else{
-            if(m==0){
-                this->horizontal = true;
-            }
-            this->a = -m;
-            this->b = 1;
-            this->c = -q;
-        }
-
-    }
-
-    Line find_parallel(double distance){
-        
-        double c_new;
-        if(this->vertical){
-            c_new = this->c + distance;
-            return Line(this->a, this->b, c_new);
-        }
-
-        c_new = this->c - ((sqrt(pow(this->a,2) + pow(this->b,2)))*distance);
+Line Line::find_parallel(double distance){
+    
+    double c_new;
+    if(this->vertical){
+        c_new = this->c + distance;
         return Line(this->a, this->b, c_new);
-
     }
 
-    Line find_perpendicular(Point p){
+    c_new = this->c - ((sqrt(pow(this->a,2) + pow(this->b,2)))*distance);
+    return Line(this->a, this->b, c_new);
 
-        if(this->vertical){
-            return Line(0, p.y());
-        }
+}
 
-        if(this->horizontal){
-            return Line(1, 0, -p.x());
-        }
-        
-        double mp = -1/(this->m);
-        //double qp = Line::get_q_from_point(p,mp);
+Line Line::find_perpendicular(Point p){
 
-        return get_line_from_m_and_p(p,mp);
+    if(this->vertical){
+        return Line(0, p.y());
     }
 
+    if(this->horizontal){
+        return Line(1, 0, -p.x());
+    }
+    
+    double mp = -1/(this->m);
+    //double qp = Line::get_q_from_point(p,mp);
 
-    static Line get_line_from_points(Point p1, Point p2){
-        double m,q;
-        if(p1.x() == p2.x()){
-            m = DBL_MAX;
-            q = p1.y();
-            return Line(m, q);
-        }
+    return get_line_from_m_and_p(p,mp);
+}
 
-        m = compute_m(p1, p2);
 
-        //q = get_q_from_point(p1, m);
-        return get_line_from_m_and_p(p1,m);
+static Line::Line get_line_from_points(Point p1, Point p2){
+    double m,q;
+    if(p1.x() == p2.x()){
+        m = DBL_MAX;
+        q = p1.y();
+        return Line(m, q);
     }
 
-    static Line get_line_from_m_and_p(Point p, double m){
-        if(m==DBL_MAX){
-            return Line(1, 0, -p.x());
-        }
-        if(m==0){
-            return Line(0, 1, -p.y());
-        }
+    m = compute_m(p1, p2);
 
-        double q = p.y() - m*p.x();
-        return Line(m,q);
+    //q = get_q_from_point(p1, m);
+    return get_line_from_m_and_p(p1,m);
+}
+
+static Line::Line get_line_from_m_and_p(Point p, double m){
+    if(m==DBL_MAX){
+        return Line(1, 0, -p.x());
+    }
+    if(m==0){
+        return Line(0, 1, -p.y());
     }
 
+    double q = p.y() - m*p.x();
+    return Line(m,q);
+}
 
-    static double get_q_from_point(Point p, double m){
-        if(m==DBL_MAX){
-            return p.x();
-        }
-        if(m==0){
-            return p.y();
-        }
 
-        return p.y() - m*p.x();
-
+static double Line::get_q_from_point(Point p, double m){
+    if(m==DBL_MAX){
+        return p.x();
+    }
+    if(m==0){
+        return p.y();
     }
 
-    static double compute_m(Point p0, Point p1){
-        double x1 = p1.x();
-        double x0 = p0.x();
+    return p.y() - m*p.x();
 
-        if ((x1-x0) != 0)
-        {
-            double y1,y0;
-            y1 = p1.y();
-            y0 = p0.y();
-            //cout<<"y0: "<<y0<<endl;
-            //cout<<"y1: "<<y1<<endl;
-            return (y1-y0) / (x1-x0);
-        }
-        return DBL_MAX;
+}
+
+static double Line::compute_m(Point p0, Point p1){
+    double x1 = p1.x();
+    double x0 = p0.x();
+
+    if ((x1-x0) != 0)
+    {
+        double y1,y0;
+        y1 = p1.y();
+        y0 = p0.y();
+        //cout<<"y0: "<<y0<<endl;
+        //cout<<"y1: "<<y1<<endl;
+        return (y1-y0) / (x1-x0);
     }
+    return DBL_MAX;
+}
 
-};
 
 ostream & operator << (ostream &out, Line l){
     out<<l.a<<"x+"<<l.b<<"y+"<<l.c<<"=0"<<endl;

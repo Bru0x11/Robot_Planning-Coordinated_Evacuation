@@ -7,7 +7,6 @@
 #include <cfloat>
 #include "include/dubins.h"
 #include "math.h"
-#pragma once
 #include <fstream>
 
 using namespace VisiLibity;
