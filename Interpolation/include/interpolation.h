@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <cfloat>
-#include "dubins.h"
+#include "src/dubins.h"
 #include "math.h"
 
 #include <fstream>

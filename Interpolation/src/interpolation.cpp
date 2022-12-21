@@ -1,8 +1,6 @@
-#include "src/visilibity.hpp"
 #include <vector>
 #include <iostream>
 #include <cfloat>
-#include "src/dubins.h"
 #include "math.h"
 
 #include <fstream>
