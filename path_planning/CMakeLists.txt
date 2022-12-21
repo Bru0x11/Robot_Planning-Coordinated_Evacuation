@@ -27,8 +27,8 @@ include_directories(
 
 add_executable(path_planning_node 
                   src/path_planning.cpp
-                  #../Interpolation/src/interpolation.cpp
-
+                  src/interpolation.cpp
+                  src/visilibity.cpp
                   )
 ament_target_dependencies(path_planning_node rclcpp nav_msgs nav2_msgs tf2 tf2_ros rclcpp_action std_srvs rclcpp_components )
 
