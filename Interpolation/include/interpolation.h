@@ -48,6 +48,8 @@ class Line{
     static double get_q_from_point(Point p, double m);
         
     static double compute_m(Point p0, Point p1);
+    static Line::get_line_from_m_and_p(Point p, double m);
+
         
 };
 
