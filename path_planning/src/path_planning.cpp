@@ -36,7 +36,7 @@ using namespace std::chrono_literals;
 #include <string.h>
 
 #include "include/interpolation.h"
-#include "dubins.h"
+#include "include/dubins.h"
 #include "src/visilibity.hpp"
 
 
