@@ -442,7 +442,7 @@ Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit
 }
 
 Environment get_environment(std::vector<Point>& map, std::vector<std::vector<Point>>& list_of_polygons){
-    std::cout << map;
+    
 }
 
 Environment get_environment1(){
