@@ -11,13 +11,9 @@ using namespace std::chrono_literals;
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <string.h>
-#include "dubins.h"
-
-
-#include "visilibity.hpp"
+#include "include/dubins.h"
 
 using namespace std;
-
 
 //Implementation of function sinc(t), returning 1 for t==0, and sin(t)/t
 //otherwise

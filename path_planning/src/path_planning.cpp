@@ -39,7 +39,6 @@ using namespace std::chrono_literals;
 #include "include/dubins.h"
 #include "src/visilibity.hpp"
 
-
 using namespace std;
 using namespace VisiLibity;
 
