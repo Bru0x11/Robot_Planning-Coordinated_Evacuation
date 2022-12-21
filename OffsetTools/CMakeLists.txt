@@ -14,15 +14,12 @@ find_package(rclcpp REQUIRED)
 
 include_directories(
     include
+    ../VisiLibity1
 )
 
 add_executable(offset_node
  src/offsetFunctions.cpp
 )
-
-FIND_LIBRARY(visilibity VisiLibity1 ../VisiLibity1)
-
-target_link_libraries(offset_node ${visilibity})
 
 
 install(TARGETS
