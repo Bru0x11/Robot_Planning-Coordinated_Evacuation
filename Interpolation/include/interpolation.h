@@ -1,3 +1,6 @@
+#ifndef INTERPOLATION_H
+#define INTERPOLATION_H
+
 #include "src/visilibity.hpp"
 #include <vector>
 #include <iostream>
