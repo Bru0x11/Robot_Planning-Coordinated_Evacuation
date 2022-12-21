@@ -22,6 +22,7 @@ find_package(std_srvs REQUIRED)
 include_directories(
     include
     ../VisiLibity1
+    ../Interpolation
 )
 
 add_executable(path_planning_node 
