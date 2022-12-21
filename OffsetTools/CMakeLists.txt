@@ -33,7 +33,7 @@ if(BUILD_TESTING)
 endif()
 
 
-install(TARGET
+install(TARGETS
   offset_node
   DESTINATION lib/${PROJECT_NAME}
 )

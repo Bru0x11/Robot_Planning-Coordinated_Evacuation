@@ -1,4 +1,4 @@
-#include "include/offsetFunctions.h"
+#include "offsetFunctions.h"
 
 auto createPolygon(const std::vector<VisiLibity::Point>& points){
   PathsD polygon;
