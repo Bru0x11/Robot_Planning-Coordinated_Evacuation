@@ -80,3 +80,5 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR);
 Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR);
 
 Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR);
+
+#endif
