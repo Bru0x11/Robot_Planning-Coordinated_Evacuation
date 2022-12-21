@@ -43,12 +43,12 @@ class Line{
         
     Line find_perpendicular(Point p);
 
-    static Line get_line_from_points(Point p1, Point p2);
+    Line get_line_from_points(Point p1, Point p2);
         
-    static double get_q_from_point(Point p, double m);
+    double get_q_from_point(Point p, double m);
         
-    static double compute_m(Point p0, Point p1);
-    static Line get_line_from_m_and_p(Point p, double m);
+    double compute_m(Point p0, Point p1);
+    Line get_line_from_m_and_p(Point p, double m);
 
         
 };
