@@ -35,6 +35,7 @@ using namespace std::chrono_literals;
 #include <math.h>
 #include <string.h>
 #include "../VisiLibity1/src/visilibity.hpp"
+#include "interpolation.h"
 
 using namespace std;
 using namespace VisiLibity;
