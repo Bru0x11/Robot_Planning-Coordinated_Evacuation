@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cfloat>
 #include "math.h"
+#include "interpolation.h"
 
 #include <fstream>
 
