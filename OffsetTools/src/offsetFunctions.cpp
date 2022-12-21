@@ -67,7 +67,6 @@ int main(){
   mapPoints.push_back(VisiLibity::Point(30.0, 30.0));
   mapPoints.push_back(VisiLibity::Point(30.0, 0.0));
 
-
   std::vector<VisiLibity::Point> trianglePoints {};
   trianglePoints.push_back(VisiLibity::Point(2.0, 20.0));
   trianglePoints.push_back(VisiLibity::Point(5.0, 28.0));
@@ -93,19 +92,17 @@ int main(){
   PathsD square2 {createPolygon(squarePoints2)};
   PathsD map {offsetPolygon(createPolygon(mapPoints), 1.0, true)};
 
-
-  //Starting point at (5.0, 3.0)
-  //Ending point at (26.0, 26.0)
-
+  std::vector<VisiLibity::Point> translatedMap {translatePolygon(map)};
+  std::cout << translatedMap;
 
   FillRule fr = FillRule::EvenOdd;
   SvgWriter svg;
-
+  /*
   svg.AddPaths(triangle, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
   svg.AddPaths(square1, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
   svg.AddPaths(square2, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
   svg.AddPaths(map, false, fr, 0x10FF66FF, 0xFF0066FF, 1, false); 
 
   svg.SaveToFile("sample_map.svg", 800, 600, 0);
-  System("sample_map.svg");
+  System("sample_map.svg");*/
 }
