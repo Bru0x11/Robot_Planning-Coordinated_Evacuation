@@ -68,7 +68,9 @@ double compute_angle(Point a, Point b);
  
 Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit, double minR);
 
-Environment get_environment();
+Environment get_environment1();
+
+Environment get_environment2();
 
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR);
 
