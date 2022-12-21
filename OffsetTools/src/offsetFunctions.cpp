@@ -93,7 +93,7 @@ int main(){
   PathsD map {offsetPolygon(createPolygon(mapPoints), 1.0, true)};
 
   std::vector<VisiLibity::Point> translatedMap {translatePolygon(map)};
-  std::cout << translatedMap;
+  std::cout << "Ciao!";
 
   FillRule fr = FillRule::EvenOdd;
   SvgWriter svg;
