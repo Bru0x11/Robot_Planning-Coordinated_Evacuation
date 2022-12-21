@@ -15,18 +15,18 @@ find_package(rclcpp REQUIRED)
 include_directories(
     include
     ../VisiLibity1
-    include/CPP/src/
-    include/CPP/Utils/
+#    include/CPP/src/
+#    include/CPP/Utils/
 )
 
 add_executable(offset_node
  src/offsetFunctions.cpp
- clipper.engine.cpp 
- clipper.offset.cpp 
- clipper.rectclip.cpp
- ClipFileLoad.cpp
- ClipFileSave.cpp
- clipper.svg.cpp
+include/CPP/Clipper2Lib/src/clipper.engine.cpp 
+include/CPP/Clipper2Lib/src/clipper.offset.cpp 
+include/CPP/Clipper2Lib/src/clipper.rectclip.cpp
+include/CPP/Utils/ClipFileLoad.cpp
+include/CPP/Utils/ClipFileSave.cpp
+include/CPP/Utils/clipper.svg.cpp
 )
 
 
@@ -36,3 +36,4 @@ install(TARGETS
 )
 
 ament_package()
+
