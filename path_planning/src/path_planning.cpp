@@ -34,7 +34,11 @@ using namespace std::chrono_literals;
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <string.h>
-#include "../VisiLibity1/src/visilibity.hpp"
+#include "src/visilibity.hpp"
+#include "src/visilibity.hpp"
+#include "src/interpolation.h"
+#include "dubins.h"
+
 
 using namespace std;
 using namespace VisiLibity;
