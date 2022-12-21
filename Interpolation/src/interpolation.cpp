@@ -1,4 +1,4 @@
-#include "VisiLibity1/src/visilibity.hpp"
+#include "visilibity.hpp"
 #include <vector>
 #include <iostream>
 #include <cfloat>

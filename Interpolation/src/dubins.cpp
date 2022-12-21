@@ -2,35 +2,8 @@
 #include <functional>
 #include <memory>
 #include <string>
-
-
-
-
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "nav_msgs/msg/path.hpp"
-
-#include "geometry_msgs/msg/point.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
-#include "geometry_msgs/msg/quaternion.hpp"
-#include "geometry_msgs/msg/pose.hpp"
-
-#include "tf2/exceptions.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2_ros/buffer.h"
-
-#include "nav2_msgs/action/follow_path.hpp"
-
-#include "std_srvs/srv/set_bool.hpp"
-
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "rclcpp_components/register_node_macro.hpp"
-
-
+#include <vector>
 using namespace std::chrono_literals;
-
-
-
 
 #include <iostream>
 #include <cstdlib>
@@ -38,41 +11,13 @@ using namespace std::chrono_literals;
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <string.h>
+#include "dubins.h"
+
+
+#include "visilibity.hpp"
 
 using namespace std;
 
-// Create a structure representing an arc of a Dubins curve (straight or
-// circular)
-struct Arc{
-    double x0;
-    double y0;
-    double th0;
-    double k;
-    double L;
-    double xf;
-    double yf;
-    double thf;
-};
-
-
-//Create a structure representing a Dubins curve (composed by three arcs)
-struct Curve{
-    //three arcs
-    Arc a1;
-    Arc a2;
-    Arc a3;
-    double L;
-
-};
-
-
-
-//TODO: change name pos
-struct Pos{
-    double x;
-    double y;
-    double th;
-};
 
 //Implementation of function sinc(t), returning 1 for t==0, and sin(t)/t
 //otherwise
@@ -179,13 +124,6 @@ double* scaleFromStandard(double lambda, double sc_s1, double sc_s2, double sc_s
   scaled[2] = s3;
   return scaled;
 }
-
-struct Solution{
-    bool ok;
-    double sc_s1;
-    double sc_s2; 
-    double sc_s3;
-};
 
 //LSL
 Solution LSL(double sc_th0, double sc_thf, double sc_Kmax){
@@ -373,45 +311,10 @@ Curve dubinscurve(double x0, double y0, double th0, double s1, double s2, double
         return c;
 }
 
-void printCurve(Curve c){
 
-  cout<<"c.L: "<< c.L<<endl;
-
-  cout<<"a1 "<<endl;
-  cout<<"L: "<<c.a1.L<<endl;
-  cout<<"x0: "<<c.a1.x0<<endl;
-  cout<<"y0: "<<c.a1.y0<<endl;
-  cout<<"xf: "<<c.a1.xf<<endl;
-  cout<<"yf: "<<c.a1.yf<<endl;
-  cout<<endl;
-
-
-  cout<<"a2 "<<endl;
-  cout<<"L: "<<c.a2.L<<endl;
-  cout<<"x0: "<<c.a2.x0<<endl;
-  cout<<"Y0: "<<c.a2.y0<<endl;
-  cout<<"xf: "<<c.a2.xf<<endl;
-  cout<<"yf: "<<c.a2.yf<<endl;
-  cout<<endl;
-
-  cout<<"a3 "<<endl;
-  cout<<"L: "<<c.a3.L<<endl;
-  cout<<"x0: "<<c.a3.x0<<endl;
-  cout<<"y0: "<<c.a3.y0<<endl;
-  cout<<"xf: "<<c.a3.xf<<endl;
-  cout<<"yf: "<<c.a3.yf<<endl;
-  cout<<endl;
-
-}
-
-
-struct Type_curve_sol{
-    int pidx;
-    Curve curve;
-};
 //Solve the Dubins problem for the given input parameters.
 //Return the type and the parameters of the optimal curve
-Type_curve_sol dubins_shortest_path(double x0, double y0, double th0, double xf, double yf, double thf, double Kmax){
+Curve dubins_shortest_path(double x0, double y0, double th0, double xf, double yf, double thf, double Kmax){
   //Compute params of standard scaled problem
   double* standard;
   standard = scaleToStandard(x0, y0, th0, xf, yf, thf, Kmax);
@@ -473,8 +376,6 @@ Type_curve_sol dubins_shortest_path(double x0, double y0, double th0, double xf,
 
   
    }
-  
-  //cout<<"HERE2"<<endl<<sc_s1<<endl<<sc_s2<<endl<<sc_s3<<endl<<pidx<<endl;
 
   Curve curve;
   if (pidx >= 0) {
@@ -499,10 +400,57 @@ Type_curve_sol dubins_shortest_path(double x0, double y0, double th0, double xf,
     //assert(check(sc_s1, ksigns(pidx,1)*sc_Kmax, sc_s2, ksigns(pidx,2)*sc_Kmax, sc_s3, ksigns(pidx,3)*sc_Kmax, sc_th0, sc_thf));
   }
 
-  Type_curve_sol type_curve;
-  type_curve.pidx = pidx;
-  type_curve.curve = curve;
+  Curve dubins_curve = curve;
 
-  return type_curve;
+  return dubins_curve;
 
+}
+
+vector<Curve> multipoint_dubins(VisiLibity::Polyline points, double Kmax){
+
+  
+  VisiLibity::Point start_point = points[0];
+  
+  double x0 = start_point.x();
+  double y0 = start_point.y();
+  double th0 = 0; //INITIAL ANGLE
+
+  double xf;
+  double yf;
+  double thf;
+
+  double x_next;
+  double y_next;
+
+  double m;
+
+  vector<Curve> dubins_curves;
+
+  int points_size = points.size();
+
+  for(int i = 1; i < points_size; i++){
+    xf = points[i].x();
+    yf = points[i].y();
+    
+    if(i != (points.size() - 1)){
+      x_next = points[i+1].x();
+      y_next = points[i+1].y();
+      m = (y_next - yf)/(x_next - xf);
+      thf = atan(m);
+    }
+    else{
+      thf = 0; //FINAL ANGLE
+    }
+
+    struct Curve c = dubins_shortest_path(x0, y0, th0, xf, yf, thf, Kmax);
+
+    dubins_curves.push_back(c);
+
+    x0 = xf;
+    y0 = yf;
+    th0 = thf;
+
+  }
+
+  return dubins_curves;
 }

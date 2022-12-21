@@ -5,7 +5,7 @@
 #include "CPP/Utils/clipper.svg.h"
 #include "CPP/Utils/clipper.svg.utils.h"
 
-#include "../VisiLibity1/src/visilibity.hpp"
+#include "visilibity.hpp"
 
 #include <vector>
 #include <string>
