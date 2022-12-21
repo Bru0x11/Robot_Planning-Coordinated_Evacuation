@@ -98,6 +98,18 @@ Line Line::find_perpendicular(Point p){
     return Line::get_line_from_m_and_p(p,mp);
 }
 
+static Line Line::get_line_from_m_and_p(Point p, double m){
+    if(m==DBL_MAX){
+        return Line(1, 0, -p.x());
+    }
+    if(m==0){
+        return Line(0, 1, -p.y());
+    }
+
+    double q = p.y() - m*p.x();
+    return Line(m,q);
+}
+
 
 static Line Line::get_line_from_points(Point p1, Point p2){
     double m,q;
@@ -113,17 +125,7 @@ static Line Line::get_line_from_points(Point p1, Point p2){
     return get_line_from_m_and_p(p1,m);
 }
 
-static Line Line::get_line_from_m_and_p(Point p, double m){
-    if(m==DBL_MAX){
-        return Line(1, 0, -p.x());
-    }
-    if(m==0){
-        return Line(0, 1, -p.y());
-    }
 
-    double q = p.y() - m*p.x();
-    return Line(m,q);
-}
 
 
 static double Line::get_q_from_point(Point p, double m){
