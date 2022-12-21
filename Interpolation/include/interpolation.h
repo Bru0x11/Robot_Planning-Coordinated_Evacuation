@@ -43,7 +43,7 @@ class Line{
         
     Line find_perpendicular(Point p);
 
-    Line get_line_from_points(Point p1, Point p2);
+    static Line get_line_from_points(Point p1, Point p2);
         
     static double get_q_from_point(Point p, double m);
         
