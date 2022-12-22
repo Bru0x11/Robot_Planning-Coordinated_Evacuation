@@ -621,7 +621,6 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         else if(i==shortest_path.size()-3){
             Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
             Point p2 = shortest_path[i];
-            
 
             Polyline line = get_points_line(p1, p2);
             
