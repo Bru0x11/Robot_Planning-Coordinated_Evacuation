@@ -613,21 +613,21 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     for(int i=1; i<shortest_path.size()-2;i++){
         if(i==1){
             Point p1 = shortest_path[1];
-            Point p2 = arc_vect[0].x0;
+            Point p2 = Point(arc_vect[0].x0, arc_vect[0].y0);
 
             Polyline line = get_points_line(p1, p2);
             points_final_path.append(line);
         }
         else if(i==shortest_path.size()-3){
-            Point p1 = arc_vect[i-2].xf;
+            Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
             Point p2 = shortest_path[i];
 
             Polyline line = get_points_line(p1, p2);
             points_final_path.append(line);            
         }
         else{
-            Point p1 = arc_vect[i-2].xf;
-            Point p2 = arc_vect[i-1].x0;
+            Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
+            Point p2 = Point(arc_vect[i-1].x0, arc_vect[i-1].y0);
             Polyline line = get_points_line(p1, p2);
             points_final_path.append(line);            
         }
