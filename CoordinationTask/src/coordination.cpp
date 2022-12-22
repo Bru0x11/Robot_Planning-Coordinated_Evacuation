@@ -1,13 +1,5 @@
 #include "coordination.h"
 
-std::vector<int> getOrder(){
-
-    std::vector<int> order {};
-
-    return order;
-}
-
-
 std::vector<RobotInitialization> coordination(Visilibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3){
 
     std::vector<RobotInitialization> robotOrder {}; //final result
