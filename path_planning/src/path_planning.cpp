@@ -63,7 +63,7 @@ class MinimalPublisher : public rclcpp::Node
       tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
       tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
       std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "map";
+      std::string toFrameRel = "gazebo/base_link";
       geometry_msgs::msg::TransformStamped t;
 
       try {
@@ -106,9 +106,6 @@ class MinimalPublisher : public rclcpp::Node
       cout << shortest_path << endl;
 
       Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
-
-
-
 
       std::vector<geometry_msgs::msg::PoseStamped> poses_temp;
 
