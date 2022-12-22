@@ -93,14 +93,11 @@ class MinimalPublisher : public rclcpp::Node
       double x0 = t.transform.translation.x;
       double y0 = t.transform.translation.y;
 
-      Point start_test = Point(0, 0);
+      Point start_test = Point(3, 1);
       Point end = Point(4.0, 17.0);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
       double thf = M_PI/2;
-
-
-      
 
       //FIND SHORTES PATH
       Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);
