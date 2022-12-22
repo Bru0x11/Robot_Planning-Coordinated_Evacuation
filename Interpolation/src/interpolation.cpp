@@ -572,7 +572,7 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     Polyline points_first_trait = get_points_from_curve(first_trait, 300);
 
     //DO INTERPOLATION
-    Vector<Arc> arc_vect;
+    vector<Arc> arc_vect;
     for (int i = 1; i < shortest_path.size()-3; i=i+1)
     {
         Point a = shortest_path[i];
