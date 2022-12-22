@@ -572,6 +572,7 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     Polyline points_first_trait = get_points_from_curve(first_trait, 300);
 
     //DO INTERPOLATION
+    Vector<Arc> arc_vect;
     for (int i = 1; i < shortest_path.size()-3; i=i+1)
     {
         Point a = shortest_path[i];
@@ -594,18 +595,44 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         double angle_exit = compute_angle(b,c);
     
         Arc arc = get_arc(entrance, exit, angle_entrance, angle_exit, minR);
+
+        arc_vect.append(arc);
         
-        Polyline arc_points = get_points_from_arc(arc, 100);
+        //Polyline arc_points = get_points_from_arc(arc, 100);
 
         //points_final_path.append(points_first);
-        points_final_path.append(arc_points); 
+        //points_final_path.append(arc_points); 
         //points_final_path.append(points_second);
     }
 
     Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
     Polyline points_last_trait = get_points_from_curve(last_trait, 300);
-    
+
     points_final_path.append(points_first_trait);
+
+    for(int i=1; i<shortest_path.size()-2;i++){
+        if(i==1){
+            Point p1 = shortest_path[1];
+            Point p2 = arc_vect[0].x0;
+
+            Polyline line = get_points_line(p1, p2);
+            points_final_path.append(line);
+        }
+        else if(i==shortest_path.size()-3){
+            Point p1 = arc[i-2].xf;
+            Point p2 = shortest_path[i];
+
+            Polyline line = get_points_line(p1, p2);
+            points_final_path.append(line);            
+        }
+        else{
+            Point p1 = arc_vect[i-2].xf;
+            Point p2 = arc_vect[i-1].x0;
+            Polyline line = get_points_line(p1, p2);
+            points_final_path.append(line);            
+        }
+    }
+
     points_final_path.append(points_last_trait);
 
     return points_final_path;
