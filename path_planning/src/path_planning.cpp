@@ -55,7 +55,6 @@ class MinimalPublisher : public rclcpp::Node
     {
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
-
       //Tranform the frame
       std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "gazebo/base_link");
       std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
@@ -83,7 +82,6 @@ class MinimalPublisher : public rclcpp::Node
       path.header.stamp = this->get_clock()->now();
       path.header.frame_id = "gazebo/base_link";
 
-
       Environment env = get_environment1();
 
       //ROAD MAP
@@ -92,11 +90,17 @@ class MinimalPublisher : public rclcpp::Node
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
       double minR = 1.5;
       //DEFINE START AND END POINTS
-      Point start_test = Point(3.0, 1.0);
+      double x0 = t.transform.translation.x;
+      double y0 = t.transform.translation.y;
+
+      Point start_test = Point(x0, y0);
       Point end = Point(4.0, 17.0);
       //DEFINE START AND END ANGLES 
-      double th0 = 0;
+      double th0 = t.transform.rotation.z;
       double thf = M_PI/2;
+
+
+      
 
       //FIND SHORTES PATH
       Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);

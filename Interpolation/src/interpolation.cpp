@@ -582,11 +582,11 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         Point exit = find_exit(a, b, c, minR);
 
         //FOR PLOTTING
-        Polyline points_first = get_points_line(a, entrance);
+        //Polyline points_first = get_points_line(a, entrance);
 
         cout<<"add path from "<<a<<" to "<<entrance<<endl; 
 
-        Polyline points_second = get_points_line(exit, c);
+        //Polyline points_second = get_points_line(exit, c);
 
         cout<<"add path from "<<exit<<" to "<<c<<endl; 
 
@@ -597,9 +597,9 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         
         Polyline arc_points = get_points_from_arc(arc, 100);
 
-        points_final_path.append(points_first);
+        //points_final_path.append(points_first);
         points_final_path.append(arc_points); 
-        points_final_path.append(points_second);
+        //points_final_path.append(points_second);
     }
 
     Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
