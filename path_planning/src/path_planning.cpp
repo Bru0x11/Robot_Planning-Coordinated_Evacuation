@@ -63,7 +63,7 @@ class MinimalPublisher : public rclcpp::Node
       tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
       tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
       std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "gazebo/base_link";
+      std::string toFrameRel = "gazebo/base_link"; //map
       geometry_msgs::msg::TransformStamped t;
 
       try {
@@ -81,7 +81,7 @@ class MinimalPublisher : public rclcpp::Node
 
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
-      path.header.frame_id = "map";
+      path.header.frame_id = "gazebo/base_link";
 
 
       Environment env = get_environment1();
@@ -92,8 +92,8 @@ class MinimalPublisher : public rclcpp::Node
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
       double minR = 1.5;
       //DEFINE START AND END POINTS
-      Point start_test = Point(0.0, 0.0);
-      Point end = Point(4.0, 5.0);
+      Point start_test = Point(3.0, 1.0);
+      Point end = Point(4.0, 17.0);
       //DEFINE START AND END ANGLES 
       double th0 = 0;
       double thf = M_PI/2;
