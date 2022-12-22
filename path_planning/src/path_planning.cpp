@@ -92,8 +92,8 @@ class MinimalPublisher : public rclcpp::Node
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
       double minR = 1.5;
       //DEFINE START AND END POINTS
-      Point start_test = Point(3.0, 1.0);
-      Point end = Point(4.0, 17.0);
+      Point start_test = Point(0.0, 0.0);
+      Point end = Point(4.0, 5.0);
       //DEFINE START AND END ANGLES 
       double th0 = 0;
       double thf = M_PI/2;
