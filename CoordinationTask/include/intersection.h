@@ -2,6 +2,7 @@
 #define INTERSECTION_H
 
 #include "src/visilibity.hpp"
+#include <vector>
 
 struct Intersection{
     VisiLibity::Point point {};
