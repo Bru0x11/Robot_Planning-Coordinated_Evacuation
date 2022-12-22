@@ -454,7 +454,8 @@ Environment get_environment1(){
     //    MyFile<<point.x()<<","<<point.y()<<endl;
     //}
 
-    Polygon obs2 = Polygon(points_obs2);
+    Polygon obs2;
+    obs2.set_vertices(points_obs2);
 
     vector<Point> points_env;
     points_env.push_back(Point(0.0, 0.0));
