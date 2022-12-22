@@ -596,7 +596,7 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     
         Arc arc = get_arc(entrance, exit, angle_entrance, angle_exit, minR);
 
-        arc_vect.append(arc);
+        arc_vect.push_back(arc);
         
         //Polyline arc_points = get_points_from_arc(arc, 100);
 
