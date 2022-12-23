@@ -109,7 +109,7 @@ class MinimalPublisher : public rclcpp::Node
       cout << "env: "<<endl;
       cout<<env<<endl;
 
-      cout << "graph: "<<graph<<endl;
+      cout << "graph: "<<endl<<graph<<endl;
       sleep(5000); 
 
       
