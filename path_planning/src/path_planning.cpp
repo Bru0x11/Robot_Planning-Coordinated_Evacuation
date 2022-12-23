@@ -106,7 +106,10 @@ class MinimalPublisher : public rclcpp::Node
       cout << "Shortest_path: " << endl;
       cout << shortest_path << endl;
 
+      cout << "env: "<<endl;
       cout<<env<<endl;
+
+      cout << "graph: "<<graph<<endl;
       sleep(5000); 
 
       
