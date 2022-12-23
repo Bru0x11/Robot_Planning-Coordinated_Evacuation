@@ -105,7 +105,11 @@ class MinimalPublisher : public rclcpp::Node
       cout << "Enviroment is valid: " << env.is_valid() << endl;
       cout << "Shortest_path: " << endl;
       cout << shortest_path << endl;
+
+      cout<<env<<endl;
       sleep(5000); 
+
+      
 
       Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
 
