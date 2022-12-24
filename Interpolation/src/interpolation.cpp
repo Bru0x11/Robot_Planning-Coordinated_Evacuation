@@ -434,8 +434,8 @@ Environment get_environment(std::vector<Point>& map, std::vector<std::vector<Poi
 Environment get_environment1(){
     vector<Point> points_obs1;
     points_obs1.push_back(Point(1.0, 2.0));
+    points_obs1.push_back(Point(1.0, 7.0));
     points_obs1.push_back(Point(6.0, 7.0));
-    points_obs1.push_back(Point(6.0, 2.0));
     // for (Point point : points_obs1){
     //     cout<<"obs1"<<endl;
     //     cout<<point.x()<<","<<point.y()<<endl;
@@ -470,7 +470,7 @@ Environment get_environment1(){
 
     Environment poly_env = Environment(points_env);
 
-    //poly_env.add_hole(obs1);
+    poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
 
     cout<<"boundary length "<<poly_env.boundary_length()<<endl;
