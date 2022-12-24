@@ -432,47 +432,47 @@ Environment get_environment(std::vector<Point>& map, std::vector<std::vector<Poi
 }
 
 Environment get_environment1(){
-    vector<Point> points_obs1;
-    points_obs1.push_back(Point(1.0, 2.0));
-    points_obs1.push_back(Point(1.0, 7.0));
-    points_obs1.push_back(Point(6.0, 7.0));
-    points_obs1.push_back(Point(2.0, 6.0));
-    // for (Point point : points_obs1){
-    //     cout<<"obs1"<<endl;
-    //     cout<<point.x()<<","<<point.y()<<endl;
-    // }
+    // vector<Point> points_obs1;
+    // points_obs1.push_back(Point(1.0, 2.0));
+    // points_obs1.push_back(Point(1.0, 7.0));
+    // points_obs1.push_back(Point(6.0, 7.0));
+    // points_obs1.push_back(Point(2.0, 6.0));
+    // // for (Point point : points_obs1){
+    // //     cout<<"obs1"<<endl;
+    // //     cout<<point.x()<<","<<point.y()<<endl;
+    // // }
 
-    Polygon obs1 = Polygon(points_obs1);
+    // Polygon obs1 = Polygon(points_obs1);
 
-    vector<Point> points_obs2;
+    // vector<Point> points_obs2;
 
-    points_obs2.push_back(Point(2.0, 9.0));
-    points_obs2.push_back(Point(2.0, 14.0));
-    points_obs2.push_back(Point(8.0, 14.0));
-    points_obs2.push_back(Point(8.0, 9.0));
+    // points_obs2.push_back(Point(2.0, 9.0));
+    // points_obs2.push_back(Point(2.0, 14.0));
+    // points_obs2.push_back(Point(8.0, 14.0));
+    // points_obs2.push_back(Point(8.0, 9.0));
 
 
-    // for (Point point : points_obs2){
-    //     cout<<"obs2: "<<endl;
-    //     cout<<point.x()<<","<<point.y()<<endl;
-    // }
+    // // for (Point point : points_obs2){
+    // //     cout<<"obs2: "<<endl;
+    // //     cout<<point.x()<<","<<point.y()<<endl;
+    // // }
 
-    Polygon obs2 = Polygon(points_obs2);
+    // Polygon obs2 = Polygon(points_obs2);
 
-    vector<Point> points_env;
-    points_env.push_back(Point(0.0, 0.0));
-    points_env.push_back(Point(20.0, 0.0));
-    points_env.push_back(Point(20.0, 20.0));
-    points_env.push_back(Point(0.0, 20.0));
+    // vector<Point> points_env;
+    // points_env.push_back(Point(0.0, 0.0));
+    // points_env.push_back(Point(20.0, 0.0));
+    // points_env.push_back(Point(20.0, 20.0));
+    // points_env.push_back(Point(0.0, 20.0));
 
-    //for (Point point : points_env){
-    //    MyFile<<point.x()<<" "<<point.y()<<endl;
-    //}
+    // //for (Point point : points_env){
+    // //    MyFile<<point.x()<<" "<<point.y()<<endl;
+    // //}
 
-    Environment poly_env = Environment(points_env);
+    // Environment poly_env = Environment(points_env);
 
-    poly_env.add_hole(obs1);
-    poly_env.add_hole(obs2);
+    // poly_env.add_hole(obs1);
+    // poly_env.add_hole(obs2);
 
     //cout<<"boundary length "<<poly_env.boundary_length()<<endl;
 
@@ -482,8 +482,9 @@ Environment get_environment1(){
     // obstacles.push_back(poly_env);
     // obstacles.push_back(obs1);
     // obstacles.push_back(obs2);
+    Environment env = Environment("example1.environment");
 
-    return poly_env;
+    return env;
 }
 
 Environment get_environment2(){
