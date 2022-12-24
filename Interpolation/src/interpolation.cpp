@@ -470,7 +470,7 @@ Environment get_environment1(){
 
     Environment poly_env = Environment(points_env);
 
-    poly_env.add_hole(obs1);
+    //poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
 
     cout<<"boundary length "<<poly_env.boundary_length()<<endl;
