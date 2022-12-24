@@ -482,7 +482,7 @@ Environment get_environment1(){
     // obstacles.push_back(poly_env);
     // obstacles.push_back(obs1);
     // obstacles.push_back(obs2);
-    Environment env = Environment("example1.environment");
+    Environment env = Environment("/root/ros2_ws/src/Interpolation/src/example1.environment");
 
     return env;
 }
