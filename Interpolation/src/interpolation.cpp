@@ -468,7 +468,7 @@ Environment get_environment1(){
     //    MyFile<<point.x()<<" "<<point.y()<<endl;
     //}
 
-    Polygon poly_env = Polygon(points_env);
+    Environment poly_env = Environment(points_env);
 
     poly_env.add_hole(obs1);
     poly_env.add_holde(obs2);
