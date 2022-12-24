@@ -444,7 +444,7 @@ Environment get_environment1(){
     Polygon obs1 = Polygon(points_obs1);
 
     vector<Point> points_obs2;
-    
+
     points_obs2.push_back(Point(2.0, 9.0));
     points_obs2.push_back(Point(2.0, 14.0));
     points_obs2.push_back(Point(8.0, 14.0));
@@ -456,8 +456,7 @@ Environment get_environment1(){
     //     cout<<point.x()<<","<<point.y()<<endl;
     // }
 
-    Polygon obs2;
-    obs2.set_vertices(points_obs2);
+    Polygon obs2 = Polygon(points_obs2);
 
     vector<Point> points_env;
     points_env.push_back(Point(0.0, 0.0));
