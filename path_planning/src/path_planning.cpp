@@ -109,8 +109,10 @@ class MinimalPublisher : public rclcpp::Node
       cout << "env: "<<endl;
       cout<<env<<endl;
 
-      cout << "graph: "<<endl<<graph<<endl;
+      //cout << "graph: "<<endl<<graph<<endl;
       //sleep(5000); 
+
+      cout<<"faccio interpolation"<<endl;
 
       Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
 
