@@ -112,8 +112,6 @@ class MinimalPublisher : public rclcpp::Node
       cout << "graph: "<<endl<<graph<<endl;
       //sleep(5000); 
 
-      
-
       Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
 
       std::vector<geometry_msgs::msg::PoseStamped> poses_temp;
