@@ -470,14 +470,17 @@ Environment get_environment1(){
 
     Polygon poly_env = Polygon(points_env);
 
+    poly_env.add_hole(obs1);
+    poly_env.add_holde(obs2);
+
     // cout<<obs2.area();
 
-    vector<Polygon> obstacles;
-    obstacles.push_back(poly_env);
-    obstacles.push_back(obs1);
-    obstacles.push_back(obs2);
+    // vector<Polygon> obstacles;
+    // obstacles.push_back(poly_env);
+    // obstacles.push_back(obs1);
+    // obstacles.push_back(obs2);
 
-    return Environment(obstacles);
+    return poly_env;
 }
 
 Environment get_environment2(){
