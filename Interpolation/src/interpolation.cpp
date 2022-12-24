@@ -436,6 +436,7 @@ Environment get_environment1(){
     points_obs1.push_back(Point(1.0, 2.0));
     points_obs1.push_back(Point(1.0, 7.0));
     points_obs1.push_back(Point(6.0, 7.0));
+    points_obs1.push_back(Point(2.0, 6.0))
     // for (Point point : points_obs1){
     //     cout<<"obs1"<<endl;
     //     cout<<point.x()<<","<<point.y()<<endl;
