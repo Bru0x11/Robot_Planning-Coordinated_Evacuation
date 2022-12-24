@@ -444,11 +444,12 @@ Environment get_environment1(){
     Polygon obs1 = Polygon(points_obs1);
 
     vector<Point> points_obs2;
-
+    
+    points_obs2.push_back(Point(2.0, 9.0));
     points_obs2.push_back(Point(2.0, 14.0));
     points_obs2.push_back(Point(8.0, 14.0));
     points_obs2.push_back(Point(8.0, 9.0));
-    points_obs2.push_back(Point(2.0, 9.0));
+
 
     // for (Point point : points_obs2){
     //     cout<<"obs2: "<<endl;
