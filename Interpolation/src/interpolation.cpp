@@ -473,7 +473,7 @@ Environment get_environment1(){
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
 
-    cout<<"boundary length "<<boundary_length()<<endl;
+    cout<<"boundary length "<<poly_env.boundary_length()<<endl;
 
     // cout<<obs2.area();
 
