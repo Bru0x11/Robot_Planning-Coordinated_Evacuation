@@ -1,11 +1,13 @@
 #ifndef INTERPOLATION_H
 #define INTERPOLATION_H
 
-#include "src/visilibity.hpp"
+//#include "src/visilibity.hpp"
+#include "../../VisiLibity1/src/visilibity.hpp"
 #include <vector>
 #include <iostream>
 #include <cfloat>
-#include "include/dubins.h"
+#include "dubins.h"
+//#include "include/dubins.h"
 #include "math.h"
 #include <fstream>
 
