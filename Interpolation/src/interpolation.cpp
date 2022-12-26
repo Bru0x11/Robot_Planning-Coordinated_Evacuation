@@ -22,9 +22,6 @@ double Vector::norm(){
         return n;
     }
 
-
-
-
 //friend ostream & operator << (ostream &out, Line l);
 
 Line::Line(double a, double b, double c){

@@ -9,8 +9,10 @@ using namespace std;
 int main(){
     string filename = "example1.environment";
 
-    // Line l = Line(1,0,0);
-    cout<<"angle: "<<compute_angle(Point(0,0), Point(-5,-5))<<endl;
+    Line l = Line(1,1,0);
+    cout<<"m: "<<l.m<<endl;
+    //cout<<"angle: "<<compute_angle(Point(0,0), Point(-1,5))<<endl;
+    //cout<<"angle: "<<compute_angle(Point(0,0), Point(-5,5))<<endl;
 
     sleep(5);
 
