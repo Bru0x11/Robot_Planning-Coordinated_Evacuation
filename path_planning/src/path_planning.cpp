@@ -62,7 +62,7 @@ class MinimalPublisher : public rclcpp::Node
       tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
       tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
       std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "shelfino1/map"; //map
+      std::string toFrameRel = "map"; //map
       geometry_msgs::msg::TransformStamped t;
 
       try {
@@ -184,7 +184,7 @@ class MinimalPublisher : public rclcpp::Node
       //ACTION 
       // using FollowPath = nav2_msgs::action::FollowPath;
       // rclcpp_action::Client<FollowPath>::SharedPtr client_ptr;
-      // client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
+      // client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino1/follow_path");
       // if (!client_ptr->wait_for_action_server()) {
       //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
       //   rclcpp::shutdown();
@@ -194,6 +194,7 @@ class MinimalPublisher : public rclcpp::Node
       // goal_msg.controller_id = "FollowPath";
       // RCLCPP_INFO(this->get_logger(), "Sending goal");
       // client_ptr->async_send_goal(goal_msg);
+
       publisher_->publish(path);
       
     }
