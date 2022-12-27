@@ -6,8 +6,9 @@
 #include <memory>
 #include <string>
 using namespace std::chrono_literals;
-//#include "src/visilibity.hpp"
-#include "../../VisiLibity1/src/visilibity.hpp"
+
+#include "src/visilibity.hpp"
+//#include "../../VisiLibity1/src/visilibity.hpp"
 
 #include <iostream>
 #include <cstdlib>

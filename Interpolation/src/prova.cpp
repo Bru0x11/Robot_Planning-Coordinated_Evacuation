@@ -29,8 +29,8 @@ int main(){
     //double x0 = 0;
     //double y0 = 0;
 
-    Point start_test = Point(5, 2);
-    Point end = Point(12.0, 14.0);
+    Point start_test = Point(2, 6);
+    Point end = Point(13.0, 5.0);
     //DEFINE START AND END ANGLES 
     double th0 = 0;
     double thf = M_PI/2;

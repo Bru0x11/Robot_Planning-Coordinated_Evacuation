@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cfloat>
 #include "math.h"
-//#include "include/interpolation.h"
 
-#include "../include/interpolation.h"
+#include "include/interpolation.h"
+// #include "../include/interpolation.h"
 
 #include <fstream>
 
@@ -586,6 +586,12 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
 
     cout<<"i did first trait"<<endl;
     //DO INTERPOLATION
+
+    // if(shortest_path.size()==3){
+    //     Polyline points_line = get_points_line(shortest_path[1], shortest_path[2]);
+    //     points_final_path.append(points_line);
+    // }
+
     vector<Arc> arc_vect;
     for (int i = 1; i < shortest_path.size()-3; i=i+1)
     {
@@ -630,30 +636,45 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     points_final_path.append(points_first_trait);
 
     for(int i=1; i<shortest_path.size()-2;i++){
-        if(i==1){
-            Point p1 = shortest_path[1];
-            Point p2 = Point(arc_vect[0].x0, arc_vect[0].y0);
 
+        if (shortest_path.size() == 4){ 
+            Point p1 = shortest_path[1];
+            Point p2 = shortest_path[2];
             Polyline line = get_points_line(p1, p2);
             points_final_path.append(line);
         }
-        else if(i==shortest_path.size()-3){
-            Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
-            Point p2 = shortest_path[i+1];
-
-            Polyline line = get_points_line(p1, p2);
-            Polyline arc_points = get_points_from_arc(arc_vect[i-2], 100);
-            points_final_path.append(arc_points);
-            points_final_path.append(line);            
-        }
+        
         else{
-            Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
-            Point p2 = Point(arc_vect[i-1].x0, arc_vect[i-1].y0);
+            if(i==1){
+            
+                
+                Point p1 = shortest_path[1];
+                Point p2 = Point(arc_vect[0].x0, arc_vect[0].y0);
 
-            Polyline arc_points = get_points_from_arc(arc_vect[i-2], 100);
-            Polyline line = get_points_line(p1, p2);
-            points_final_path.append(arc_points);
-            points_final_path.append(line);        
+                Polyline line = get_points_line(p1, p2);
+                points_final_path.append(line);
+        
+            }
+            
+            else if(i==shortest_path.size()-3){
+                Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
+                Point p2 = shortest_path[i+1];
+
+                Polyline line = get_points_line(p1, p2);
+                Polyline arc_points = get_points_from_arc(arc_vect[i-2], 100);
+                points_final_path.append(arc_points);
+                points_final_path.append(line);            
+            }
+
+            else{
+                Point p1 = Point(arc_vect[i-2].xf, arc_vect[i-2].yf);
+                Point p2 = Point(arc_vect[i-1].x0, arc_vect[i-1].y0);
+
+                Polyline arc_points = get_points_from_arc(arc_vect[i-2], 100);
+                Polyline line = get_points_line(p1, p2);
+                points_final_path.append(arc_points);
+                points_final_path.append(line);        
+            }
         }
     }
 
