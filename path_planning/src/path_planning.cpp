@@ -53,7 +53,7 @@ class MinimalPublisher : public rclcpp::Node
     MinimalPublisher()
     : Node("barba_node")
     {
-      publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
+      publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 20);
 
       //Tranform the frame
       std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino2/base_link");
