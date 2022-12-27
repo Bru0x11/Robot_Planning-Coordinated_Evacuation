@@ -56,13 +56,13 @@ class MinimalPublisher : public rclcpp::Node
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
       //Tranform the frame
-      std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino2/base_link");
+      std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino1/base_link");
       std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
       std::unique_ptr<tf2_ros::Buffer> tf_buffer;
       tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
       tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
       std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "shelfino2/map"; //map
+      std::string toFrameRel = "shelfino1/map"; //map
       geometry_msgs::msg::TransformStamped t;
 
       try {
@@ -184,7 +184,7 @@ class MinimalPublisher : public rclcpp::Node
       //ACTION 
       // using FollowPath = nav2_msgs::action::FollowPath;
       // rclcpp_action::Client<FollowPath>::SharedPtr client_ptr;
-      // client_ptr = rclcpp_action::create_client<FollowPath>(this,"follow_path");
+      // client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
       // if (!client_ptr->wait_for_action_server()) {
       //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
       //   rclcpp::shutdown();
