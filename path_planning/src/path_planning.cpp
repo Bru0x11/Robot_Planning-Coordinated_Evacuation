@@ -142,7 +142,7 @@ class MinimalPublisher : public rclcpp::Node
 
           pose_stamped_temp.pose = pose_temp;
           pose_stamped_temp.header.stamp = this->get_clock()->now();
-          pose_stamped_temp.header.frame_id = "map";
+          pose_stamped_temp.header.frame_id = "gazebo/base_link";
 
           poses_temp.push_back(pose_stamped_temp);
       }
