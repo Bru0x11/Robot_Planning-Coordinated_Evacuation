@@ -94,7 +94,7 @@ class MinimalPublisher : public rclcpp::Node
       double y0 = t.transform.translation.y;
 
       Point start_test = Point(2, 6);
-      Point end = Point(8.0, 3.0);
+      Point end = Point(16.0, 13.0);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
       double thf = M_PI/2;
