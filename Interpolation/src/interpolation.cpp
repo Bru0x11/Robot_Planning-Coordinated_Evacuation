@@ -653,7 +653,7 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
                 Point p2 = Point(arc.x0, arc.y0);
 
                 Polyline line_points = get_points_line(p1, p2);
-                Polyline arc_points = get_points_from_arc(arc);
+                Polyline arc_points = get_points_from_arc(arc, 100);
                 points_final_path.append(line_points);
             }
             
