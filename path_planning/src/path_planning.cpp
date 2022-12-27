@@ -88,13 +88,13 @@ class MinimalPublisher : public rclcpp::Node
       Visibility_Graph graph = Visibility_Graph(env, 0);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
-      double minR = 1.5;
+      double minR = 1;
       //DEFINE START AND END POINTS
       double x0 = t.transform.translation.x;
       double y0 = t.transform.translation.y;
 
-      Point start_test = Point(2, 6);
-      Point end = Point(16.0, 13.0);
+      Point start_test = Point(15, 5);
+      Point end = Point(7, 13);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
       double thf = M_PI/2;
