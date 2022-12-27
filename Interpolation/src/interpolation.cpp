@@ -436,59 +436,47 @@ Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit
 //}
 
 Environment get_environment1(){
-    // vector<Point> points_obs1;
-    // points_obs1.push_back(Point(1.0, 2.0));
-    // points_obs1.push_back(Point(1.0, 7.0));
-    // points_obs1.push_back(Point(6.0, 7.0));
-    // points_obs1.push_back(Point(2.0, 6.0));
-    // // for (Point point : points_obs1){
-    // //     cout<<"obs1"<<endl;
-    // //     cout<<point.x()<<","<<point.y()<<endl;
-    // // }
 
-    // Polygon obs1 = Polygon(points_obs1);
+    vector<Point> points_obs1;
+    points_obs1.push_back(Point(4,4));
+    points_obs1.push_back(Point(4, 8));
+    points_obs1.push_back(Point(11, 8));
+    points_obs1.push_back(Point(11, 4));
+    Polygon obs1 = Polygon(points_obs1);
 
-    // vector<Point> points_obs2;
+    vector<Point> points_obs2;
+    points_obs2.push_back(Point(8, 10));
+    points_obs2.push_back(Point(7, 12));
+    points_obs2.push_back(Point(14, 12));
+    points_obs2.push_back(Point(14, 10));
+    Polygon obs2 = Polygon(points_obs2);
 
-    // points_obs2.push_back(Point(2.0, 9.0));
-    // points_obs2.push_back(Point(2.0, 14.0));
-    // points_obs2.push_back(Point(8.0, 14.0));
-    // points_obs2.push_back(Point(8.0, 9.0));
+    vector<Point> points_obs3;
+    points_obs3.push_back(Point(13, 6));
+    points_obs3.push_back(Point(13, 8));
+    points_obs3.push_back(Point(16, 8));
+    points_obs3.push_back(Point(16, 6));
+    Polygon obs3 = Polygon(points_obs3);
 
+    vector<Point> points_env;
+    points_env.push_back(Point(-20.0, -20.0));
+    points_env.push_back(Point(20.0, -20.0));
+    points_env.push_back(Point(20.0, 20.0));
+    points_env.push_back(Point(-20.0, 20.0));
 
-    // // for (Point point : points_obs2){
-    // //     cout<<"obs2: "<<endl;
-    // //     cout<<point.x()<<","<<point.y()<<endl;
-    // // }
+    Environment poly_env = Environment(points_env);
 
-    // Polygon obs2 = Polygon(points_obs2);
-
-    // vector<Point> points_env;
-    // points_env.push_back(Point(0.0, 0.0));
-    // points_env.push_back(Point(20.0, 0.0));
-    // points_env.push_back(Point(20.0, 20.0));
-    // points_env.push_back(Point(0.0, 20.0));
-
-    // //for (Point point : points_env){
-    // //    MyFile<<point.x()<<" "<<point.y()<<endl;
-    // //}
-
-    // Environment poly_env = Environment(points_env);
-
-    // poly_env.add_hole(obs1);
-    // poly_env.add_hole(obs2);
-
-    //cout<<"boundary length "<<poly_env.boundary_length()<<endl;
-
-    // cout<<obs2.area();
+    poly_env.add_hole(obs1);
+    poly_env.add_hole(obs2);
+    poly_env.add_hole(obs3);
 
     // vector<Polygon> obstacles;
     // obstacles.push_back(poly_env);
     // obstacles.push_back(obs1);
     // obstacles.push_back(obs2);
-    Environment env = Environment("/root/ros2_ws/src/Interpolation/src/example1.environment");
+    // obstacles.push_back(obs3);
 
-    return env;
+    return poly_env;
 }
 
 Environment get_environment2(){

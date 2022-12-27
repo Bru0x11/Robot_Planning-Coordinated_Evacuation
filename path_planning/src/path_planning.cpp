@@ -82,9 +82,8 @@ class MinimalPublisher : public rclcpp::Node
       path.header.stamp = this->get_clock()->now();
       path.header.frame_id = "gazebo/base_link";
 
-      string filename = "example1.environment";
 
-      Environment env = Environment(filename);
+      Environment env = get_environment1();
 
       //ROAD MAP
       Visibility_Graph graph = Visibility_Graph(env, 0);
