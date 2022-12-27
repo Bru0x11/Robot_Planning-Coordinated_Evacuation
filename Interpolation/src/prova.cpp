@@ -29,8 +29,8 @@ int main(){
     //double x0 = 0;
     //double y0 = 0;
 
-    Point start_test = Point(2, 6);
-    Point end = Point(8.0, 3.0);
+    Point start_test = Point(0, 0);
+    Point end = Point(13.0, 13.0);
     //DEFINE START AND END ANGLES 
     double th0 = 0;
     double thf = M_PI/2;
@@ -46,7 +46,7 @@ int main(){
     cout<<env<<endl;
 
     //cout << "graph: "<<endl<<graph<<endl;
-    //sleep(5); 
+    sleep(5); 
 
     cout<<"do interpolation"<<endl;
 
