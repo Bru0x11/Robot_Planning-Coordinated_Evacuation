@@ -102,7 +102,7 @@ class MinimalPublisher : public rclcpp::Node
       double thf = M_PI/2;
 
       //FIND SHORTES PATH
-      Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.0);
+      Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.1);
 
       cout << "Enviroment is valid: " << env.is_valid() << endl;
       cout << "Shortest_path: " << endl;
