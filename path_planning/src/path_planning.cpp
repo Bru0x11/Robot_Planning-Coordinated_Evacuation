@@ -53,7 +53,7 @@ class MinimalPublisher : public rclcpp::Node
     MinimalPublisher()
     : Node("barba_node")
     {
-      publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 20);
+      publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
       //Tranform the frame
       std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino2/base_link");
@@ -66,7 +66,7 @@ class MinimalPublisher : public rclcpp::Node
       geometry_msgs::msg::TransformStamped t;
 
       try {
-        t = tf_buffer->lookupTransform(toFrameRel, fromFrameRel, tf2::TimePointZero, 15s);
+        t = tf_buffer->lookupTransform(toFrameRel, fromFrameRel, tf2::TimePointZero, 30s);
       } 
       catch (const tf2::TransformException & ex) {
         RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
