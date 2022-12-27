@@ -4,7 +4,7 @@
 #include "math.h"
 
 #include "include/interpolation.h"
-// #include "../include/interpolation.h"
+//#include "../include/interpolation.h"
 
 #include <fstream>
 
@@ -635,19 +635,17 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
 
     points_final_path.append(points_first_trait);
 
-    for(int i=1; i<shortest_path.size()-2;i++){
-
-        if (shortest_path.size() == 4){ 
-            Point p1 = shortest_path[1];
-            Point p2 = shortest_path[2];
-            Polyline line = get_points_line(p1, p2);
-            points_final_path.append(line);
+    if (shortest_path.size() == 4){ 
+        Point p1 = shortest_path[1];
+        Point p2 = shortest_path[2];
+        Polyline line = get_points_line(p1, p2);
+        points_final_path.append(line);
         }
-        
-        else{
+
+    else{
+        for(int i=1; i<shortest_path.size()-2;i++){
             if(i==1){
             
-                
                 Point p1 = shortest_path[1];
                 Point p2 = Point(arc_vect[0].x0, arc_vect[0].y0);
 
@@ -675,6 +673,7 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
                 points_final_path.append(arc_points);
                 points_final_path.append(line);        
             }
+            
         }
     }
 
