@@ -98,7 +98,6 @@ class MinimalPublisher : public rclcpp::Node
       Point end = Point(13, 13);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
-      th0 = 0;
       double thf = M_PI/2;
 
       //FIND SHORTES PATH
