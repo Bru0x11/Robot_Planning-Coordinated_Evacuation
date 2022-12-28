@@ -480,51 +480,49 @@ Environment get_environment1(){
 }
 
 Environment get_environment2(){
+
     vector<Point> points_obs1;
-    points_obs1.push_back(Point(1.0, 2.0));
-    points_obs1.push_back(Point(9.0, 7.0));
-    points_obs1.push_back(Point(9.0, 2.0));
-
-
-    //for (Point point : points_obs1){
-    //   MyFile<<point.x()<<","<<point.y()<<endl;
-    //}
-
+    points_obs1.push_back(Point(-3,1));
+    points_obs1.push_back(Point(-3, 2));
+    points_obs1.push_back(Point(-2, 2));
+    points_obs1.push_back(Point(-2, 1));
     Polygon obs1 = Polygon(points_obs1);
 
     vector<Point> points_obs2;
-    points_obs2.push_back(Point(2.0, 9.0));
-    points_obs2.push_back(Point(2.0, 14.0));
-    points_obs2.push_back(Point(8.0, 14.0));
-    points_obs2.push_back(Point(8.0, 9.0));
-
-    //for (Point point : points_obs2){
-    //    MyFile<<point.x()<<","<<point.y()<<endl;
-    //}
-
+    points_obs2.push_back(Point(-5, 4));
+    points_obs2.push_back(Point(-5, 5));
+    points_obs2.push_back(Point(1, 5));
+    points_obs2.push_back(Point(1, 4));
     Polygon obs2 = Polygon(points_obs2);
 
+    // vector<Point> points_obs3;
+    // points_obs3.push_back(Point(13, 6));
+    // points_obs3.push_back(Point(13, 8));
+    // points_obs3.push_back(Point(16, 8));
+    // points_obs3.push_back(Point(16, 6));
+    // Polygon obs3 = Polygon(points_obs3);
+
     vector<Point> points_env;
-    points_env.push_back(Point(0.0, 0.0));
-    points_env.push_back(Point(20.0, 0.0));
+    points_env.push_back(Point(-20.0, -20.0));
+    points_env.push_back(Point(20.0, -20.0));
     points_env.push_back(Point(20.0, 20.0));
-    points_env.push_back(Point(0.0, 20.0));
+    points_env.push_back(Point(-20.0, 20.0));
 
-    //for (Point point : points_env){
-    //    MyFile<<point.x()<<" "<<point.y()<<endl;
-    //}
+    Environment poly_env = Environment(points_env);
 
-    Polygon poly_env = Polygon(points_env);
+    poly_env.add_hole(obs1);
+    poly_env.add_hole(obs2);
+    // poly_env.add_hole(obs3);
 
-    // cout<<obs2.area();
+    // vector<Polygon> obstacles;
+    // obstacles.push_back(poly_env);
+    // obstacles.push_back(obs1);
+    // obstacles.push_back(obs2);
+    // obstacles.push_back(obs3);
 
-    vector<Polygon> obstacles;
-    obstacles.push_back(poly_env);
-    obstacles.push_back(obs1);
-    obstacles.push_back(obs2);
-
-    return Environment(obstacles);
+    return poly_env;
 }
+
 
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
 
