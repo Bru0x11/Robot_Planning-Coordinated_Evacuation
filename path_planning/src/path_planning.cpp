@@ -59,13 +59,13 @@ class MinimalPublisher : public rclcpp::Node
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
       //Tranform the frame
-      std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino1/base_link");
+      std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino2/base_link");
       std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
       std::unique_ptr<tf2_ros::Buffer> tf_buffer;
       tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
       tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
       std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "shelfino1/map"; //map
+      std::string toFrameRel = "map"; //map
       geometry_msgs::msg::TransformStamped t;
 
       try {
@@ -84,7 +84,7 @@ class MinimalPublisher : public rclcpp::Node
 
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
-      path.header.frame_id = "shelfino1/map";
+      path.header.frame_id = "map";
 
 
       Environment env = get_environment1();
