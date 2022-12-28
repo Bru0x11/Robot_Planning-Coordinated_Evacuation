@@ -69,6 +69,7 @@ class MinimalPublisher : public rclcpp::Node
       geometry_msgs::msg::TransformStamped t;
 
       try {
+        rclcpp::Time now = this->get_clock()->now();
         t = tf_buffer->lookupTransform(toFrameRel, fromFrameRel, tf2::TimePointZero, 30s);
       } 
       catch (const tf2::TransformException & ex) {
@@ -83,7 +84,7 @@ class MinimalPublisher : public rclcpp::Node
 
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
-      path.header.frame_id = "map";
+      path.header.frame_id = "shelfino1/map";
 
 
       Environment env = get_environment1();
