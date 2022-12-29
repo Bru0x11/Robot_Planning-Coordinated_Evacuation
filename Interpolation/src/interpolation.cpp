@@ -625,9 +625,9 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         Point p2 = shortest_path[2];
         Polyline line = get_points_line(p1, p2);
         points_final_path.append(line);
-        }
+    }
 
-    else{
+    else if (shortest_path.size() != 3){
         for(int i=1; i<shortest_path.size()-2;i++){
             if(i==1){
             
