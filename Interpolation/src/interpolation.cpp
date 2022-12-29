@@ -531,8 +531,7 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
     Point p0 = shortest_path[1];
     Point p1 = shortest_path[2];
     //Find final angle of first trait
-    double m = Line::compute_m(p0,p1);
-    double th1 = atan(m);
+    double th1 = compute_angle(p0, p1);
 
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
@@ -547,12 +546,11 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
 
     //BUILD DUBINS LAST TRAIT
     //last 3 vertex (need them to build dubins last trait)
-    Point pn_1 = shortest_path[shortest_path.size() -3];
-    Point pn = shortest_path[shortest_path.size() -2];
-    Point goal = shortest_path[shortest_path.size() -1];
+    Point pn_1 = shortest_path[shortest_path.size()-3];
+    Point pn = shortest_path[shortest_path.size()-2];
+    Point goal = shortest_path[shortest_path.size()-1];
 
-    double m_final_segment = Line::compute_m(pn_1, pn);
-    double th_n = atan(m_final_segment);
+    double th_n = compute_angle(pn_1, pn)
 
     double Kmax = 1/minR;
 
