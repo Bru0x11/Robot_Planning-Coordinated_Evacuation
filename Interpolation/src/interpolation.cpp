@@ -550,7 +550,7 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
     Point pn = shortest_path[shortest_path.size()-2];
     Point goal = shortest_path[shortest_path.size()-1];
 
-    double th_n = compute_angle(pn_1, pn)
+    double th_n = compute_angle(pn_1, pn);
 
     double Kmax = 1/minR;
 
