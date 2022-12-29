@@ -482,17 +482,23 @@ Environment get_environment1(){
 Environment get_environment2(){
 
     vector<Point> points_obs1;
-    points_obs1.push_back(Point(-3, 2));
-    points_obs1.push_back(Point(-3, 3));
-    points_obs1.push_back(Point(-2, 3));
-    points_obs1.push_back(Point(-2, 2));
+    points_obs1.push_back(Point(2, 2));
+    points_obs1.push_back(Point(2, 3));
+    points_obs1.push_back(Point(3, 3));
+    points_obs1.push_back(Point(3, 2));
+    
+    
+
     Polygon obs1 = Polygon(points_obs1);
 
     vector<Point> points_obs2;
-    points_obs2.push_back(Point(-5, 4));
-    points_obs2.push_back(Point(-5, 5));
-    points_obs2.push_back(Point(1, 5));
-    points_obs2.push_back(Point(1, 4));
+    points_obs2.push_back(Point(-1, 4));
+    points_obs2.push_back(Point(-1, 5));
+    points_obs2.push_back(Point(5, 5));
+    points_obs2.push_back(Point(5, 4));
+    
+    
+    
     Polygon obs2 = Polygon(points_obs2);
 
     // vector<Point> points_obs3;
