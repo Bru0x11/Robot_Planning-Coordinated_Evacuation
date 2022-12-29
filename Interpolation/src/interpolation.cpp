@@ -617,7 +617,6 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
 
     Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
     Polyline points_last_trait = get_points_from_curve(last_trait, 300);
-
     points_final_path.append(points_first_trait);
 
     if (shortest_path.size() == 4){ 
