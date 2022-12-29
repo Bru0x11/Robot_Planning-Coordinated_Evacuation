@@ -533,6 +533,10 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
     //Find final angle of first trait
     double th1 = compute_angle(p0, p1);
 
+    cout<<"ANGLE: "<<th1<<endl;
+    cout<<"I'm doing the opposite"<<endl;
+    th1 = -th1;
+
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
 
