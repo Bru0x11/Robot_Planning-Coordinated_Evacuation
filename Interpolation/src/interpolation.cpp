@@ -482,7 +482,7 @@ Environment get_environment1(){
 Environment get_environment2(){
 
     vector<Point> points_obs1;
-    points_obs1.push_back(Point(-3,2));
+    points_obs1.push_back(Point(-3, 2));
     points_obs1.push_back(Point(-3, 3));
     points_obs1.push_back(Point(-2, 3));
     points_obs1.push_back(Point(-2, 2));

@@ -90,7 +90,7 @@ class MinimalPublisher : public rclcpp::Node
       Environment env = get_environment2();
 
       //ROAD MAP
-      Visibility_Graph graph = Visibility_Graph(env, 0);
+      Visibility_Graph graph = Visibility_Graph(env, 0.1);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
       double minR = 1;
@@ -107,7 +107,7 @@ class MinimalPublisher : public rclcpp::Node
       //FIND SHORTES PATH
       Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.1);
 
-      cout << "Enviroment is valid: " << env.is_valid() << endl;
+      cout << "Enviroment is valid: " << env.is_valid(0.1) << endl;
       cout << "Shortest_path: " << endl;
       cout << shortest_path << endl;
 
