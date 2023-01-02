@@ -3,8 +3,8 @@
 #include <cfloat>
 #include "math.h"
 
-#include "include/interpolation.h"
-//#include "../include/interpolation.h"
+//#include "include/interpolation.h"
+#include "../include/interpolation.h"
 
 #include <fstream>
 
@@ -186,18 +186,25 @@ double find_distance(Point p0, Point p1, Point p2, double minR)
     m1 = Line::compute_m(p0,p1);
     m2 = Line::compute_m(p1,p2);
 
-    cout<<"m1: "<<m1<<" m2: "<<m2<<endl;
+    //cout<<"m1: "<<m1<<" m2: "<<m2<<endl;
 
     //double tan_angle = (m1 - m2) / (1 + (m1 * m2));
-    double angle = M_PI - abs(atan(m1) -  atan(m2));
+    double angle = abs(atan(m1) -  atan(m2));
+    //M_PI - 
+
+    //cout<<"DA TOGLIERE "<<endl;
+    //angle = M_PI - angle;
+
 
     if (angle>M_PI){
-        cout<<"IM HEEEEEEEEEEEREEEEE";
+        //cout<<"IM HEEEEEEEEEEEREEEEE";
         angle = 2*M_PI - angle;
     }
+
+    //cout<<"angle after: "<<angle<<endl;
     //double angle = atan(tan_angle);
 
-    cout<<"angle between 2 lines: "<<angle<<endl;
+    //cout<<"angle between 2 lines: "<<angle<<endl;
 
     double distance = minR * (1 / tan(angle / 2));
 
@@ -293,19 +300,25 @@ Polyline get_points_from_arc(Arc a, int npts){
     Point point;
     Pos pose;
 
+    //Curve c = dubins_shortest_path(a.x0, a.y0, a.th0, a.xf, a.yf, a.thf, a.k);
+
+
+
     for (int j=0; j<npts; j++){
 
-        double s = a.L/npts * j;
+          double s = a.L/npts * j;
 
-        pose = circline(s, a.x0, a.y0, a.th0, a.k);
+          pose = circline(s, a.x0, a.y0, a.th0, a.k);
 
-        point.set_x(pose.x);
-        point.set_y(pose.y);
+          point.set_x(pose.x);
+          point.set_y(pose.y);
 
-        points.push_back(point);
-    }
+          points.push_back(point);
+     }
 
     return points; 
+
+    //return get_points_from_curve(c, 100);
 }
 
 Polyline get_points_from_curve(Curve c, int npts){
@@ -336,8 +349,8 @@ Polyline get_points_line(Point p0, Point p1){
     Line l = Line::get_line_from_points(p0, p1);
 
     
-    cout<<"costruisco segment da punto "<<p0<<endl;
-    cout<<"a punto "<<p1<<endl;
+    //cout<<"costruisco segment da punto "<<p0<<endl;
+    //cout<<"a punto "<<p1<<endl;
 
     //cout<<"m: "<<m<<endl;
     //cout<<"q: "<<q<<endl;
@@ -371,8 +384,6 @@ Polyline get_points_line(Point p0, Point p1){
             Point p = Point(temp_x, temp_y);
 
             points.push_back(p);
-
-            break;
         }
     }
 
@@ -400,6 +411,14 @@ double compute_arc_length(Point a, Point b, double minR){
     double points_distance = sqrt(pow(b.x() - a.x(),2) + pow(b.y() - a.y(),2));
     //cout<<"COMPUTE ARC LENGHT of points: "<<a<<" and "<<b<<endl;
     //cout<<"points distance: "<<points_distance<<endl;
+
+    //double central_angle = 2 * atan((points_distance)/(2 * minR));
+    //central_angle = 2*M_PI - central_angle;
+
+    // if(central_angle>M_PI){
+    //     central_angle = central_angle-M_PI
+    // }
+
     double central_angle = acos(1 - (pow(points_distance,2)/(2*pow(minR, 2))));
     //cout<<"central angle: "<<central_angle<<endl;
     double L = minR * central_angle;
@@ -410,7 +429,18 @@ double compute_arc_length(Point a, Point b, double minR){
 
 double compute_angle(Point a, Point b){
     double m = Line::compute_m(a, b);
-    return atan(m);
+    double angle = atan(m);
+    if(b.x() < a.x()){
+        
+        angle = angle + M_PI;
+
+    }
+    else if(b.x() == a.x()){
+        if(b.y()<a.y()){
+            angle = angle - M_PI;
+        }
+    }
+    return angle;
 }
 
 Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit, double minR){
@@ -426,7 +456,7 @@ Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit
     arc.k = 1/minR;
     arc.L = compute_arc_length(entrance, exit, minR);
 
-    //cout<<"L arc: "<<arc.L<<endl;
+    cout<<"L arc: "<<arc.L<<endl;
     return arc;
 
 }
@@ -529,6 +559,61 @@ Environment get_environment2(){
     return poly_env;
 }
 
+Environment get_environment3(){
+
+    vector<Point> points_obs1;
+
+    points_obs1.push_back(Point(-1, -7));
+    points_obs1.push_back(Point(-1, -4));
+    points_obs1.push_back(Point(5, -4));
+    points_obs1.push_back(Point(5, -7));    
+    
+    
+
+    Polygon obs1 = Polygon(points_obs1);
+
+    vector<Point> points_obs2;
+    
+
+
+    points_obs2.push_back(Point(2, -2));
+    points_obs2.push_back(Point(2, -1));
+    points_obs2.push_back(Point(4, -1));
+    points_obs2.push_back(Point(4, -2));
+    
+    
+    
+    
+    Polygon obs2 = Polygon(points_obs2);
+
+    vector<Point> points_obs3;
+    points_obs3.push_back(Point(-2, 2));
+    points_obs3.push_back(Point(-2, 3));
+    points_obs3.push_back(Point(1, 3));
+    points_obs3.push_back(Point(1, 2));
+    Polygon obs3 = Polygon(points_obs3);
+
+    vector<Point> points_env;
+    points_env.push_back(Point(-20.0, -20.0));
+    points_env.push_back(Point(20.0, -20.0));
+    points_env.push_back(Point(20.0, 20.0));
+    points_env.push_back(Point(-20.0, 20.0));
+
+    Environment poly_env = Environment(points_env);
+
+    poly_env.add_hole(obs1);
+    poly_env.add_hole(obs2);
+    poly_env.add_hole(obs3);
+
+    // vector<Polygon> obstacles;
+    // obstacles.push_back(poly_env);
+    // obstacles.push_back(obs1);
+    // obstacles.push_back(obs2);
+    // obstacles.push_back(obs3);
+
+    return poly_env;
+}
+
 
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
 
@@ -539,10 +624,10 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
     //Find final angle of first trait
     double th1 = compute_angle(p0, p1);
 
-    cout<<"ANGLE BEFORE: "<<th1<<endl;
-    cout<<"I'm doing the opposite"<<endl;
-    th1 = th1 + M_PI;
-    cout<<"ANGLE AFTER: "<<th1<<endl;
+    // cout<<"ANGLE BEFORE: "<<th1<<endl;
+    // cout<<"I'm doing the opposite"<<endl;
+    
+    // cout<<"ANGLE AFTER: "<<th1<<endl;
 
     double Kmax = 1/minR;
     Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, p0.x(), p0.y(), th1, Kmax);
@@ -551,9 +636,7 @@ Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
 }
 
 
-//TO DO: TH0
 Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
-
 
     //BUILD DUBINS LAST TRAIT
     //last 3 vertex (need them to build dubins last trait)
@@ -561,13 +644,9 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
     Point pn = shortest_path[shortest_path.size()-2];
     Point goal = shortest_path[shortest_path.size()-1];
     double th_n;
-    if(shortest_path.size()==3){
-        th_n = compute_angle(pn, goal);
-    }
-    else{
-        th_n = compute_angle(pn_1, pn);
-    }
 
+    th_n = compute_angle(pn_1, pn);
+        
     double Kmax = 1/minR;
 
     Curve last_trait = dubins_shortest_path(pn.x(), pn.y(), th_n, goal.x(), goal.y(), thf, Kmax);
@@ -575,32 +654,16 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
     return last_trait;
 }
 
-
-Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR){
-
-    Polyline points_final_path;
-
-    //BUILD DUBINS FIRST TRAIT
-    Curve first_trait = get_first_trait_dubins(shortest_path, th0, minR);
-    Polyline points_first_trait = get_points_from_curve(first_trait, 300);
-
-    //cout<<"i did first trait"<<endl;
-    //DO INTERPOLATION
-
-    // if(shortest_path.size()==3){
-    //     Polyline points_line = get_points_line(shortest_path[1], shortest_path[2]);
-    //     points_final_path.append(points_line);
-    // }
-    vector<Line> lines_vect;
+vector<Arc> get_arcs_interpolation(Polyline shortest_path, double minR){
     vector<Arc> arc_vect;
 
-    for (int i = 1; i < shortest_path.size()-3; i=i+1)
+    for (int i = 1; i < shortest_path.size()-3; i++)
     {
         Point a = shortest_path[i];
         Point b = shortest_path[i+1];
         Point c = shortest_path[i+2];
 
-        double distance = find_distance(a,b,c,minR);
+        double distance = find_distance(a,b,c, minR);
 
         Point entrance = find_entrance(a, b, distance);
         Point exit = find_exit(b, c, distance);
@@ -608,82 +671,110 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
         cout<<"Entrance: "<<entrance<<endl;
         cout<<"Exit: "<<exit<<endl;
 
-        //FOR PLOTTING
-        //Polyline points_first = get_points_line(a, entrance);
-
-        //cout<<"add path from "<<a<<" to "<<entrance<<endl; 
-
-        //Polyline points_second = get_points_line(exit, c);
-
-        //cout<<"add path from "<<exit<<" to "<<c<<endl; 
-
         double angle_entrance = compute_angle(a,b);
         double angle_exit = compute_angle(b,c);
+
+        cout<<"Angle Entrance: "<<angle_entrance<<endl;
+        cout<<"Angle Exit: "<<angle_exit<<endl;        
     
         Arc arc = get_arc(entrance, exit, angle_entrance, angle_exit, minR);
-
         arc_vect.push_back(arc);
+    }
+    return arc_vect;
+}
+
+Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR){
+    Polyline points_final_path;
+    double kmax = 1/minR;
+
+    if(shortest_path.size()==2){
+        Point start = shortest_path[0];
+        Point end = shortest_path[1];
+
+        Curve dubins_path = dubins_shortest_path(start.x(), start.y(), th0, end.x(), end.y(), thf, kmax);
+        points_final_path.append(get_points_from_curve(dubins_path, 200)); 
+        return points_final_path;
+    }
+
+    else if(shortest_path.size()==3){
+        Point start = shortest_path[0];
+        Point middle = shortest_path[1];
+        Point end = shortest_path[2];
         
-        //Polyline arc_points = get_points_from_arc(arc, 100);
+        double th_middle = compute_angle(middle, end);
 
-        //points_final_path.append(points_first);
-        //points_final_path.append(arc_points); 
-        //points_final_path.append(points_second);
+        Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, middle.x(), middle.y(), th_middle, kmax);
+        Curve second_trait = dubins_shortest_path(middle.x(), middle.y(), th_middle, end.x(), end.y(), thf, kmax);
+
+        points_final_path.append(get_points_from_curve(first_trait, 100));
+        points_final_path.append(get_points_from_curve(second_trait, 100));
+
+        return points_final_path;
     }
 
-    Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
-    Polyline points_last_trait = get_points_from_curve(last_trait, 300);
-    points_final_path.append(points_first_trait);
+    else if(shortest_path.size()==4){
+        Point start = shortest_path[0];
+        Point middle1 = shortest_path[1];
+        Point middle2 = shortest_path[2];
+        Point end = shortest_path[3];
+        
+        double th_m1_m2 = compute_angle(middle1, middle2);
+        //double th_m2_end = compute_angle(middle2, end);
 
-    if (shortest_path.size() == 4){ 
-        Point p1 = shortest_path[1];
-        Point p2 = shortest_path[2];
-        Polyline line = get_points_line(p1, p2);
-        points_final_path.append(line);
+        Curve first_trait = dubins_shortest_path(start.x(), start.y(), th0, middle1.x(), middle1.y(), th_m1_m2, kmax);
+        cout<<"Add LINE from "<<middle1<<" to "<<middle2<<endl;
+        Polyline middle_line = get_points_line(middle1, middle2);
+        Curve last_trait = dubins_shortest_path(middle2.x(), middle2.y(), th_m1_m2, end.x(), end.y(), thf, kmax);
+
+        points_final_path.append(get_points_from_curve(first_trait, 100));
+        points_final_path.append(middle_line);
+        points_final_path.append(get_points_from_curve(last_trait, 100));
+
+        return points_final_path;
     }
 
-    else if (shortest_path.size() != 3){
-        for(int i=1; i<shortest_path.size()-2;i++){
-            if(i==1){
+    else{
+
+        Curve first_trait = get_first_trait_dubins(shortest_path, th0, minR);
+        points_final_path.append(get_points_from_curve(first_trait, 100));
+
+        vector<Arc> arc_vect = get_arcs_interpolation(shortest_path, minR);
+
+        Point s1 = shortest_path[1];
+        Arc arc0 = arc_vect[0];
+        Point s2 = Point(arc0.x0, arc0.y0);      
+
+        //cout<<"arc0 x0,y0: "<<s2<<endl;  
+        //cout<<"arc0 xf,yf: "<<arc0.xf<<" "<<arc0.yf <<endl;  
+                
+        points_final_path.append(get_points_line(s1, s2));
+        points_final_path.append(get_points_from_arc(arc0, 100));
+
+        for(int i = 2; i < shortest_path.size()-3; i++){
+            Arc first_arc = arc_vect[i-2];
+            Arc second_arc = arc_vect[i-1];
+
+            Point first_point = Point(first_arc.xf, first_arc.yf);
+            Point second_point = Point(second_arc.x0, second_arc.y0);
             
-                Arc arc = arc_vect[0];
-
-                Point p1 = shortest_path[1];
-                Point p2 = Point(arc.x0, arc.y0);
-
-                Polyline line_points = get_points_line(p1, p2);
-                Polyline arc_points = get_points_from_arc(arc, 100);
-                points_final_path.append(line_points);
-            }
-            
-            else if(i==shortest_path.size()-3){
-
-                Arc arc = arc_vect[i-2];
-                Point p1 = Point(arc.xf, arc.yf);
-                Point p2 = shortest_path[i+1];
-
-                Polyline line = get_points_line(p1, p2);
-                //Polyline arc_points = get_points_from_arc(arc, 100);
-                //points_final_path.append(arc_points);
-                points_final_path.append(line);            
-            }
-
-            else{
-                Arc arc_first = arc_vect[i-2];
-                Arc arc_second = arc_vect[i-1];
-                Point p1 = Point(arc_first.xf, arc_first.yf);
-                Point p2 = Point(arc_second.x0, arc_second.y0);
-
-                Polyline arc_points = get_points_from_arc(arc_second, 100);
-                Polyline line = get_points_line(p1, p2);
-                points_final_path.append(line);     
-                points_final_path.append(arc_points);
-            }
-            
+            points_final_path.append(get_points_line(first_point, second_point));
+            points_final_path.append(get_points_from_arc(second_arc, 100));
         }
-    }
 
-    points_final_path.append(points_last_trait);
+        Arc last_arc = arc_vect[arc_vect.size()-1];
+        Point sn_1 = Point(last_arc.xf, last_arc.yf);
+        Point sn_2 = shortest_path[shortest_path.size() - 2];
+
+        cout<<"Add LINE from "<<sn_2<<" to "<<sn_1<<endl;
+        points_final_path.append(get_points_line(sn_2, sn_1));
+
+        Curve last_trait = get_last_trait_dubins(shortest_path, thf, minR);
+        points_final_path.append(get_points_from_curve(last_trait, 100));
+
+        //cout<<"POINTS: "<<endl<<points_final_path<<endl;
+        return points_final_path;
+
+    }
 
     return points_final_path;
 }

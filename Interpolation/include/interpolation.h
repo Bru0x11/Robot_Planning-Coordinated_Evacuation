@@ -1,15 +1,15 @@
 #ifndef INTERPOLATION_H
 #define INTERPOLATION_H
 
-#include "src/visilibity.hpp"
-//#include "../../VisiLibity1/src/visilibity.hpp"
+//#include "src/visilibity.hpp"
+#include "../../VisiLibity1/src/visilibity.hpp"
 
 #include <vector>
 #include <iostream>
 #include <cfloat>
 
-//#include "dubins.h"
-#include "include/dubins.h"
+#include "dubins.h"
+//#include "include/dubins.h"
 
 #include "math.h"
 #include <fstream>
@@ -82,9 +82,13 @@ Environment get_environment1();
 
 Environment get_environment2();
 
+Environment get_environment3();
+
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR);
 
 Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR);
+
+vector<Arc> get_arcs_interpolation(Polyline shortest_path, double minR);
 
 Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR);
 
