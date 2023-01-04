@@ -25,6 +25,6 @@ Intersection getPathIntersection(Visilibity::Polyline& robotPath1, VisiLibity::P
     double travelTimeRobot1 {getTravelTime(intersectionPoint, robotPath1)};
     double travelTimeRobot2 {getTravelTime(intersectionPoint, robotPath2)};
 
-    Intesection result {intersectionPoint, travelTimeRobot1, travelTimeRobot2};
+    Intersection result {intersectionPoint, travelTimeRobot1, travelTimeRobot2};
     return result;    
 }

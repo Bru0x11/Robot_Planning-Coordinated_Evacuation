@@ -13,7 +13,7 @@ std::vector<RobotInitialization> coordination(Visilibity::Polyline& robotPath1, 
 
     allDeltas.push_back(DeltaTime{
         abs(allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2),
-        (((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2) > 0) ? : 2; 1) //TODO: cambiare > 0 in qualcosa di più coarse
+        (((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2) > 0) ? : 2; 1) //TODO: cambiare > 0 in qualcosa di più coarse (uguale al granularity che sceglierò)
     }); //delta betweeen robot 1 and 2
 
     allDeltas.push_back(DeltaTime{

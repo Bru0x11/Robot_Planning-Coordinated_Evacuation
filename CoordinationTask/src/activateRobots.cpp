@@ -35,7 +35,7 @@ int sendMessage(std::vector<int> robotOrder){  //std::vector<RobotInitialization
     }
 
 while ((wpid = wait(&status)) > 0);
-std::cout << "\nAll processes have ended... quitting program...\n";
+std::cout << "\nAll processes have ended... turning off the engines... quitting program...\n";
 return 0;
 }
 
