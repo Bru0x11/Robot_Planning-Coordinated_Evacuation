@@ -87,7 +87,7 @@ class MinimalPublisher : public rclcpp::Node
       path.header.frame_id = "map";
 
 
-      Environment env = get_environment2();
+      Environment env = get_environment3();
 
       //ROAD MAP
       Visibility_Graph graph = Visibility_Graph(env, 0.1);
@@ -99,7 +99,7 @@ class MinimalPublisher : public rclcpp::Node
       double y0 = t.transform.translation.y;
 
       Point start_test = Point(x0, y0);
-      Point end = Point(-4, 6);
+      Point end = Point(4, -8);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
       double thf = M_PI/2;
