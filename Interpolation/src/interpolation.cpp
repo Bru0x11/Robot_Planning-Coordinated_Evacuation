@@ -22,6 +22,14 @@ double Vector::norm(){
         return n;
     }
 
+double Vector::dot(Vector v1, Vector v2){
+    return ((v1.x)*(v2.x)) + ((v1.y)*(v2.y));
+}
+
+double Vector::angle(Vector v1, Vector v2){
+    return acos(dot(v1, v2) / (v1.norm()*v2.norm()));
+}
+
 //friend ostream & operator << (ostream &out, Line l);
 
 Line::Line(double a, double b, double c){
@@ -181,25 +189,32 @@ Point find_lines_intersection(Line l1, Line l2){
 
 double find_distance(Point p0, Point p1, Point p2, double minR)
 {
-    double m1, m2;
+    //double m1, m2;
     // Compute m
-    m1 = Line::compute_m(p0,p1);
-    m2 = Line::compute_m(p1,p2);
+    //m1 = Line::compute_m(p0,p1);
+    //m2 = Line::compute_m(p1,p2);
+
+    Vector v1 = Vector(p1.x() - p0.x(), p1.y() - p0.y());
+    Vector v2 = Vector(p2.x() - p1.x(), p2.y() - p1.y());
+
+    double angle = Vector::angle(v1, v2);
+
+    angle = M_PI - angle; 
 
     //cout<<"m1: "<<m1<<" m2: "<<m2<<endl;
 
     //double tan_angle = (m1 - m2) / (1 + (m1 * m2));
-    double angle = abs(atan(m1) -  atan(m2));
+    //double angle = abs(atan(m1) -  atan(m2));
     //M_PI - 
 
     //cout<<"DA TOGLIERE "<<endl;
     //angle = M_PI - angle;
 
 
-    if (angle>M_PI){
-        //cout<<"IM HEEEEEEEEEEEREEEEE";
-        angle = 2*M_PI - angle;
-    }
+    // if (angle>M_PI){
+    //     //cout<<"IM HEEEEEEEEEEEREEEEE";
+    //     angle = 2*M_PI - angle;
+    // }
 
     //cout<<"angle after: "<<angle<<endl;
     //double angle = atan(tan_angle);
@@ -300,9 +315,21 @@ Polyline get_points_from_arc(Arc a, int npts){
     Point point;
     Pos pose;
 
+    double k = a.k;
+
+    double true_x = a.xf;
+    double true_y = a.yf;
+
+    Pos temp = circline(a.L, a.x0, a.y0, a.th0, a.k);
+
+    double epsilon = 0.01;
+
+    if((abs(temp.x - true_x)>epsilon) || (abs(temp.y - true_y)>epsilon)){
+        a.k = -k;
+    }
+
+
     //Curve c = dubins_shortest_path(a.x0, a.y0, a.th0, a.xf, a.yf, a.thf, a.k);
-
-
 
     for (int j=0; j<npts; j++){
 
@@ -428,18 +455,33 @@ double compute_arc_length(Point a, Point b, double minR){
 
 
 double compute_angle(Point a, Point b){
-    double m = Line::compute_m(a, b);
-    double angle = atan(m);
-    if(b.x() < a.x()){
-        
-        angle = angle + M_PI;
 
+    Vector v1 = Vector(b.x() - a.x(), b.y() - a.y());
+    Vector v2 = Vector(1, 0);
+
+    double angle = Vector::angle(v1, v2);
+
+    if(v1.y < 0){
+        angle = -angle;
     }
-    else if(b.x() == a.x()){
-        if(b.y()<a.y()){
-            angle = angle - M_PI;
-        }
-    }
+
+
+
+    //angle = M_PI - angle; 
+
+
+    // double m = Line::compute_m(a, b);
+    // double angle = atan(m);
+    // if(b.x() < a.x()){
+        
+    //     angle = angle + M_PI;
+
+    // }
+    // else if(b.x() == a.x()){
+    //     if(b.y()<a.y()){
+    //         angle = angle - M_PI;
+    //     }
+    // }
     return angle;
 }
 

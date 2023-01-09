@@ -26,6 +26,8 @@ public:
     Vector(double x, double y);
    
     double norm();
+    static double dot(Vector v1, Vector v2);
+    static double angle(Vector v1, Vector v2);
 };
 
 class Line{

@@ -22,11 +22,11 @@ int main(int argc, char** argv){
     //DEFINE ROBOT MIN_CURVATURE_RADIUS
     double minR = 1;
     //DEFINE START AND END POINTS
-    double x0 = 3;
-    double y0 = -8;
+    double x0 = 0;
+    double y0 = 4;
 
     Point start_test = Point(x0, y0);
-    Point end = Point(0, 4);
+    Point end = Point(4, -8);
     //DEFINE START AND END ANGLES 
     double th0 = 0;
     double thf = M_PI/2;
