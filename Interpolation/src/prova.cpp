@@ -14,6 +14,10 @@ int main(int argc, char** argv){
     string filename = "example1.environment";
     Environment env = get_environment3();
 
+    cout<<"obs1: "<<endl<<env[1]<<endl;
+
+    cout<<"DISTANCE: "<<endl<<boundary_distance(Point(2,-5), env[1])<<endl;
+
     double epsilon = 0.001;
 
     //ROAD MAP
@@ -47,6 +51,8 @@ int main(int argc, char** argv){
     cout<<"faccio interpolation"<<endl;
 
     Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
+
+    //cout<<points_final_path<<endl;
 
     ofstream MyFile("points.csv");
 

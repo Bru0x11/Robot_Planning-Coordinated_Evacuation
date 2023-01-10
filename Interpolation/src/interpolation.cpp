@@ -3,8 +3,8 @@
 #include <cfloat>
 #include "math.h"
 
-#include "include/interpolation.h"
-//#include "../include/interpolation.h"
+//#include "include/interpolation.h"
+#include "../include/interpolation.h"
 
 #include <fstream>
 
