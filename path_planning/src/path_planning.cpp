@@ -87,6 +87,12 @@ class MinimalPublisher : public rclcpp::Node
       path.header.frame_id = "map";
 
 
+      //TODO:
+        // 1) read map and robot positions
+        // 2) build Environment
+        // 3) apply offset
+        // 4) transform environment in VisiLibity Environment
+
       Environment env = get_environment3();
 
       //ROAD MAP
@@ -186,18 +192,18 @@ class MinimalPublisher : public rclcpp::Node
       */
 
       //ACTION 
-      using FollowPath = nav2_msgs::action::FollowPath;
-      rclcpp_action::Client<FollowPath>::SharedPtr client_ptr;
-      client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
-      if (!client_ptr->wait_for_action_server()) {
-        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-        rclcpp::shutdown();
-      }
-      auto goal_msg = FollowPath::Goal();
-      goal_msg.path = path;
-      goal_msg.controller_id = "FollowPath";
-      RCLCPP_INFO(this->get_logger(), "Sending goal");
-      client_ptr->async_send_goal(goal_msg);
+      // using FollowPath = nav2_msgs::action::FollowPath;
+      // rclcpp_action::Client<FollowPath>::SharedPtr client_ptr;
+      // client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
+      // if (!client_ptr->wait_for_action_server()) {
+      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+      //   rclcpp::shutdown();
+      // }
+      // auto goal_msg = FollowPath::Goal();
+      // goal_msg.path = path;
+      // goal_msg.controller_id = "FollowPath";
+      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+      // client_ptr->async_send_goal(goal_msg);
 
       publisher_->publish(path);
       
