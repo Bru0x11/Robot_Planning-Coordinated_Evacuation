@@ -3,8 +3,8 @@
 #include <cfloat>
 #include "math.h"
 
-#include "include/interpolation.h"
-//#include "../include/interpolation.h"
+//#include "include/interpolation.h"
+#include "../include/interpolation.h"
 
 #include <fstream>
 
@@ -471,7 +471,7 @@ Environment get_environment3(){
     points_obs2.push_back(Point(2, -2));
     points_obs2.push_back(Point(2, -1));
     points_obs2.push_back(Point(4, -1));
-    points_obs2.push_back(Point(4, -2));
+    // points_obs2.push_back(Point(4, -2));
     
     
     

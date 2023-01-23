@@ -48,6 +48,55 @@ auto translatePolygon(const PathsD& originalPolygon){
   return listOfPoints;
 }
 
+
+//Ashkan
+double find_min_angle(Polygon points){
+    double min_angle = 5;
+    int indx_p1, indx_p2, indx_p3;
+
+    for (int i = 0; i < points.n(); i++) {
+//        cout << " point "<<i<<" "<<points[i].x()<<" "<<points[i].y() <<endl;
+//         v1;
+//        Vector v2;
+
+        if(i == points.n() - 1){
+            indx_p1 = i-1;
+            indx_p2 = i;
+            indx_p3 = 0;
+        } if (i == 0){
+            indx_p1 = points.n() - 1;
+            indx_p2 = i;
+            indx_p3 = i+1;
+        }
+
+        Vector v1 = Vector(points[indx_p2].x() - points[indx_p1].x(), points[indx_p2].y() - points[indx_p1].y());
+        Vector v2 = Vector(points[indx_p2].x() - points[indx_p3].x(), points[indx_p2].y() - points[indx_p3].y());
+        double angle = Vector::angle(v1,v2);
+        if (min_angle > angle){
+            min_angle = angle;
+        }
+    }
+    return min_angle;
+}
+
+double offset_calculator(double minAngle, double minR, double minH){
+    double offset;
+    offset = max(minR * (1 - sin(minAngle/2)) + minH * sin(minAngle/2), minH);
+    return offset;
+}
+
+int env_holes(Environment env){
+    double angle;
+    double offset;
+    for(int i = 1 ; i < env.h() + 1 ; i++){
+        angle = find_min_angle(env[i]);
+        offset = offset_calculator(angle, 1.5, 0.5);
+        cout<< "hole "<< i << " min angle: " << angle <<": \n";
+        cout<< "hole "<< i << " offset: " << offset <<": \n";
+    }
+    return 0;
+}
+
 //FOR PRINTING PURPOSES
 void System(const std::string& filename){
 #ifdef _WIN32

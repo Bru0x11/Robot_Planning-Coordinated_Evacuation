@@ -1,6 +1,7 @@
 #include "../include/dubins.h"
 #include "../include/interpolation.h"
 #include "../../VisiLibity1/src/visilibity.hpp"
+#include "../../OffsetTools/include/offsetFunctions.h"
 #include <unistd.h>
 
 using namespace VisiLibity;
@@ -13,6 +14,8 @@ int main(int argc, char** argv){
     
     string filename = "example1.environment";
     Environment env = get_environment3();
+
+    env_holes(env);
 
     cout<<"obs1: "<<endl<<env[1]<<endl;
 
@@ -27,10 +30,10 @@ int main(int argc, char** argv){
     double minR = 1;
     //DEFINE START AND END POINTS
     double x0 = 0;
-    double y0 = 4;
+    double y0 = -6;
 
     Point start_test = Point(x0, y0);
-    Point end = Point(4, -8);
+    Point end = Point(0, 4);
     //DEFINE START AND END ANGLES 
     double th0 = 0;
     double thf = M_PI/2;

@@ -40,4 +40,11 @@ Given a PathD, returns list of VisiLibity::Point
 */
 auto translatePolygon(const PathsD& originalPolygon);
 
+
+double find_min_angle(Polygon points);
+
+double offset_calculator(double minAngle, double minR, double minH);
+
+int env_holes(Environment env);
+
 #endif
