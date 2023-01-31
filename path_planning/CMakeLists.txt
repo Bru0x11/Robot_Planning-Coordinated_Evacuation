@@ -23,6 +23,7 @@ include_directories(
     include
     ../VisiLibity1
     ../Interpolation
+    ../OffsetTools
 )
 
 add_executable(path_planning_node 

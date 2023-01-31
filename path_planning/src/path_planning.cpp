@@ -93,19 +93,22 @@ class MinimalPublisher : public rclcpp::Node
         // 3) apply offset
         // 4) transform environment in VisiLibity Environment
 
+      double minR = 1;
+      double minH = 0.5; 
       Environment env = get_environment3();
+      Environment off_env = get_env_offset(env, minR, minH);
 
       //ROAD MAP
       Visibility_Graph graph = Visibility_Graph(env, 0.1);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
-      double minR = 1;
+
       //DEFINE START AND END POINTS
       double x0 = t.transform.translation.x;
       double y0 = t.transform.translation.y;
 
-      Point start_test = Point(x0, y0);
-      Point end = Point(4, -8);
+      VisiLibity::Point start_test = VisiLibity::Point(x0, y0);
+      VisiLibity::Point end = VisiLibity::Point(4, -8);
       //DEFINE START AND END ANGLES 
       double th0 = t.transform.rotation.z;
       double thf = M_PI/2;

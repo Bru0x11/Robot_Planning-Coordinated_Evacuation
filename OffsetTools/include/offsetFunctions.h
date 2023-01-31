@@ -16,13 +16,13 @@ using namespace Clipper2Lib;
 Given a vector of Point, creates a polygon. The points have to be listed in a clockwise order (from bottom_left onwards).
 Returns a list of Point that describe the polygon.
 */
-auto createPolygon(const std::vector<VisiLibity::Point>& points);
+PathsD createPolygon(const std::vector<VisiLibity::Point>& points);
 
 /*
 Given a polygon and a value, offsets the polygon by that amount. If the parameter isMapContour is set to true, return the frame representing the
 contour of map. Returns the list of Point that define the new polygon.
 */
-auto offsetPolygon(const PathsD& polygon, float offsetSize, bool isMapContour);
+PathsD offsetPolygon(const PathsD& polygon, float offsetSize, bool isMapContour);
 
 /*
 Given two polygons, returns true if they are intersected.
@@ -41,10 +41,6 @@ Given a PathD, returns list of VisiLibity::Point
 auto translatePolygon(const PathsD& originalPolygon);
 
 
-double find_min_angle(Polygon points);
 
-double offset_calculator(double minAngle, double minR, double minH);
-
-int env_holes(Environment env);
 
 #endif

@@ -15,6 +15,7 @@ find_package(rclcpp REQUIRED)
 include_directories(
     include
     ../VisiLibity1
+    ../OffsetTools
 )
 
 

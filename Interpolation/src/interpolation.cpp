@@ -3,8 +3,9 @@
 #include <cfloat>
 #include "math.h"
 
-//#include "include/interpolation.h"
-#include "../include/interpolation.h"
+#include "include/interpolation.h"
+//#include "../include/interpolation.h"
+
 
 #include <fstream>
 
@@ -88,7 +89,7 @@ Line Line::find_parallel(double distance){
 
 }
 
-Line Line::find_perpendicular(Point p){
+Line Line::find_perpendicular(VisiLibity::Point p){
 
     if(this->vertical){
         return Line(0, p.y());
@@ -104,7 +105,7 @@ Line Line::find_perpendicular(Point p){
     return Line::get_line_from_m_and_p(p,mp);
 }
 
-Line Line::get_line_from_m_and_p(Point p, double m){
+Line Line::get_line_from_m_and_p(VisiLibity::Point p, double m){
     if(m==DBL_MAX){
         return Line(1, 0, -p.x());
     }
@@ -117,7 +118,7 @@ Line Line::get_line_from_m_and_p(Point p, double m){
 }
 
 
-Line Line::get_line_from_points(Point p1, Point p2){
+Line Line::get_line_from_points(VisiLibity::Point p1, VisiLibity::Point p2){
     double m,q;
     if(p1.x() == p2.x()){
         m = DBL_MAX;
@@ -133,7 +134,7 @@ Line Line::get_line_from_points(Point p1, Point p2){
 
 
 
-double Line::get_q_from_point(Point p, double m){
+double Line::get_q_from_point(VisiLibity::Point p, double m){
     if(m==DBL_MAX){
         return p.x();
     }
@@ -145,7 +146,7 @@ double Line::get_q_from_point(Point p, double m){
 
 }
 
-double Line::compute_m(Point p0, Point p1){
+double Line::compute_m(VisiLibity::Point p0, VisiLibity::Point p1){
     double x1 = p1.x();
     double x0 = p0.x();
 
@@ -166,7 +167,7 @@ ostream & operator << (ostream &out, Line l){
 }
 
 
-Point find_lines_intersection(Line l1, Line l2){
+VisiLibity::Point find_lines_intersection(Line l1, Line l2){
     
     double a1 = l1.a;
     double b1 = l1.b; 
@@ -177,10 +178,10 @@ Point find_lines_intersection(Line l1, Line l2){
     double x = (b1*c2 - b2*c1)/(a1*b2 - a2*b1);
     double y = (c1*a2 - c2*a1)/(a1*b2 - a2*b1);
 
-    return Point(x,y);
+    return VisiLibity::Point(x,y);
 }
 
-double find_distance(Point p0, Point p1, Point p2, double minR)
+double find_distance(VisiLibity::Point p0,VisiLibity::Point p1, VisiLibity::Point p2, double minR)
 {
 
     Vector v1 = Vector(p1.x() - p0.x(), p1.y() - p0.y());
@@ -197,7 +198,7 @@ double find_distance(Point p0, Point p1, Point p2, double minR)
 
 
 // given the initial and final points of the segment and a distance, compute the entrance point
-Point find_entrance(Point p0, Point p1, double distance)
+VisiLibity::Point find_entrance(VisiLibity::Point p0, VisiLibity::Point p1, double distance)
 {
     double x0 = p0.x();
     double y0 = p0.y();
@@ -213,21 +214,21 @@ Point find_entrance(Point p0, Point p1, double distance)
 
     double x_entrance = x1 - distance * unit_v.x;
     double y_entrance = y1 - distance * unit_v.y;
-    Point entrance = Point(x_entrance, y_entrance);
+    VisiLibity::Point entrance = VisiLibity::Point(x_entrance, y_entrance);
 
     return entrance;
 };
 
-Point find_exit(Point p0, Point p1, double distance)
+VisiLibity::Point find_exit(VisiLibity::Point p0, VisiLibity::Point p1, double distance)
 {
-    Point exit = find_entrance(p1, p0, distance);
+    VisiLibity::Point exit = find_entrance(p1, p0, distance);
     return exit;
 }
 
 Polyline get_points_from_arc(Arc a, int npts){
     
     Polyline points;
-    Point point;
+    VisiLibity::Point point;
     Pos pose;
 
     double k = a.k;
@@ -279,7 +280,7 @@ Polyline get_points_from_curve(Curve c, int npts){
 }
 
 
-Polyline get_points_line(Point p0, Point p1){
+Polyline get_points_line(VisiLibity::Point p0, VisiLibity::Point p1){
     
     Polyline points;
     Line l = Line::get_line_from_points(p0, p1);
@@ -296,7 +297,7 @@ Polyline get_points_line(Point p0, Point p1){
             double temp_y = l.m*temp_x + l.q;
             //cout<<"temp_y: "<<temp_y<<endl;
 
-            Point p = Point(temp_x, temp_y);
+            VisiLibity::Point p =VisiLibity::Point(temp_x, temp_y);
 
             points.push_back(p);
         }
@@ -311,7 +312,7 @@ Polyline get_points_line(Point p0, Point p1){
             double temp_y = l.m*temp_x + l.q;
             //cout<<"temp_y: "<<temp_y<<endl;
 
-            Point p = Point(temp_x, temp_y);
+            VisiLibity::Point p = VisiLibity::Point(temp_x, temp_y);
 
             points.push_back(p);
         }
@@ -325,7 +326,7 @@ Polyline get_points_line(Point p0, Point p1){
             double temp_y = (1-gamma)*p0.y() + (gamma*p1.y());
             //cout<<"temp_x: "<<temp_x<<endl;
             //cout<<"temp_y: "<<temp_y<<endl;
-            Point p = Point(temp_x, temp_y);
+            VisiLibity::Point p = VisiLibity::Point(temp_x, temp_y);
 
             points.push_back(p);
         }
@@ -336,7 +337,7 @@ Polyline get_points_line(Point p0, Point p1){
 }
 
 
-double compute_arc_length(Point a, Point b, double minR){
+double compute_arc_length(VisiLibity::Point a, VisiLibity::Point b, double minR){
     
     double points_distance = sqrt(pow(b.x() - a.x(),2) + pow(b.y() - a.y(),2));
 
@@ -347,7 +348,7 @@ double compute_arc_length(Point a, Point b, double minR){
 }
 
 
-double compute_angle(Point a, Point b){
+double compute_angle(VisiLibity::Point a, VisiLibity::Point b){
 
     Vector v1 = Vector(b.x() - a.x(), b.y() - a.y());
     Vector v2 = Vector(1, 0);
@@ -361,7 +362,7 @@ double compute_angle(Point a, Point b){
     return angle;
 }
 
-Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit, double minR){
+Arc get_arc(VisiLibity::Point entrance, VisiLibity::Point exit, double angle_entrance, double angle_exit, double minR){
     
     Arc arc;
 
@@ -381,32 +382,32 @@ Arc get_arc(Point entrance, Point exit, double angle_entrance, double angle_exit
 
 Environment get_environment1(){
 
-    vector<Point> points_obs1;
-    points_obs1.push_back(Point(4,4));
-    points_obs1.push_back(Point(4, 8));
-    points_obs1.push_back(Point(11, 8));
-    points_obs1.push_back(Point(11, 4));
+    vector<VisiLibity::Point> points_obs1;
+    points_obs1.push_back(VisiLibity::Point(4,4));
+    points_obs1.push_back(VisiLibity::Point(4, 8));
+    points_obs1.push_back(VisiLibity::Point(11, 8));
+    points_obs1.push_back(VisiLibity::Point(11, 4));
     Polygon obs1 = Polygon(points_obs1);
 
-    vector<Point> points_obs2;
-    points_obs2.push_back(Point(8, 10));
-    points_obs2.push_back(Point(7, 12));
-    points_obs2.push_back(Point(14, 12));
-    points_obs2.push_back(Point(14, 10));
+    vector<VisiLibity::Point> points_obs2;
+    points_obs2.push_back(VisiLibity::Point(8, 10));
+    points_obs2.push_back(VisiLibity::Point(7, 12));
+    points_obs2.push_back(VisiLibity::Point(14, 12));
+    points_obs2.push_back(VisiLibity::Point(14, 10));
     Polygon obs2 = Polygon(points_obs2);
 
-    vector<Point> points_obs3;
-    points_obs3.push_back(Point(13, 6));
-    points_obs3.push_back(Point(13, 8));
-    points_obs3.push_back(Point(16, 8));
-    points_obs3.push_back(Point(16, 6));
+    vector<VisiLibity::Point> points_obs3;
+    points_obs3.push_back(VisiLibity::Point(13, 6));
+    points_obs3.push_back(VisiLibity::Point(13, 8));
+    points_obs3.push_back(VisiLibity::Point(16, 8));
+    points_obs3.push_back(VisiLibity::Point(16, 6));
     Polygon obs3 = Polygon(points_obs3);
 
-    vector<Point> points_env;
-    points_env.push_back(Point(-20.0, -20.0));
-    points_env.push_back(Point(20.0, -20.0));
-    points_env.push_back(Point(20.0, 20.0));
-    points_env.push_back(Point(-20.0, 20.0));
+    vector<VisiLibity::Point> points_env;
+    points_env.push_back(VisiLibity::Point(-20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, 20.0));
+    points_env.push_back(VisiLibity::Point(-20.0, 20.0));
 
     Environment poly_env = Environment(points_env);
 
@@ -419,29 +420,29 @@ Environment get_environment1(){
 
 Environment get_environment2(){
 
-    vector<Point> points_obs1;
-    points_obs1.push_back(Point(2, 2));
-    points_obs1.push_back(Point(2, 3));
-    points_obs1.push_back(Point(3, 3));
-    points_obs1.push_back(Point(3, 2));
+    vector<VisiLibity::Point> points_obs1;
+    points_obs1.push_back(VisiLibity::Point(2, 2));
+    points_obs1.push_back(VisiLibity::Point(2, 3));
+    points_obs1.push_back(VisiLibity::Point(3, 3));
+    points_obs1.push_back(VisiLibity::Point(3, 2));
 
     Polygon obs1 = Polygon(points_obs1);
 
-    vector<Point> points_obs2;
-    points_obs2.push_back(Point(-1, 4));
-    points_obs2.push_back(Point(-1, 5));
-    points_obs2.push_back(Point(5, 5));
-    points_obs2.push_back(Point(5, 4));
+    vector<VisiLibity::Point> points_obs2;
+    points_obs2.push_back(VisiLibity::Point(-1, 4));
+    points_obs2.push_back(VisiLibity::Point(-1, 5));
+    points_obs2.push_back(VisiLibity::Point(5, 5));
+    points_obs2.push_back(VisiLibity::Point(5, 4));
     
     
     
     Polygon obs2 = Polygon(points_obs2);
 
-    vector<Point> points_env;
-    points_env.push_back(Point(-20.0, -20.0));
-    points_env.push_back(Point(20.0, -20.0));
-    points_env.push_back(Point(20.0, 20.0));
-    points_env.push_back(Point(-20.0, 20.0));
+    vector<VisiLibity::Point> points_env;
+    points_env.push_back(VisiLibity::Point(-20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, 20.0));
+    points_env.push_back(VisiLibity::Point(-20.0, 20.0));
 
     Environment poly_env = Environment(points_env);
 
@@ -453,43 +454,36 @@ Environment get_environment2(){
 
 Environment get_environment3(){
 
-    vector<Point> points_obs1;
+    vector<VisiLibity::Point> points_obs1;
 
-    points_obs1.push_back(Point(-1, -7));
-    points_obs1.push_back(Point(-1, -4));
-    points_obs1.push_back(Point(5, -4));
-    points_obs1.push_back(Point(5, -7));    
-    
-    
+    points_obs1.push_back(VisiLibity::Point(-1, -7));
+    points_obs1.push_back(VisiLibity::Point(-1, -4));
+    points_obs1.push_back(VisiLibity::Point(5, -4));
+    points_obs1.push_back(VisiLibity::Point(5, -7));    
 
     Polygon obs1 = Polygon(points_obs1);
 
-    vector<Point> points_obs2;
-    
+    vector<VisiLibity::Point> points_obs2;
 
-
-    points_obs2.push_back(Point(2, -2));
-    points_obs2.push_back(Point(2, -1));
-    points_obs2.push_back(Point(4, -1));
-    // points_obs2.push_back(Point(4, -2));
-    
-    
-    
+    points_obs2.push_back(VisiLibity::Point(2, -2));
+    points_obs2.push_back(VisiLibity::Point(2, -1));
+    points_obs2.push_back(VisiLibity::Point(4, -1));
+    // points_obs2.push_back(VisiLibity::Point(4, -2));
     
     Polygon obs2 = Polygon(points_obs2);
 
-    vector<Point> points_obs3;
-    points_obs3.push_back(Point(-2, 2));
-    points_obs3.push_back(Point(-2, 3));
-    points_obs3.push_back(Point(1, 3));
-    points_obs3.push_back(Point(1, 2));
+    vector<VisiLibity::Point> points_obs3;
+    points_obs3.push_back(VisiLibity::Point(-2, 2));
+    points_obs3.push_back(VisiLibity::Point(-2, 3));
+    points_obs3.push_back(VisiLibity::Point(1, 3));
+    points_obs3.push_back(VisiLibity::Point(1, 2));
     Polygon obs3 = Polygon(points_obs3);
 
-    vector<Point> points_env;
-    points_env.push_back(Point(-20.0, -20.0));
-    points_env.push_back(Point(20.0, -20.0));
-    points_env.push_back(Point(20.0, 20.0));
-    points_env.push_back(Point(-20.0, 20.0));
+    vector<VisiLibity::Point> points_env;
+    points_env.push_back(VisiLibity::Point(-20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, -20.0));
+    points_env.push_back(VisiLibity::Point(20.0, 20.0));
+    points_env.push_back(VisiLibity::Point(-20.0, 20.0));
 
     Environment poly_env = Environment(points_env);
 
@@ -500,13 +494,37 @@ Environment get_environment3(){
     return poly_env;
 }
 
+Environment get_env_offset(Environment env, double minR, double minH){
+    cout<<"ENV.H(): "<<env.h()<<endl;
+    
+    for(int i = 0; i<env.h(); i++){
+        Polygon poly = env[i];
+        vector<VisiLibity::Point> poly_points;
+        for(int j = 0; i<poly.n(); j++){
+            VisiLibity::Point p = poly[j];
+            poly_points.push_back(p);
+        }
+        
+        double min_angle = find_min_angle(poly);
+        float off_value = (float) offset_calculator(min_angle, minR, minH);
+        const ::PathsD& b_poly = createPolygon(poly_points);
+        //PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
+
+
+    }
+
+
+
+    return env; 
+}
+
 
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR){
 
     //first 3 vertex (need them to do dubins)
-    Point start = shortest_path[0];
-    Point p0 = shortest_path[1];
-    Point p1 = shortest_path[2];
+    VisiLibity::Point start = shortest_path[0];
+    VisiLibity::Point p0 = shortest_path[1];
+    VisiLibity::Point p1 = shortest_path[2];
     //Find final angle of first trait
     double th1 = compute_angle(p0, p1);
 
@@ -521,9 +539,9 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
 
     //BUILD DUBINS LAST TRAIT
     //last 3 vertex (need them to build dubins last trait)
-    Point pn_1 = shortest_path[shortest_path.size()-3];
-    Point pn = shortest_path[shortest_path.size()-2];
-    Point goal = shortest_path[shortest_path.size()-1];
+    VisiLibity::Point pn_1 = shortest_path[shortest_path.size()-3];
+    VisiLibity::Point pn = shortest_path[shortest_path.size()-2];
+    VisiLibity::Point goal = shortest_path[shortest_path.size()-1];
     double th_n;
 
     th_n = compute_angle(pn_1, pn);
@@ -535,19 +553,67 @@ Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR){
     return last_trait;
 }
 
+//Ashkan
+double find_min_angle(VisiLibity::Polygon points){
+    double min_angle = 5;
+    int indx_p1, indx_p2, indx_p3;
+
+    for (int i = 0; i < points.n(); i++) {
+//        cout << " point "<<i<<" "<<points[i].x()<<" "<<points[i].y() <<endl;
+//         v1;
+//        Vector v2;
+
+        if(i == points.n() - 1){
+            indx_p1 = i-1;
+            indx_p2 = i;
+            indx_p3 = 0;
+        } if (i == 0){
+            indx_p1 = points.n() - 1;
+            indx_p2 = i;
+            indx_p3 = i+1;
+        }
+
+        Vector v1 = Vector(points[indx_p2].x() - points[indx_p1].x(), points[indx_p2].y() - points[indx_p1].y());
+        Vector v2 = Vector(points[indx_p2].x() - points[indx_p3].x(), points[indx_p2].y() - points[indx_p3].y());
+        double angle = Vector::angle(v1,v2);
+        if (min_angle > angle){
+            min_angle = angle;
+        }
+    }
+    return min_angle;
+}
+
+double offset_calculator(double minAngle, double minR, double minH){
+    double offset;
+    offset = std::max(minR * (1 - sin(minAngle/2)) + minH * sin(minAngle/2), minH);
+    return offset;
+}
+
+int env_holes(VisiLibity::Environment env){
+    double angle;
+    double offset;
+    for(int i = 1 ; i < env.h() + 1 ; i++){
+        angle = find_min_angle(env[i]);
+        offset = offset_calculator(angle, 1.5, 0.5);
+        cout<< "hole "<< i << " min angle: " << angle <<": \n";
+        cout<< "hole "<< i << " offset: " << offset <<": \n";
+    }
+    return 0;
+}
+
 vector<Arc> get_arcs_interpolation(Polyline shortest_path, double minR){
     vector<Arc> arc_vect;
 
     for (int i = 1; i < shortest_path.size()-3; i++)
     {
-        Point a = shortest_path[i];
-        Point b = shortest_path[i+1];
-        Point c = shortest_path[i+2];
+        VisiLibity::Point a = shortest_path[i];
+        VisiLibity::Point b = shortest_path[i+1];
+        VisiLibity::Point c = shortest_path[i+2];
 
         double distance = find_distance(a,b,c, minR);
 
-        Point entrance = find_entrance(a, b, distance);
-        Point exit = find_exit(b, c, distance);
+        VisiLibity::Point entrance = find_entrance(a, b, distance);
+        VisiLibity::Point exit = find_exit(b, c, distance);
 
         cout<<"Entrance: "<<entrance<<endl;
         cout<<"Exit: "<<exit<<endl;
@@ -569,8 +635,8 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     double kmax = 1/minR;
 
     if(shortest_path.size()==2){
-        Point start = shortest_path[0];
-        Point end = shortest_path[1];
+        VisiLibity::Point start = shortest_path[0];
+        VisiLibity::Point end = shortest_path[1];
 
         Curve dubins_path = dubins_shortest_path(start.x(), start.y(), th0, end.x(), end.y(), thf, kmax);
         points_final_path.append(get_points_from_curve(dubins_path, 200)); 
@@ -578,9 +644,9 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     }
 
     else if(shortest_path.size()==3){
-        Point start = shortest_path[0];
-        Point middle = shortest_path[1];
-        Point end = shortest_path[2];
+        VisiLibity::Point start = shortest_path[0];
+        VisiLibity::Point middle = shortest_path[1];
+        VisiLibity::Point end = shortest_path[2];
         
         double th_middle = compute_angle(middle, end);
 
@@ -594,10 +660,10 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
     }
 
     else if(shortest_path.size()==4){
-        Point start = shortest_path[0];
-        Point middle1 = shortest_path[1];
-        Point middle2 = shortest_path[2];
-        Point end = shortest_path[3];
+        VisiLibity::Point start = shortest_path[0];
+        VisiLibity::Point middle1 = shortest_path[1];
+        VisiLibity::Point middle2 = shortest_path[2];
+        VisiLibity::Point end = shortest_path[3];
         
         double th_m1_m2 = compute_angle(middle1, middle2);
         //double th_m2_end = compute_angle(middle2, end);
@@ -621,9 +687,9 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
 
         vector<Arc> arc_vect = get_arcs_interpolation(shortest_path, minR);
 
-        Point s1 = shortest_path[1];
+        VisiLibity::Point s1 = shortest_path[1];
         Arc arc0 = arc_vect[0];
-        Point s2 = Point(arc0.x0, arc0.y0);      
+        VisiLibity::Point s2 = VisiLibity::Point(arc0.x0, arc0.y0);      
 
         //cout<<"arc0 x0,y0: "<<s2<<endl;  
         //cout<<"arc0 xf,yf: "<<arc0.xf<<" "<<arc0.yf <<endl;  
@@ -635,16 +701,16 @@ Polyline interpolation(Polyline shortest_path, double th0, double thf, double mi
             Arc first_arc = arc_vect[i-2];
             Arc second_arc = arc_vect[i-1];
 
-            Point first_point = Point(first_arc.xf, first_arc.yf);
-            Point second_point = Point(second_arc.x0, second_arc.y0);
+            VisiLibity::Point first_point = VisiLibity::Point(first_arc.xf, first_arc.yf);
+            VisiLibity::Point second_point = VisiLibity::Point(second_arc.x0, second_arc.y0);
             
             points_final_path.append(get_points_line(first_point, second_point));
             points_final_path.append(get_points_from_arc(second_arc, 100));
         }
 
         Arc last_arc = arc_vect[arc_vect.size()-1];
-        Point sn_1 = Point(last_arc.xf, last_arc.yf);
-        Point sn_2 = shortest_path[shortest_path.size() - 2];
+        VisiLibity::Point sn_1 = VisiLibity::Point(last_arc.xf, last_arc.yf);
+        VisiLibity::Point sn_2 = shortest_path[shortest_path.size() - 2];
 
         cout<<"Add LINE from "<<sn_2<<" to "<<sn_1<<endl;
         points_final_path.append(get_points_line(sn_2, sn_1));
