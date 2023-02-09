@@ -96,7 +96,7 @@ class MinimalPublisher : public rclcpp::Node
       double minR = 1;
       double minH = 0.5; 
       Environment env = get_environment3();
-      Environment off_env = get_env_offset(env, minR, minH);
+      //Environment off_env = get_env_offset(env, minR, minH);
 
       //ROAD MAP
       Visibility_Graph graph = Visibility_Graph(env, 0.1);

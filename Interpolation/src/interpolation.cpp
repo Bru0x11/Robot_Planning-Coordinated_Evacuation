@@ -507,7 +507,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
         
         double min_angle = find_min_angle(poly);
         float off_value = (float) offset_calculator(min_angle, minR, minH);
-        const ::PathsD& b_poly = createPolygon(poly_points);
+        //const ::PathsD& b_poly = createPolygon(poly_points);
         //PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
 
 
