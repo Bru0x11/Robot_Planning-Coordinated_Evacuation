@@ -58,29 +58,29 @@ class MinimalPublisher : public rclcpp::Node
     {
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
-      //Tranform the frame
-      std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "base_link");
-      std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
-      std::unique_ptr<tf2_ros::Buffer> tf_buffer;
-      tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
-      tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
-      std::string fromFrameRel = target_frame_.c_str();
-      std::string toFrameRel = "map"; //map
-      geometry_msgs::msg::TransformStamped t;
+      // //Tranform the frame
+      // std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "base_link");
+      // std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
+      // std::unique_ptr<tf2_ros::Buffer> tf_buffer;
+      // tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+      // tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
+      // std::string fromFrameRel = target_frame_.c_str();
+      // std::string toFrameRel = "map"; //map
+      // geometry_msgs::msg::TransformStamped t;
 
-      try {
-        rclcpp::Time now = this->get_clock()->now();
-        t = tf_buffer->lookupTransform(toFrameRel, fromFrameRel, tf2::TimePointZero, 30s);
-      } 
-      catch (const tf2::TransformException & ex) {
-        RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
-        return;
-      }
+      // try {
+      //   rclcpp::Time now = this->get_clock()->now();
+      //   t = tf_buffer->lookupTransform(toFrameRel, fromFrameRel, tf2::TimePointZero, 30s);
+      // } 
+      // catch (const tf2::TransformException & ex) {
+      //   RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), fromFrameRel.c_str(), ex.what());
+      //   return;
+      // }
 
-      tf2::Quaternion q(t.transform.rotation.x,t.transform.rotation.y,t.transform.rotation.z,t.transform.rotation.w);
-      tf2::Matrix3x3 m(q);
-      double roll, pitch, yaw;
-      m.getRPY(roll, pitch, yaw);
+      // tf2::Quaternion q(t.transform.rotation.x,t.transform.rotation.y,t.transform.rotation.z,t.transform.rotation.w);
+      // tf2::Matrix3x3 m(q);
+      // double roll, pitch, yaw;
+      // m.getRPY(roll, pitch, yaw);
 
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
@@ -96,21 +96,25 @@ class MinimalPublisher : public rclcpp::Node
       double minR = 1;
       double minH = 0.5; 
       Environment env = get_environment3();
-      //Environment off_env = get_env_offset(env, minR, minH);
+      Environment off_env = get_env_offset(env, minR, minH);
 
       //ROAD MAP
-      Visibility_Graph graph = Visibility_Graph(env, 0.1);
+      Visibility_Graph graph = Visibility_Graph(off_env, 0.1);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
 
       //DEFINE START AND END POINTS
-      double x0 = t.transform.translation.x;
-      double y0 = t.transform.translation.y;
+      // double x0 = t.transform.translation.x;
+      // double y0 = t.transform.translation.y;
+
+      double x0 = 0;
+      double y0 = 0;
 
       VisiLibity::Point start_test = VisiLibity::Point(x0, y0);
       VisiLibity::Point end = VisiLibity::Point(4, -8);
       //DEFINE START AND END ANGLES 
-      double th0 = t.transform.rotation.z;
+      // double th0 = t.transform.rotation.z;
+      double th0 = 0;
       double thf = M_PI/2;
 
       //FIND SHORTES PATH

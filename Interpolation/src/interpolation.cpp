@@ -403,6 +403,8 @@ Environment get_environment1(){
     points_obs3.push_back(VisiLibity::Point(16, 6));
     Polygon obs3 = Polygon(points_obs3);
 
+
+
     vector<VisiLibity::Point> points_env;
     points_env.push_back(VisiLibity::Point(-20.0, -20.0));
     points_env.push_back(VisiLibity::Point(20.0, -20.0));
@@ -414,6 +416,7 @@ Environment get_environment1(){
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
     poly_env.add_hole(obs3);
+
 
     return poly_env;
 }
@@ -485,35 +488,78 @@ Environment get_environment3(){
     points_env.push_back(VisiLibity::Point(20.0, 20.0));
     points_env.push_back(VisiLibity::Point(-20.0, 20.0));
 
+    vector<VisiLibity::Point> points_obs4;
+    points_obs4.push_back(VisiLibity::Point(19, 0));
+    points_obs4.push_back(VisiLibity::Point(19, 1));
+    points_obs4.push_back(VisiLibity::Point(19.5, 1));
+    points_obs4.push_back(VisiLibity::Point(19.5, 0));
+    Polygon obs4 = Polygon(points_obs4);
+
+    vector<VisiLibity::Point> points_obs5;
+    points_obs5.push_back(VisiLibity::Point(0, -3.5));
+    points_obs5.push_back(VisiLibity::Point(0, -2));
+    points_obs5.push_back(VisiLibity::Point(1.5, -2));
+    points_obs5.push_back(VisiLibity::Point(1.5, -3.5));
+    Polygon obs5 = Polygon(points_obs5);
+
     Environment poly_env = Environment(points_env);
 
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
     poly_env.add_hole(obs3);
+    poly_env.add_hole(obs4);
+    poly_env.add_hole(obs5);
 
     return poly_env;
 }
 
 Environment get_env_offset(Environment env, double minR, double minH){
     cout<<"ENV.H(): "<<env.h()<<endl;
-    
-    for(int i = 0; i<env.h(); i++){
+    FillRule fr = FillRule::EvenOdd;
+    SvgWriter svg;
+    vector<PathsD> polygons;
+
+    //MAP
+    vector<VisiLibity::Point> boundary_points;
+    Polygon boundary = env[0];
+    cout<<"creo mappa"<<endl;
+    for(int j = 0; j<4; j++){
+        
+        VisiLibity::Point p = boundary[j];
+        boundary_points.push_back(p);
+    }   
+    PathsD b_boundary = createPolygon(boundary_points);
+    PathsD off_boundary = offsetPolygon(b_boundary, minH, true); 
+    polygons.push_back(off_boundary);
+   
+
+    //OBSTACLES
+    for(int i = 1; i<=env.h(); i++){
+        
         Polygon poly = env[i];
         vector<VisiLibity::Point> poly_points;
-        for(int j = 0; i<poly.n(); j++){
+        
+        for(int j = 0; j<poly.n(); j++){
+           
             VisiLibity::Point p = poly[j];
             poly_points.push_back(p);
         }
         
         double min_angle = find_min_angle(poly);
+       
         float off_value = (float) offset_calculator(min_angle, minR, minH);
-        //const ::PathsD& b_poly = createPolygon(poly_points);
-        //PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
 
+        PathsD b_poly = createPolygon(poly_points);
+        PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
 
+        checkIntersections(off_b_poly, polygons, 0); 
     }
 
-
+    for(int i=0; i<polygons.size(); i++){
+        svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
+    }
+    svg.SaveToFile("sample_map.svg", 800, 600, 0);
+    //System("sample_map.svg");
 
     return env; 
 }

@@ -31,7 +31,16 @@ add_executable(path_planning_node
                   ../Interpolation/src/interpolation.cpp
                   ../VisiLibity1/src/visilibity.cpp
                   ../Interpolation/src/dubins.cpp
+                  ../OffsetTools/src/offsetFunctions.cpp
+                  ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.engine.cpp 
+                  ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.offset.cpp 
+                  ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.rectclip.cpp
+                  ../OffsetTools/include/CPP/Utils/ClipFileLoad.cpp
+                  ../OffsetTools/include/CPP/Utils/ClipFileSave.cpp
+                  ../OffsetTools/include/CPP/Utils/clipper.svg.cpp
                   )
+
+
 ament_target_dependencies(path_planning_node rclcpp nav_msgs nav2_msgs tf2 tf2_ros rclcpp_action std_srvs rclcpp_components )
 
 

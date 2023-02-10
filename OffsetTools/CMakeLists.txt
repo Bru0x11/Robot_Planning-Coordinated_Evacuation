@@ -17,19 +17,19 @@ include_directories(
     ../VisiLibity1
 )
 
-add_executable(offset_node
- src/offsetFunctions.cpp
-include/CPP/Clipper2Lib/src/clipper.engine.cpp 
-include/CPP/Clipper2Lib/src/clipper.offset.cpp 
-include/CPP/Clipper2Lib/src/clipper.rectclip.cpp
-include/CPP/Utils/ClipFileLoad.cpp
-include/CPP/Utils/ClipFileSave.cpp
-include/CPP/Utils/clipper.svg.cpp
-)
+# add_executable(offset_node
+# #  src/offsetFunctions.cpp
+# include/CPP/Clipper2Lib/src/clipper.engine.cpp 
+# include/CPP/Clipper2Lib/src/clipper.offset.cpp 
+# include/CPP/Clipper2Lib/src/clipper.rectclip.cpp
+# include/CPP/Utils/ClipFileLoad.cpp
+# include/CPP/Utils/ClipFileSave.cpp
+# include/CPP/Utils/clipper.svg.cpp
+# )
 
 
 install(TARGETS
-  offset_node
+  # offset_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
