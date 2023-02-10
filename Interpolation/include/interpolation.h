@@ -88,6 +88,8 @@ Environment get_environment2();
 
 Environment get_environment3();
 
+Environment get_maze_env();
+
 Environment get_env_offset(Environment env, double minR, double minH);
 
 Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR);

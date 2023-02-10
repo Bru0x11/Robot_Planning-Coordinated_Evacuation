@@ -488,12 +488,12 @@ Environment get_environment3(){
     points_env.push_back(VisiLibity::Point(20.0, 20.0));
     points_env.push_back(VisiLibity::Point(-20.0, 20.0));
 
-    vector<VisiLibity::Point> points_obs4;
-    points_obs4.push_back(VisiLibity::Point(19, 0));
-    points_obs4.push_back(VisiLibity::Point(19, 1));
-    points_obs4.push_back(VisiLibity::Point(19.5, 1));
-    points_obs4.push_back(VisiLibity::Point(19.5, 0));
-    Polygon obs4 = Polygon(points_obs4);
+    // vector<VisiLibity::Point> points_obs4;
+    // points_obs4.push_back(VisiLibity::Point(19, 0));
+    // points_obs4.push_back(VisiLibity::Point(19, 1));
+    // points_obs4.push_back(VisiLibity::Point(19.5, 1));
+    // points_obs4.push_back(VisiLibity::Point(19.5, 0));
+    // Polygon obs4 = Polygon(points_obs4);
 
     vector<VisiLibity::Point> points_obs5;
     points_obs5.push_back(VisiLibity::Point(0, -3.5));
@@ -507,8 +507,42 @@ Environment get_environment3(){
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
     poly_env.add_hole(obs3);
-    poly_env.add_hole(obs4);
+    // poly_env.add_hole(obs4);
     poly_env.add_hole(obs5);
+
+    return poly_env;
+}
+
+Environment get_maze_env(){
+
+    vector<VisiLibity::Point> points_obs1;
+
+    points_obs1.push_back(VisiLibity::Point(-4, -3));
+    points_obs1.push_back(VisiLibity::Point(-4, -1.5));
+    points_obs1.push_back(VisiLibity::Point(3, -1.5));
+    points_obs1.push_back(VisiLibity::Point(3, -3));    
+
+    Polygon obs1 = Polygon(points_obs1);
+
+    vector<VisiLibity::Point> points_obs2;
+
+    points_obs2.push_back(VisiLibity::Point(-2, 1));
+    points_obs2.push_back(VisiLibity::Point(-2, 3));
+    points_obs2.push_back(VisiLibity::Point(4, 3));
+    points_obs2.push_back(VisiLibity::Point(4, 1));
+    
+    Polygon obs2 = Polygon(points_obs2);
+
+    vector<VisiLibity::Point> points_env;
+    points_env.push_back(VisiLibity::Point(-8, 8));
+    points_env.push_back(VisiLibity::Point(8, -8));
+    points_env.push_back(VisiLibity::Point(8, 8));
+    points_env.push_back(VisiLibity::Point(-8, 8));
+
+    Environment poly_env = Environment(points_env);
+
+    poly_env.add_hole(obs1);
+    poly_env.add_hole(obs2);
 
     return poly_env;
 }
@@ -518,18 +552,21 @@ Environment get_env_offset(Environment env, double minR, double minH){
     FillRule fr = FillRule::EvenOdd;
     SvgWriter svg;
     vector<PathsD> polygons;
+    int map_pos = 0;
 
     //MAP
     vector<VisiLibity::Point> boundary_points;
     Polygon boundary = env[0];
     cout<<"creo mappa"<<endl;
-    for(int j = 0; j<4; j++){
-        
+    for(int j = 0; j<boundary.n(); j++){
         VisiLibity::Point p = boundary[j];
         boundary_points.push_back(p);
     }   
     PathsD b_boundary = createPolygon(boundary_points);
+    cout<<"b_boundary: "<<endl<<b_boundary<<endl;
+    polygons.push_back(b_boundary);
     PathsD off_boundary = offsetPolygon(b_boundary, minH, true); 
+    cout<<"off_boundary: "<<endl<<off_boundary<<endl;
     polygons.push_back(off_boundary);
    
 
@@ -559,9 +596,43 @@ Environment get_env_offset(Environment env, double minR, double minH){
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     }
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
-    //System("sample_map.svg");
+    System("sample_map.svg");
 
-    return env; 
+    // //TRANSLATE INTO VISILIBITY MAP
+    vector<Polygon> translated_polygons;
+    for(int i = 0; i<polygons.size(); i++){
+        if(i==0){
+            PathsD map = polygons[0];
+            Polygon translated_map; 
+            vector<VisiLibity::Point> translated_map_points; 
+
+            // for (int j = map[0].size()-1; j >= 0; j--){
+            //     cout<<"J: "<<j<<endl;
+            //     translated_map_points.push_back(VisiLibity::Point(map[0][j].x, map[0][j].y));
+            // }
+
+            for (PointD point : map[0]){
+                cout<<"point: "<<point<<endl;
+                translated_map_points.push_back(VisiLibity::Point(point.x, point.y));
+            }
+
+
+            translated_map = Polygon(translated_map_points);
+            translated_polygons.push_back(translated_map);
+            cout<<"TRANSLATED BOUNDARY: "<<endl<<translated_map<<endl;
+        }
+        else{
+            std::vector<VisiLibity::Point> poly_points = translatePolygon(polygons[i]);
+            Polygon poly = Polygon(poly_points);
+            translated_polygons.push_back(poly);
+        }
+    }
+
+    
+
+    Environment off_env = Environment(translated_polygons);
+
+    return off_env; 
 }
 
 

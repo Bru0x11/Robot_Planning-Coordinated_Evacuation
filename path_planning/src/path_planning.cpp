@@ -58,7 +58,7 @@ class MinimalPublisher : public rclcpp::Node
     {
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
-      // //Tranform the frame
+      //Tranform the frame
       // std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "base_link");
       // std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
       // std::unique_ptr<tf2_ros::Buffer> tf_buffer;
@@ -82,6 +82,7 @@ class MinimalPublisher : public rclcpp::Node
       // double roll, pitch, yaw;
       // m.getRPY(roll, pitch, yaw);
 
+
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
       path.header.frame_id = "map";
@@ -93,9 +94,10 @@ class MinimalPublisher : public rclcpp::Node
         // 3) apply offset
         // 4) transform environment in VisiLibity Environment
 
-      double minR = 1;
-      double minH = 0.5; 
-      Environment env = get_environment3();
+      double minR = 0.5;
+      double minH = 0.3; 
+      // Environment env = get_environment3();
+      Environment env = get_maze_env();
       Environment off_env = get_env_offset(env, minR, minH);
 
       //ROAD MAP
@@ -111,11 +113,11 @@ class MinimalPublisher : public rclcpp::Node
       double y0 = 0;
 
       VisiLibity::Point start_test = VisiLibity::Point(x0, y0);
-      VisiLibity::Point end = VisiLibity::Point(4, -8);
+      VisiLibity::Point end = VisiLibity::Point(4, 4);
       //DEFINE START AND END ANGLES 
       // double th0 = t.transform.rotation.z;
       double th0 = 0;
-      double thf = M_PI/2;
+      double thf = 0;
 
       //FIND SHORTES PATH
       Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.1);
@@ -125,10 +127,9 @@ class MinimalPublisher : public rclcpp::Node
       cout << shortest_path << endl;
 
       cout << "env: "<<endl;
-      cout<<env<<endl;
-
-      //cout << "graph: "<<endl<<graph<<endl;
-      //sleep(5000); 
+      cout <<env<<endl;
+      cout << "off_env: "<<endl;
+      cout<<off_env<<endl;
 
       cout<<"faccio interpolation"<<endl;
 

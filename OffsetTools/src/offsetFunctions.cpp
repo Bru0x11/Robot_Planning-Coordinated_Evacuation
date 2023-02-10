@@ -20,12 +20,13 @@ PathsD createPolygon(const std::vector<VisiLibity::Point>& points){
 PathsD offsetPolygon(const ::PathsD& polygon, float offsetSize, bool isMapContour=false){
   PathsD offsettedPolygon;
 
-  offsettedPolygon = InflatePaths(polygon, offsetSize, JoinType::Miter, EndType::Polygon);
-  
-  if (isMapContour){
+  if(isMapContour){
+    offsettedPolygon = InflatePaths(polygon, offsetSize, JoinType::Miter, EndType::Polygon);
     offsettedPolygon = Xor(offsettedPolygon, polygon, FillRule::NonZero);
   }
-
+  else{
+    offsettedPolygon = InflatePaths(polygon, offsetSize, JoinType::Miter, EndType::Polygon);
+  }
   return offsettedPolygon;
 }
 
@@ -54,7 +55,7 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
   previousPolygons.push_back(merged_poly);
 }
 
-auto translatePolygon(const PathsD& originalPolygon){
+std::vector<VisiLibity::Point> translatePolygon(const PathsD& originalPolygon){
   std::vector<VisiLibity::Point> listOfPoints {};
 
   for (PointD point : originalPolygon[0]){

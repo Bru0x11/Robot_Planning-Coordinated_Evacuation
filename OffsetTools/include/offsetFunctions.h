@@ -41,7 +41,9 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
 /*
 Given a PathD, returns list of VisiLibity::Point
 */
-auto translatePolygon(const PathsD& originalPolygon);
+std::vector<VisiLibity::Point> translatePolygon(const PathsD& originalPolygon);
+
+void System(const std::string& filename);
 
 
 
