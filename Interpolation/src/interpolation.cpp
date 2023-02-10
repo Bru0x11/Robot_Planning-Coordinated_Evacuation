@@ -525,7 +525,6 @@ Environment get_maze_env(){
     Polygon obs1 = Polygon(points_obs1);
 
     vector<VisiLibity::Point> points_obs2;
-
     points_obs2.push_back(VisiLibity::Point(-2, 1));
     points_obs2.push_back(VisiLibity::Point(-2, 3));
     points_obs2.push_back(VisiLibity::Point(4, 3));
@@ -543,7 +542,7 @@ Environment get_maze_env(){
 
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
-
+    //prova
     return poly_env;
 }
 
