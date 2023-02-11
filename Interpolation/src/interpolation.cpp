@@ -576,7 +576,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     auto end = off_boundary.begin() + off_boundary.size() + 1;
     PathsD final_map {};
     copy(start, end, final_map.begin());
-    polygons.push_back(off_boundary);   
+    polygons.push_back(final_map);   
 
     //-----------------OBSTACLES----------------
     for(int i = 1; i<=env.h(); i++){
