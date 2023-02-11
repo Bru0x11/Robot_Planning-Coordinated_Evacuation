@@ -557,7 +557,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     vector<PathsD> polygons;
 
     //MAP
-    cout << "...CREATING THE MAP...\n"
+    cout << "...CREATING THE MAP...\n";
     int map_pos = 0;
     vector<VisiLibity::Point> boundary_points;
     Polygon boundary = env[0];
