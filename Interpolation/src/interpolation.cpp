@@ -547,7 +547,7 @@ Environment get_maze_env(){
     // points_obs3.push_back(VisiLibity::Point(-1.5, 2));
 
     points_obs3.push_back(VisiLibity::Point(-6, -3.2));
-    points_obs3.push_back(VisiLibity::Point(-4, 2));
+    points_obs3.push_back(VisiLibity::Point(-4, 2.8));
     points_obs3.push_back(VisiLibity::Point(-2, -3.2));
     
     Polygon obs3 = Polygon(points_obs3);
