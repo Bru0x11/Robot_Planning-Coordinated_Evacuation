@@ -77,39 +77,39 @@ void System(const std::string& filename){
 
 
 //Example of print
-int main(){
+// int main(){
 
-  std::vector<VisiLibity::Point> mapPoints {};
-  mapPoints.push_back(VisiLibity::Point(-8, 8));
-  mapPoints.push_back(VisiLibity::Point(8, -8));
-  mapPoints.push_back(VisiLibity::Point(8, 8));
-  mapPoints.push_back(VisiLibity::Point(-8, 8));
+//   std::vector<VisiLibity::Point> mapPoints {};
+//   mapPoints.push_back(VisiLibity::Point(-8, 8));
+//   mapPoints.push_back(VisiLibity::Point(8, -8));
+//   mapPoints.push_back(VisiLibity::Point(8, 8));
+//   mapPoints.push_back(VisiLibity::Point(-8, 8));
 
-  std::vector<VisiLibity::Point> trianglePoints {};
-  trianglePoints.push_back(VisiLibity::Point(-2, 1));
-  trianglePoints.push_back(VisiLibity::Point(-2, 3));
-  trianglePoints.push_back(VisiLibity::Point(4, 3));
-  trianglePoints.push_back(VisiLibity::Point(4, 1));
+//   std::vector<VisiLibity::Point> trianglePoints {};
+//   trianglePoints.push_back(VisiLibity::Point(-2, 1));
+//   trianglePoints.push_back(VisiLibity::Point(-2, 3));
+//   trianglePoints.push_back(VisiLibity::Point(4, 3));
+//   trianglePoints.push_back(VisiLibity::Point(4, 1));
   
-  std::vector<VisiLibity::Point> squarePoints1 {};
-  squarePoints1.push_back(VisiLibity::Point(-4, -3));
-  squarePoints1.push_back(VisiLibity::Point(-4, -1.5));
-  squarePoints1.push_back(VisiLibity::Point(3, -1.5));
-  squarePoints1.push_back(VisiLibity::Point(3, -3)); 
+//   std::vector<VisiLibity::Point> squarePoints1 {};
+//   squarePoints1.push_back(VisiLibity::Point(-4, -3));
+//   squarePoints1.push_back(VisiLibity::Point(-4, -1.5));
+//   squarePoints1.push_back(VisiLibity::Point(3, -1.5));
+//   squarePoints1.push_back(VisiLibity::Point(3, -3)); 
 
-  PathsD triangle {createPolygon(trianglePoints)};
-  PathsD square1 {createPolygon(squarePoints1)};
-  PathsD map {offsetPolygon(createPolygon(mapPoints), 0.5, true)};
+//   PathsD triangle {createPolygon(trianglePoints)};
+//   PathsD square1 {createPolygon(squarePoints1)};
+//   PathsD map {offsetPolygon(createPolygon(mapPoints), 0.5, true)};
 
-  std::vector<VisiLibity::Point> translatedMap {translatePolygon(map)};
+//   std::vector<VisiLibity::Point> translatedMap {translatePolygon(map)};
 
-  FillRule fr = FillRule::EvenOdd;
-  SvgWriter svg;
+//   FillRule fr = FillRule::EvenOdd;
+//   SvgWriter svg;
   
-  svg.AddPaths(triangle, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
-  svg.AddPaths(square1, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
-  svg.AddPaths(map, false, fr, 0x10FF66FF, 0xFF0066FF, 1, false); 
+//   svg.AddPaths(triangle, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
+//   svg.AddPaths(square1, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
+//   svg.AddPaths(map, false, fr, 0x10FF66FF, 0xFF0066FF, 1, false); 
 
-  svg.SaveToFile("sample_map.svg", 800, 600, 0);
-  System("sample_map.svg");
-}
+//   svg.SaveToFile("sample_map.svg", 800, 600, 0);
+//   System("sample_map.svg");
+// }
