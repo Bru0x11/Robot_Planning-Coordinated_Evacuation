@@ -599,7 +599,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
         polygons.push_back(off_b_poly);
 
         //Check whether there are intersection between the different polygons
-        checkIntersections(off_b_poly, polygons, 0); 
+        //checkIntersections(off_b_poly, polygons, 0); 
     }
 
     cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
