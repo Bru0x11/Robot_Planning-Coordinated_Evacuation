@@ -566,7 +566,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     }
 
     PathsD b_boundary = createPolygon(boundary_points);
-    cout << "Points of the normal boundary: " b_boundary << '\n';
+    cout << "Points of the normal boundary: " << b_boundary << '\n';
     polygons.push_back(b_boundary);
 
     PathsD off_boundary = offsetPolygon(b_boundary, 0.5, true);
