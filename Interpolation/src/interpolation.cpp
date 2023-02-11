@@ -549,6 +549,7 @@ Environment get_maze_env(){
 
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
+    poly_env.add_hole(obs3);
     //prova
     return poly_env;
 }
