@@ -575,6 +575,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     polygons.push_back(off_boundary);   
 
     //-----------------OBSTACLES----------------
+    cout << "...CREATING THE OBSTACLES...\n";
     for(int i = 1; i<=env.h(); i++){
         
         Polygon poly = env[i];
@@ -610,40 +611,32 @@ Environment get_env_offset(Environment env, double minR, double minH){
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
 
     //-----------------TRANSLATION----------------
+    cout << "...TRANSLATING THE OBSTACLES...\n";
     vector<Polygon> translated_polygons;
-    
+
     for(int i = 0; i<polygons.size(); i++){
+        //The first has to be necessarily the map
         if(i==0){
-            PathsD map = polygons[0];
-            Polygon translated_map; 
-            vector<VisiLibity::Point> translated_map_points; 
+            PathsD map = polygons[0]; 
+            vector<VisiLibity::Point> translated_map_points;
 
-            // for (int j = map[0].size()-1; j >= 0; j--){
-            //     cout<<"J: "<<j<<endl;
-            //     translated_map_points.push_back(VisiLibity::Point(map[0][j].x, map[0][j].y));
-            // }
-
-            for (PointD point : map[0]){
-                cout<<"point: "<<point<<endl;
+            for (PointD point : map[1]){
                 translated_map_points.push_back(VisiLibity::Point(point.x, point.y));
             }
 
-
-            translated_map = Polygon(translated_map_points);
+            Polygon translated_map = Polygon(translated_map_points);
             translated_polygons.push_back(translated_map);
-            cout<<"TRANSLATED BOUNDARY: "<<endl<<translated_map<<endl;
+            cout << "Point of translated offsetted boundary: " << translated_map << '\n';
         }
         else{
-            std::vector<VisiLibity::Point> poly_points = translatePolygon(polygons[i]);
+            vector<VisiLibity::Point> poly_points = translatePolygon(polygons[i]);
             Polygon poly = Polygon(poly_points);
             translated_polygons.push_back(poly);
+            cout << "Point of translated offsetted polygon: " << poly << '\n';     
         }
     }
 
-    
-
     Environment off_env = Environment(translated_polygons);
-
     return off_env; 
 }
 
