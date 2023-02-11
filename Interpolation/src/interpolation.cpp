@@ -573,7 +573,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     cout << "Point of offsetted boundary: " << off_boundary << '\n';
 
     auto start = off_boundary.begin() + 4;
-    auto end = off_boundary.begin() + off_boundary.size() + 1;
+    auto end = off_boundary.begin() + off_boundary.size();
     PathsD final_map {};
     copy(start, end, final_map.begin());
     polygons.push_back(final_map);   
