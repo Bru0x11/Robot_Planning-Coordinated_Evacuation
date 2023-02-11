@@ -540,8 +540,8 @@ Environment get_maze_env(){
 
     Environment poly_env = Environment(points_env);
 
-    poly_env.add_hole(obs1);
-    poly_env.add_hole(obs2);
+    //poly_env.add_hole(obs1);
+    //poly_env.add_hole(obs2);
     //prova
     return poly_env;
 }
@@ -604,7 +604,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     for(int i=0; i<polygons.size(); i++){
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     }
-    svg.SaveToFile("sample_mapxd.svg", 800, 600, 0);
+    svg.SaveToFile("sample_map.svg", 800, 600, 0);
     System("sample_map.svg");
 
     // //TRANSLATE INTO VISILIBITY MAP
