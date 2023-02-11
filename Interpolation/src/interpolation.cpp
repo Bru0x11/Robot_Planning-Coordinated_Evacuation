@@ -550,7 +550,8 @@ Environment get_env_offset(Environment env, double minR, double minH){
     cout<<"ENV.H(): "<<env.h()<<endl;
 
     FillRule fr = FillRule::EvenOdd;
-    SvgWriter svg;
+    SvgWriter svg1;
+    SvgWriter svg2;
     cout << "prova\n"; 
 
     vector<PathsD> polygons;
