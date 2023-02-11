@@ -553,31 +553,31 @@ Environment get_env_offset(Environment env, double minR, double minH){
     SvgWriter svg;
     SvgWriter svg1;
     SvgWriter svg2;
-    cout << "prova\n"; 
 
     vector<PathsD> polygons;
 
     //MAP
+    cout << "...CREATING THE MAP...\n"
     int map_pos = 0;
     vector<VisiLibity::Point> boundary_points;
     Polygon boundary = env[0];
 
-    cout<<"creo mappa"<<endl;
     for(int j = 0; j<boundary.n(); j++){
         VisiLibity::Point p = boundary[j];
+        cout << "Boundary point: " << p << "\n";
         boundary_points.push_back(p);
     }
 
     PathsD b_boundary = createPolygon(boundary_points);
     cout<<"b_boundary: "<<endl<<b_boundary<<endl;
-    svg1.AddPaths(b_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     polygons.push_back(b_boundary);
+    svg1.AddPaths(b_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     svg1.SaveToFile("prova1.svg", 800, 600, 0);
 
     PathsD off_boundary = offsetPolygon(b_boundary, 0.5, true);
     cout<<"off_boundary: "<<endl<<off_boundary<<endl;
-    svg2.AddPaths(off_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     polygons.push_back(off_boundary);
+    svg2.AddPaths(off_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     svg2.SaveToFile("prova2.svg", 800, 600, 0);
    
 
