@@ -547,66 +547,61 @@ Environment get_maze_env(){
 }
 
 Environment get_env_offset(Environment env, double minR, double minH){
-    cout<<"ENV.H(): "<<env.h()<<endl;
-
+    //For printing purposes
     FillRule fr = FillRule::EvenOdd;
     SvgWriter svg;
-    SvgWriter svg1;
-    SvgWriter svg2;
 
     vector<PathsD> polygons;
 
-    //MAP
+    //------------------MAP------------------
     cout << "...CREATING THE MAP...\n";
     int map_pos = 0;
     vector<VisiLibity::Point> boundary_points;
     Polygon boundary = env[0];
 
+    //Extrapolating the points
     for(int j = 0; j<boundary.n(); j++){
         VisiLibity::Point p = boundary[j];
         boundary_points.push_back(p);
     }
 
     PathsD b_boundary = createPolygon(boundary_points);
-    cout<<"b_boundary: "<<endl<<b_boundary<<endl;
+    cout << "Points of the normal boundary: " b_boundary << '\n';
     polygons.push_back(b_boundary);
-    svg1.AddPaths(b_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
-    svg1.SaveToFile("prova1.svg", 800, 600, 0);
 
     PathsD off_boundary = offsetPolygon(b_boundary, 0.5, true);
-    cout<<"off_boundary: "<<endl<<off_boundary<<endl;
-    polygons.push_back(off_boundary);
-    svg2.AddPaths(off_boundary, false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
-    svg2.SaveToFile("prova2.svg", 800, 600, 0);
-   
+    cout << "Point of offsetted boundary: " << off_boundary << '\n';
+    polygons.push_back(off_boundary);   
 
-    //OBSTACLES
+    //-----------------OBSTACLES----------------
     for(int i = 1; i<=env.h(); i++){
         
         Polygon poly = env[i];
         vector<VisiLibity::Point> poly_points;
         
+        //Extrapolating the points
         for(int j = 0; j<poly.n(); j++){
-           
             VisiLibity::Point p = poly[j];
             poly_points.push_back(p);
         }
-        
+
+        //Computing the right offset for the polygon
         double min_angle = find_min_angle(poly);
-       
         float off_value = (float) offset_calculator(min_angle, minR, minH);
 
         PathsD b_poly = createPolygon(poly_points);
+        cout << "Points of the "<< i << "-th normal polygon: " << b_poly << '\n';
         PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
+        cout << "Points of the "<< i << "-th offsetted polygon: " << off_b_poly << '\n';
 
         checkIntersections(off_b_poly, polygons, 0); 
     }
 
+    //For printing purposes
     for(int i=0; i<polygons.size(); i++){
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
-    }
+    }   
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
-    System("sample_map.svg");
 
     // //TRANSLATE INTO VISILIBITY MAP
     vector<Polygon> translated_polygons;
