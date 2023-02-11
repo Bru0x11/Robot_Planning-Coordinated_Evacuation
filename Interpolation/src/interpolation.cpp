@@ -540,8 +540,8 @@ Environment get_maze_env(){
 
     Environment poly_env = Environment(points_env);
 
-    //poly_env.add_hole(obs1);
-    //poly_env.add_hole(obs2);
+    poly_env.add_hole(obs1);
+    poly_env.add_hole(obs2);
     //prova
     return poly_env;
 }
@@ -564,7 +564,6 @@ Environment get_env_offset(Environment env, double minR, double minH){
 
     for(int j = 0; j<boundary.n(); j++){
         VisiLibity::Point p = boundary[j];
-        cout << "Boundary point: " << p << "\n";
         boundary_points.push_back(p);
     }
 
