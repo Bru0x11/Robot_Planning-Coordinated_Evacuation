@@ -532,6 +532,13 @@ Environment get_maze_env(){
     
     Polygon obs2 = Polygon(points_obs2);
 
+    vector<VisiLibity::Point> points_obs3;
+    points_obs3.push_back(VisiLibity::Point(-4, 1));
+    points_obs3.push_back(VisiLibity::Point(-4, 5));
+    points_obs3.push_back(VisiLibity::Point(-1.5, 2));
+    
+    Polygon obs3 = Polygon(points_obs3);
+
     vector<VisiLibity::Point> points_env;
     points_env.push_back(VisiLibity::Point(-8, -8));
     points_env.push_back(VisiLibity::Point(8, -8));
