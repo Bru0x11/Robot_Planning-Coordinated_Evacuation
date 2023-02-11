@@ -551,6 +551,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     FillRule fr = FillRule::EvenOdd;
     SvgWriter svg;
 
+    //Save all the polygon in this variable
     vector<PathsD> polygons;
 
     //------------------MAP------------------
@@ -571,6 +572,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
 
     PathsD off_boundary = offsetPolygon(b_boundary, 0.5, true);
     cout << "Point of offsetted boundary: " << off_boundary << '\n';
+
     polygons.push_back(off_boundary);   
 
     //-----------------OBSTACLES----------------
@@ -594,6 +596,9 @@ Environment get_env_offset(Environment env, double minR, double minH){
         PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
         cout << "Points of the "<< i << "-th offsetted polygon: " << off_b_poly << '\n';
 
+        polygons.push_back(off_b_poly);
+
+        //Check whether there are intersection between the different polygons
         checkIntersections(off_b_poly, polygons, 0); 
     }
 
@@ -605,7 +610,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     }   
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
 
-    // //TRANSLATE INTO VISILIBITY MAP
+    //-----------------TRANSLATION----------------
     vector<Polygon> translated_polygons;
     for(int i = 0; i<polygons.size(); i++){
         if(i==0){
