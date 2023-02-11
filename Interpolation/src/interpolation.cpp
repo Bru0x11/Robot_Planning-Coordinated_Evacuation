@@ -572,11 +572,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     PathsD off_boundary = offsetPolygon(b_boundary, -0.5, true);
     cout << "Point of offsetted boundary: " << off_boundary << '\n';
 
-    auto start = off_boundary.begin() + 4;
-    auto end = off_boundary.begin() + off_boundary.size();
-    PathsD final_map {};
-    copy(start, end, final_map.begin());
-    polygons.push_back(final_map);   
+    polygons.push_back(off_boundary);   
 
     //-----------------OBSTACLES----------------
     for(int i = 1; i<=env.h(); i++){
@@ -615,6 +611,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
 
     //-----------------TRANSLATION----------------
     vector<Polygon> translated_polygons;
+    
     for(int i = 0; i<polygons.size(); i++){
         if(i==0){
             PathsD map = polygons[0];
