@@ -597,8 +597,10 @@ Environment get_env_offset(Environment env, double minR, double minH){
         checkIntersections(off_b_poly, polygons, 0); 
     }
 
+    cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
     //For printing purposes
     for(int i=0; i<polygons.size(); i++){
+        cout << polygons[i] < '\n';
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
     }   
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
