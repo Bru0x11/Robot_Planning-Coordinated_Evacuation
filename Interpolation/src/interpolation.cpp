@@ -573,7 +573,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     cout << "Point of offsetted boundary: " << off_boundary << '\n';
 
     
-    polygons.push_back(off_boundary);   
+    polygons.push_back(off_boundary[1]);   
 
     //-----------------OBSTACLES----------------
     for(int i = 1; i<=env.h(); i++){
