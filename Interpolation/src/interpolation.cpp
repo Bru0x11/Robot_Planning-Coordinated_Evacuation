@@ -513,7 +513,7 @@ Environment get_environment3(){
     return poly_env;
 }
 
-Environment get_maze_env(){
+Environment getEnvironment(){
 
     vector<VisiLibity::Point> points_obs1;
 
@@ -594,7 +594,7 @@ Environment get_maze_env(){
     return poly_env;
 }
 
-Environment get_env_offset(Environment env, double minR, double minH){
+Environment getOffsettedEnvironment(Environment env, double minR, double minH){
     //For printing purposes
     FillRule fr = FillRule::EvenOdd;
     SvgWriter svg;
