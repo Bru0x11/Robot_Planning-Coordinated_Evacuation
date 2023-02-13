@@ -642,7 +642,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     iter_swap(polygons.begin(), polygons.begin() + mapPosition);
 
     cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
-    cout << "LISTING ALL THE POLYGON WE HAVE:\n"
+    cout << "LISTING ALL THE POLYGON WE HAVE:\n";
     for(int i=0; i<polygons.size(); i++){
         cout << polygons[i] << '\n';
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
