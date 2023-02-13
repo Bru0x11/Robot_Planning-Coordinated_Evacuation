@@ -1,10 +1,8 @@
-
 #include "include/interpolation.h"
 
 /*
 Defining the methods for the class Vector
 */
-
 //Constructor
 Vector::Vector(double x, double y){
         this->x = x;
