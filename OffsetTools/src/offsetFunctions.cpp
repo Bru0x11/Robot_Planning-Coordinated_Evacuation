@@ -40,54 +40,11 @@ auto mergePolygons(const PathsD& firstPolygon, const PathsD& secondPolygon){
   return Union(firstPolygon, secondPolygon, FillRule::NonZero);
 }
 
-// void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int from){
-
-//   PathsD merged_poly {newPolygon};
-
-//   for(int i = from; i<previousPolygons.size(); i++){
-//     PathsD ith_poly = previousPolygons.at(i);
-
-//     if(AreIntersected(newPolygon, ith_poly)){
-//       merged_poly = mergePolygons(newPolygon, ith_poly);
-
-//       std::cout << "OTHER CODE BEFORE ELIMINATION:\n";
-//       for (int k=0; k<previousPolygons.size(); k++){
-//           std::cout << previousPolygons[k] << '\n';
-//       }
-
-//       previousPolygons.erase(previousPolygons.begin() + i);
-
-//       std::cout << "OTHER CODE AFTER ELIMINATION:\n";
-//       for (int k=0; k<previousPolygons.size(); k++){
-//           std::cout << previousPolygons[k] << '\n';
-//       }
-
-//       checkIntersections(merged_poly, previousPolygons, i);
-//     }
-
-//     break;
-//   }
-
-//   std::cout << "OTHER CODE BEFORE RETURN:\n";
-//   for (int k=0; k<previousPolygons.size(); k++){
-//       std::cout << previousPolygons[k] << '\n';
-//   }
-
-//   previousPolygons.push_back(merged_poly);
-
-//   std::cout << "OTHER CODE AFTER RETURN:\n";
-//   for (int k=0; k<previousPolygons.size(); k++){
-//       std::cout << previousPolygons[k] << '\n';
-//   }
-// }
-
 void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons){
   checkIntersectionsRec(newPolygon, previousPolygons, 0);
 }
 
 void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int i){
-  std::cout <<"HERE\n";
-  std::cout << i << '\n';
   PathsD merged_poly {};
   if((previousPolygons.size() != 0) && (i < previousPolygons.size())){
     PathsD ith_poly = previousPolygons.at(i);
@@ -99,7 +56,9 @@ void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previo
       checkIntersectionsRec(newPolygon, previousPolygons, i+1);
     }
   }else{
-    previousPolygons.push_back(merged_poly);
+    if merged_poly != {} {
+      previousPolygons.push_back(merged_poly);
+    }
   }
 }
 
