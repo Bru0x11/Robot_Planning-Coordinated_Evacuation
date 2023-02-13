@@ -112,7 +112,6 @@ class MinimalPublisher : public rclcpp::Node{
       //Finding the shortest path in the map
       Polyline shortestPath = offsettedEnvironment.shortest_path(startingPoint, endingPoint, roadmapGraph, 0.1);
 
-      cout << "Enviroment is valid: " << offsettedEnvironment.is_valid(0.1) << '\n';
       cout << "Offsetted environment: " << offsettedEnvironment << '\n';
       cout << "Shortest path in the map: " << shortestPath << '\n';      
 
