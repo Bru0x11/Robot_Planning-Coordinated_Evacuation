@@ -43,6 +43,7 @@ auto mergePolygons(const PathsD& firstPolygon, const PathsD& secondPolygon){
 void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int from){
 
   PathsD merged_poly {newPolygon};
+
   for(int i = from; i<previousPolygons.size(); i++){
     PathsD ith_poly = previousPolygons.at(i);
     if(AreIntersected(newPolygon, ith_poly)){
@@ -77,6 +78,7 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
       std::cout << previousPolygons[k] << '\n';
   }
 
+  return;
 }
 
 std::vector<VisiLibity::Point> translatePolygon(const PathsD& originalPolygon){
