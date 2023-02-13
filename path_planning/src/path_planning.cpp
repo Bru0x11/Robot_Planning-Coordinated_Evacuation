@@ -37,13 +37,23 @@ using namespace std::chrono_literals;
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <string.h>
+#include <vector>
 
 #include "include/interpolation.h"
 #include "include/dubins.h"
 #include "src/visilibity.hpp"
 
+#include "obstacles_msgs/msg/obstacle_array_msg.hpp"
+#include "obstacles_msgs/msg/obstacle_msg.hpp"
+#include "std_msgs/msg/header.hpp"
+
 using namespace std;
 using namespace VisiLibity;
+using FollowPath = nav2_msgs::action::FollowPath;
+using GoalHandle = rclcpp_action::ClientGoalHandle<FollowPath>;
+using std::placeholders::_1;
+using std::placeholders::_2;
+
 
 
 /* This example creates a subclass of Node and uses std::bind() to register a
@@ -52,13 +62,14 @@ using namespace VisiLibity;
 
 class MinimalPublisher : public rclcpp::Node
 {
+
   public:
     MinimalPublisher()
     : Node("barba_node")
     {
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
-      //Tranform the frame
+      // //Tranform the frame
       // std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "base_link");
       // std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
       // std::unique_ptr<tf2_ros::Buffer> tf_buffer;
@@ -88,16 +99,59 @@ class MinimalPublisher : public rclcpp::Node
       path.header.frame_id = "map";
 
 
-      //TODO:
-        // 1) read map and robot positions
-        // 2) build Environment
-        // 3) apply offset
-        // 4) transform environment in VisiLibity Environment
+      //TOPIC SUBSCRIPTION TO READ BORDERS
+      auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
+      borders_subscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
+      "map_borders", qos, std::bind(&MinimalPublisher::border_topic_callback, this, _1));
+
+      
+      //TOPIC SUBSCRIPTION TO READ GATE
+      gate_subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
+      "gate_position", qos, std::bind(&MinimalPublisher::gate_topic_callback, this, _1));
+      
+      
+      //TOPIC SUBSCRIPTION TO READ OBSTACLES
+      subscription_ = this->create_subscription<obstacles_msgs::msg::ObstacleArrayMsg>(
+      "obstacles", qos, std::bind(&MinimalPublisher::topic_callback, this, _1));
+
+      // //GATE
+      // geometry_msgs::msg::Pose gate;
+      // VisiLibity::Point gate_position = VisiLibity::Point(gate.position.x, gate.position.y);
+      // double th_gate = gate.orientation.z;
+
+      // //BORDER 
+      // geometry_msgs::msg::Polygon border;
+      // vector<VisiLibity::Point> points_border;
+      // for(int i=0; i<border.points.size(); i++){
+      //   points_border.push_back(VisiLibity::Point(border.points[i].x, border.points[i].y));
+      // }
+
+      // VisiLibity::Environment new_env = VisiLibity::Environment(points_border);
+
+      // //OBSTACLES
+      // std::vector<obstacles_msgs::msg::ObstacleMsg> obstacles = obs_msg.obstacles; 
+      // cout<<"ci sono "<<obstacles.size()<<" ostacoli "<<endl;
+
+      // geometry_msgs::msg::Polygon polygon_obs;
+      // geometry_msgs::msg::Point32 vertex;
+
+      // for(int i = 0; i<obstacles.size(); i++){
+      //   polygon_obs = obstacles[i].polygon;
+      //   vector<VisiLibity::Point> points_obs;
+
+      //   for(int j = 0; j<polygon_obs.points.size(); j++){
+      //     vertex = polygon_obs.points[j];
+      //     points_obs.push_back(VisiLibity::Point(vertex.x, vertex.y));
+      //   }
+      //   VisiLibity::Polygon new_obs = Polygon(points_obs);
+      //   new_env.add_hole(new_obs);
+      // }
+
 
       double minR = 0.5;
       double minH = 0.3; 
-      // Environment env = get_environment3();
-      Environment env = get_maze_env();
+      Environment env = get_environment3();
+      // Environment env = get_maze_env();
       Environment off_env = get_env_offset(env, minR, minH);
 
       //ROAD MAP
@@ -113,7 +167,7 @@ class MinimalPublisher : public rclcpp::Node
       double y0 = 0;
 
       VisiLibity::Point start_test = VisiLibity::Point(x0, y0);
-      VisiLibity::Point end = VisiLibity::Point(4, 4);
+      VisiLibity::Point end = VisiLibity::Point(0, 5);
       //DEFINE START AND END ANGLES 
       // double th0 = t.transform.rotation.z;
       double th0 = 0;
@@ -199,8 +253,10 @@ class MinimalPublisher : public rclcpp::Node
       client_->async_send_request(request);
       */
 
+      // publisher_->publish(path);
+
       //ACTION 
-      // using FollowPath = nav2_msgs::action::FollowPath;
+
       // rclcpp_action::Client<FollowPath>::SharedPtr client_ptr;
       // client_ptr = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
       // if (!client_ptr->wait_for_action_server()) {
@@ -211,15 +267,55 @@ class MinimalPublisher : public rclcpp::Node
       // goal_msg.path = path;
       // goal_msg.controller_id = "FollowPath";
       // RCLCPP_INFO(this->get_logger(), "Sending goal");
+
+      // auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      // send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
       // client_ptr->async_send_goal(goal_msg);
 
-      publisher_->publish(path);
-      
     }
+
+
+  //result
+  void resultCallback(const GoalHandle::WrappedResult & result)
+  {
+    switch (result.code) {
+      case rclcpp_action::ResultCode::SUCCEEDED:
+        RCLCPP_INFO(get_logger(), "Success!!!");
+        break;
+      case rclcpp_action::ResultCode::ABORTED:
+        RCLCPP_ERROR(get_logger(), "Goal was aborted");
+        return;
+      case rclcpp_action::ResultCode::CANCELED:
+        RCLCPP_ERROR(get_logger(), "Goal was canceled");
+        return;
+      default:
+        RCLCPP_ERROR(get_logger(), "Unknown result code");
+        return;
+    }
+  }
+
   
   private:
 
+  void topic_callback(obstacles_msgs::msg::ObstacleArrayMsg msg){
+    RCLCPP_INFO(this->get_logger(), "I heard obstacles ");
+  }
+
+
+  void border_topic_callback(geometry_msgs::msg::Polygon msg){
+  RCLCPP_INFO(this->get_logger(), "I heard borders ");
+  }
+
+  void gate_topic_callback(geometry_msgs::msg::Pose msg){
+  RCLCPP_INFO(this->get_logger(), "I heard gate ");
+  }
+  
+  rclcpp::Subscription<obstacles_msgs::msg::ObstacleArrayMsg>::SharedPtr subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Polygon>::SharedPtr borders_subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr gate_subscription_;
+
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher_;  
+  obstacles_msgs::msg::ObstacleArrayMsg obs_msg;
 
   
 };

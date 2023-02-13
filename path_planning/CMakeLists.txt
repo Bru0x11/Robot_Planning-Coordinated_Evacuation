@@ -18,12 +18,14 @@ find_package(tf2_ros REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(obstacles_msgs REQUIRED)
 
 include_directories(
     include
     ../VisiLibity1
     ../Interpolation
     ../OffsetTools
+    ../obstacles_msgs
 )
 
 add_executable(path_planning_node 
@@ -41,7 +43,7 @@ add_executable(path_planning_node
                   )
 
 
-ament_target_dependencies(path_planning_node rclcpp nav_msgs nav2_msgs tf2 tf2_ros rclcpp_action std_srvs rclcpp_components )
+ament_target_dependencies(path_planning_node rclcpp nav_msgs nav2_msgs tf2 tf2_ros rclcpp_action std_srvs rclcpp_components obstacles_msgs)
 
 
 install(TARGETS
