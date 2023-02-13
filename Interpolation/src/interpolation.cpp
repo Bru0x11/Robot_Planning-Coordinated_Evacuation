@@ -575,9 +575,10 @@ Environment get_maze_env(){
 
     Environment poly_env = Environment(points_env);
 
-    poly_env.add_hole(obs3);
     poly_env.add_hole(obs1);
     poly_env.add_hole(obs2);
+    poly_env.add_hole(obs3);
+
     //prova
     return poly_env;
 }
@@ -603,10 +604,8 @@ Environment get_env_offset(Environment env, double minR, double minH){
     }
 
     PathsD b_boundary = createPolygon(boundary_points);
-    cout << "Points of the normal boundary: " << b_boundary << '\n';
 
     PathsD off_boundary = offsetPolygon(b_boundary, -0.5, true);
-    cout << "Point of offsetted boundary: " << off_boundary << '\n';
 
     polygons.push_back(off_boundary);   
 
@@ -628,26 +627,12 @@ Environment get_env_offset(Environment env, double minR, double minH){
         float off_value = (float) offset_calculator(min_angle, minR, minH);
 
         PathsD b_poly = createPolygon(poly_points);
-        cout << "\nPoints of the "<< i << "-th normal polygon: " << b_poly << '\n';
         PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
-        cout << "Points of the "<< i << "-th offsetted polygon: " << off_b_poly << '\n';
 
-        //Check whether there are intersection between the different polygons
-        cout << "Checking all the polygons BEFORE INTERSECTION:\n";
-        for (int k=0; k<polygons.size(); k++){
-            cout << polygons[k] << '\n';
-        }
-
-        cout << "Checking intersection of " << i << "-th offsetted polygon" << '\n';
         checkIntersections(off_b_poly, polygons);
-        
-        cout << "Checking all the polygons within the vector at i-th iteration:\n";
-        for (int k=0; k<polygons.size(); k++){
-            cout << polygons[k] << '\n';
-        }
     }
 
-    //Putting the map in the first spot -> this is necessary for the next step
+    //Putting the map in the first spot. This is necessary for the translation part
     int mapPosition = 0;
     for(int i=0; i<polygons.size(); i++){
         if (polygons[i].size() == 2){
@@ -657,7 +642,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     iter_swap(polygons.begin(), polygons.begin() + mapPosition);
 
     cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
-    //For printing purposes
+    cout << "LISTING ALL THE POLYGON WE HAVE:\n"
     for(int i=0; i<polygons.size(); i++){
         cout << polygons[i] << '\n';
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
