@@ -47,7 +47,19 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
     PathsD ith_poly = previousPolygons.at(i);
     if(AreIntersected(newPolygon, ith_poly)){
       merged_poly = mergePolygons(newPolygon, ith_poly);
+
+      cout << "OTHER CODE BEFORE ELIMINATION:\n";
+      for (int k=0; k<previousPolygons.size(); k++){
+          cout << previousPolygons[k] << '\n';
+      }
+
       previousPolygons.erase(previousPolygons.begin() + i);
+
+      cout << "OTHER CODE AFTER ELIMINATION:\n";
+      for (int k=0; k<previousPolygons.size(); k++){
+          cout << previousPolygons[k] << '\n';
+      }
+
       checkIntersections(merged_poly, previousPolygons, i);
       break;
     }
