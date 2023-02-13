@@ -655,6 +655,11 @@ Environment get_env_offset(Environment env, double minR, double minH){
     }   
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
 
+    //Putting the map in the first spot -> this is necessary for the next step
+    for(int i=0; i<polygons.size(); i++){
+        cout << polygons[i].size() << '\n';
+    }
+
     //-----------------TRANSLATION----------------
     cout << "...TRANSLATING THE OBSTACLES...\n";
     vector<Polygon> translated_polygons;
