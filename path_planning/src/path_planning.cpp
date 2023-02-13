@@ -1,9 +1,8 @@
 #include "path_planning.h"
-/* This example creates a subclass of Node and uses std::bind() to register a
-* member function as a callback from the timer. */
 
 class MinimalPublisher : public rclcpp::Node{
 
+  //PUBLIC METHODS
   public:
     MinimalPublisher(): Node("barba_node"){
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
@@ -32,22 +31,18 @@ class MinimalPublisher : public rclcpp::Node{
       // double roll, pitch, yaw;
       // m.getRPY(roll, pitch, yaw);
 
-
       nav_msgs::msg::Path path;
       path.header.stamp = this->get_clock()->now();
       path.header.frame_id = "map";
 
-
       //TOPIC SUBSCRIPTION TO READ BORDERS
       auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
-      borders_subscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
+      bordersSubscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
       "map_borders", qos, std::bind(&MinimalPublisher::border_topic_callback, this, _1));
 
-      
       //TOPIC SUBSCRIPTION TO READ GATE
-      gate_subscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
+      gateSubscription_ = this->create_subscription<geometry_msgs::msg::Pose>(
       "gate_position", qos, std::bind(&MinimalPublisher::gate_topic_callback, this, _1));
-      
       
       //TOPIC SUBSCRIPTION TO READ OBSTACLES
       subscription_ = this->create_subscription<obstacles_msgs::msg::ObstacleArrayMsg>(
@@ -87,81 +82,73 @@ class MinimalPublisher : public rclcpp::Node{
       // }
 
 
-      double minR = 0.5;
-      double minH = 0.3; 
-      Environment env = get_environment3();
-      // Environment env = get_maze_env();
-      Environment off_env = get_env_offset(env, minR, minH);
+      //Hyperparameters
+      double minimumCurvatureRadius = 0.5;
+      double robotSize = 0.3; //We divide its size by 2
 
-      //ROAD MAP
-      Visibility_Graph graph = Visibility_Graph(off_env, 0.1);
+      //Defining the environment
+      Environment environment = getEnvironment();
+      Environment offsettedEnvironment = getOffsettedEnvironment(environment, minimumCurvatureRadius, robotSize);
+
+      //Creating the roadmap
+      Visibility_Graph roadmapGraph = Visibility_Graph(offsettedEnvironment, 0.1);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
 
-      //DEFINE START AND END POINTS
+      //Defining the start and end point
       // double x0 = t.transform.translation.x;
       // double y0 = t.transform.translation.y;
+      double startingPointX = 0;
+      double startingPointY = 0;
 
-      double x0 = 0;
-      double y0 = 0;
+      VisiLibity::Point startingPoint = VisiLibity::Point(startingPointX, startingPointY);
+      VisiLibity::Point endingPoint = VisiLibity::Point(0, 5);
 
-      VisiLibity::Point start_test = VisiLibity::Point(x0, y0);
-      VisiLibity::Point end = VisiLibity::Point(0, 5);
-      //DEFINE START AND END ANGLES 
+      //Defining start and end angles
       // double th0 = t.transform.rotation.z;
-      double th0 = 0;
-      double thf = 0;
+      double thetaStartingPoint = 0;
+      double thetaEndingPoint = 0;
 
-      //FIND SHORTES PATH
-      Polyline shortest_path = env.shortest_path(start_test, end, graph, 0.1);
+      //Finding the shortest path in the map
+      Polyline shortestPath = offsettedEnvironment.shortest_path(startingPoint, endingPoint, roadmapGraph, 0.1);
 
-      cout << "Enviroment is valid: " << env.is_valid(0.1) << endl;
-      cout << "Shortest_path: " << endl;
-      cout << shortest_path << endl;
+      cout << "Enviroment is valid: " << offsettedEnvironment.is_valid(0.1) << '\n';
+      cout << "Offsetted environment: " << offsettedEnvironment << '\n';
+      cout << "Shortest path in the map: " << shortestPath << '\n';      
 
-      cout << "env: "<<endl;
-      cout <<env<<endl;
-      cout << "off_env: "<<endl;
-      cout<<off_env<<endl;
+      Polyline finalPath = interpolation(shortestPath, thetaStartingPoint, thetaEndingPoint, minimumCurvatureRadius);
 
-      cout<<"faccio interpolation"<<endl;
+      std::vector<geometry_msgs::msg::PoseStamped> posesTemp;
+      geometry_msgs::msg::Pose poseTemp;
+      geometry_msgs::msg::Point positionTemp;
+      geometry_msgs::msg::Quaternion quaternionTemp;
+      geometry_msgs::msg::PoseStamped poseStampedTemp;
 
-      Polyline points_final_path = interpolation(shortest_path, th0, thf, minR);
+      for(int i=0; i < finalPath.size(); i++){
+          double x = finalPath[i].x();
+          double y = finalPath[i].y();
 
-      std::vector<geometry_msgs::msg::PoseStamped> poses_temp;
+          positionTemp.x = x;
+          positionTemp.y = y;
+          positionTemp.z = 0;
 
-      geometry_msgs::msg::Pose pose_temp;
-      geometry_msgs::msg::Point position_temp;
-      geometry_msgs::msg::Quaternion quaternion_temp;
-      geometry_msgs::msg::PoseStamped pose_stamped_temp;
+          quaternionTemp.x = 0;
+          quaternionTemp.y = 0;
+          quaternionTemp.z = 0;
+          quaternionTemp.w = 0;
 
-      for(int i=0; i<points_final_path.size(); i++){
-          double x = points_final_path[i].x();
-          double y = points_final_path[i].y();
+          poseTemp.position = positionTemp;
+          poseTemp.orientation = quaternionTemp;
 
-          position_temp.x = x;
-          position_temp.y = y;
-          position_temp.z = 0;
+          poseStampedTemp.pose = poseTemp;
+          poseStampedTemp.header.stamp = this->get_clock()->now();
+          poseStampedTemp.header.frame_id = "base_link";
 
-          quaternion_temp.x = 0;
-          quaternion_temp.y = 0;
-          quaternion_temp.z = 0;
-          quaternion_temp.w = 0;
-
-          pose_temp.position = position_temp;
-          pose_temp.orientation = quaternion_temp;
-
-          pose_stamped_temp.pose = pose_temp;
-          pose_stamped_temp.header.stamp = this->get_clock()->now();
-          pose_stamped_temp.header.frame_id = "base_link";
-
-          poses_temp.push_back(pose_stamped_temp);
+          posesTemp.push_back(poseStampedTemp);
       }
 
-      path.poses = poses_temp;
+      path.poses = posesTemp;
       
-
-
       /*
       //ACTIVATE THE MOTORS
       rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr client_;
@@ -213,10 +200,8 @@ class MinimalPublisher : public rclcpp::Node{
 
     }
 
-
-  //result
-  void resultCallback(const GoalHandle::WrappedResult & result)
-  {
+  //Receiving the result from the robot
+  void resultCallback(const GoalHandle::WrappedResult & result){
     switch (result.code) {
       case rclcpp_action::ResultCode::SUCCEEDED:
         RCLCPP_INFO(get_logger(), "Success!!!");
@@ -233,13 +218,12 @@ class MinimalPublisher : public rclcpp::Node{
     }
   }
 
-  
+  //PRIVATE METHODS
   private:
 
   void topic_callback(obstacles_msgs::msg::ObstacleArrayMsg msg){
     RCLCPP_INFO(this->get_logger(), "I heard obstacles ");
   }
-
 
   void border_topic_callback(geometry_msgs::msg::Polygon msg){
   RCLCPP_INFO(this->get_logger(), "I heard borders ");
@@ -250,8 +234,8 @@ class MinimalPublisher : public rclcpp::Node{
   }
   
   rclcpp::Subscription<obstacles_msgs::msg::ObstacleArrayMsg>::SharedPtr subscription_;
-  rclcpp::Subscription<geometry_msgs::msg::Polygon>::SharedPtr borders_subscription_;
-  rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr gate_subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Polygon>::SharedPtr bordersSubscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr gateSubscription_;
 
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher_;  
   obstacles_msgs::msg::ObstacleArrayMsg obs_msg;
