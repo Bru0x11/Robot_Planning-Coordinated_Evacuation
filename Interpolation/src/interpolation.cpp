@@ -541,9 +541,9 @@ Curve getFirstTraitDubins(Polyline shortestPath, double theta0, double minimumCu
 
 Curve getLastTraitDubins(Polyline shortestPath, double thetaF, double minimumCurvatureRadius){
     //Take the first three point to compute dubins
-    VisiLibity::Point finalpoint0 = shortest_path[shortest_path.size()-3];
-    VisiLibity::Point finalpoint1 = shortest_path[shortest_path.size()-2];
-    VisiLibity::Point goal = shortest_path[shortest_path.size()-1];
+    VisiLibity::Point finalpoint0 = shortestPath[shortestPath.size()-3];
+    VisiLibity::Point finalpoint1 = shortestPath[shortestPath.size()-2];
+    VisiLibity::Point goal = shortestPath[shortestPath.size()-1];
     double thetaN;
 
     thetaN = computeAngle(finalpoint0, finalpoint1);
