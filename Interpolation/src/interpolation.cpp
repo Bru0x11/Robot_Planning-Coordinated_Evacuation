@@ -639,7 +639,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
         }
 
         cout << "Checking intersection of " << i << "-th offsetted polygon" << '\n';
-        checkIntersections(off_b_poly, polygons, 0);
+        checkIntersections(off_b_poly, polygons);
         
         cout << "Checking all the polygons within the vector at i-th iteration:\n";
         for (int k=0; k<polygons.size(); k++){
