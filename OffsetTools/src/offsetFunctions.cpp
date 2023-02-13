@@ -61,8 +61,8 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
       }
 
       checkIntersections(merged_poly, previousPolygons, i);
-      continue;
     }
+    break;
   }
 
   std::cout << "OTHER CODE BEFORE RETURN:\n";
