@@ -87,9 +87,10 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
 
 void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int i){
   std::cout <<"HERE\n";
-  PathsD ith_poly = previousPolygons.at(i);
+  std::cout << i << '\n';
   PathsD merged_poly {};
   if((previousPolygons.size() != 0) && (i < previousPolygons.size())){
+    PathsD ith_poly = previousPolygons.at(i);
     if(AreIntersected(newPolygon, ith_poly)){
       merged_poly = mergePolygons(newPolygon, ith_poly);
       previousPolygons.erase(previousPolygons.begin() + i);
