@@ -1,72 +1,11 @@
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
-
-#include <vector>
-#include <iostream>
-
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
-#include "nav_msgs/msg/path.hpp"
-
-#include "geometry_msgs/msg/point.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
-#include "geometry_msgs/msg/quaternion.hpp"
-#include "geometry_msgs/msg/pose.hpp"
-
-#include "geometry_msgs/msg/transform_stamped.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-
-#include "tf2/exceptions.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2_ros/buffer.h"
-
-#include "nav2_msgs/action/follow_path.hpp"
-
-#include "std_srvs/srv/set_bool.hpp"
-
-#include "rclcpp_action/rclcpp_action.hpp"
-#include "rclcpp_components/register_node_macro.hpp"
-
-using namespace std::chrono_literals;
-
-#include <iostream>
-#include <cstdlib>
-#include <cmath>
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <string.h>
-#include <vector>
-
-#include "include/interpolation.h"
-#include "include/dubins.h"
-#include "src/visilibity.hpp"
-
-#include "obstacles_msgs/msg/obstacle_array_msg.hpp"
-#include "obstacles_msgs/msg/obstacle_msg.hpp"
-#include "std_msgs/msg/header.hpp"
-
-using namespace std;
-using namespace VisiLibity;
-using FollowPath = nav2_msgs::action::FollowPath;
-using GoalHandle = rclcpp_action::ClientGoalHandle<FollowPath>;
-using std::placeholders::_1;
-using std::placeholders::_2;
-
-
-
+#include "path_planning.h"
 /* This example creates a subclass of Node and uses std::bind() to register a
 * member function as a callback from the timer. */
 
-
-class MinimalPublisher : public rclcpp::Node
-{
+class MinimalPublisher : public rclcpp::Node{
 
   public:
-    MinimalPublisher()
-    : Node("barba_node")
-    {
+    MinimalPublisher(): Node("barba_node"){
       publisher_ = this->create_publisher<nav_msgs::msg::Path>("plan", 10);
 
       // //Tranform the frame
@@ -316,18 +255,11 @@ class MinimalPublisher : public rclcpp::Node
 
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher_;  
   obstacles_msgs::msg::ObstacleArrayMsg obs_msg;
-
-  
 };
 
-
-
-
-int main(int argc, char * argv[])
-{
+int main(int argc, char * argv[]){
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<MinimalPublisher>());
   rclcpp::shutdown();
   return 0;
-
 }
