@@ -1,27 +1,29 @@
 #ifndef INTERPOLATION_H
 #define INTERPOLATION_H
 
-//#include "src/visilibity.hpp"
 #include "../../VisiLibity1/src/visilibity.hpp"
-
 #include "include/offsetFunctions.h"
+#include "dubins.h"
+#include "math.h"
 
 #include <vector>
 #include <iostream>
 #include <cfloat>
-
-#include "dubins.h"
-//#include "include/dubins.h"
-
-#include "math.h"
 #include <fstream>
 
 using namespace VisiLibity;
 using namespace std;
 
-class Vector
-{
-public:
+/*
+Class that represents a Vector of two coordinates.
+Also these methods are defined:
+- constructur -> builds the object Vector.
+- norm -> returns the norm.
+- dot -> performs dot product between two Vectors.
+- angle -> computes the angle between two Vectors.
+*/
+class Vector{
+    public:
     double x;
     double y;
 
@@ -32,6 +34,10 @@ public:
     static double angle(Vector v1, Vector v2);
 };
 
+
+/*
+Class that represents a Line.
+*/
 class Line{
     public:
     double a;
@@ -48,62 +54,113 @@ class Line{
     
     Line(double m, double q);
 
-    Line find_parallel(double distance);
+    Line findParallel(double distance);
         
-    Line find_perpendicular(VisiLibity::Point p);
+    Line findPerpendicular(VisiLibity::Point point);
 
-    static Line get_line_from_points(VisiLibity::Point p1, VisiLibity::Point p2);
+    static Line getLineFromPoints(VisiLibity::Point point1, VisiLibity::Point point2);
         
-    static double get_q_from_point(VisiLibity::Point p, double m);
+    static double getQFromPoint(VisiLibity::Point point, double m);
         
-    static double compute_m(VisiLibity::Point p0, VisiLibity::Point p1);
+    static double computeM(VisiLibity::Point point0, VisiLibity::Point point1);
 
-    static Line get_line_from_m_and_p(VisiLibity::Point p, double m);
-
-        
+    static Line getLineFromMAndP(VisiLibity::Point point, double m);    
 };
 
-VisiLibity::Point find_lines_intersection(Line l1, Line l2);
+/*
+Finds the intersection between two Lines.
+*/
+VisiLibity::Point findLinesIntersection(Line line1, Line line2);
 
-VisiLibity::Point find_entrance(VisiLibity::Point a, VisiLibity::Point b, VisiLibity::Point c, double minR);
+/*
+Find the distance given three Points.
+*/
+double findDistance(VisiLibity::Point point0,VisiLibity::Point point1, VisiLibity::Point point2, double minimumCurvatureRadius);
 
-VisiLibity::Point find_exit(VisiLibity::Point a, VisiLibity::Point b, VisiLibity::Point c, double minR);
+/*
+Given a initial and final point of the segment and a distance value, compute the entrance point.
+*/
+VisiLibity::Point findEntrance(VisiLibity::Point point0, VisiLibity::Point point1, double minimumCurvatureRadius);
 
-Polyline get_points_from_arc(Arc a, int npts);
-    
-Polyline get_points_from_curve(Curve c, int npts);
+/*
+Given a initial and final point of the segment and a distance value, compute the exit point.
+*/
+VisiLibity::Point findExit(VisiLibity::Point point0, VisiLibity::Point point1, double minimumCurvatureRadius);
 
-//TODO: IF X1>X0
-Polyline get_points_line(VisiLibity::Point p0, VisiLibity::Point p1);
+/*
+Given an Arc, retrive its points.
+*/
+Polyline getPointsFromArc(Arc arc, int npts);
 
-double compute_arc_length(VisiLibity::Point a, VisiLibity::Point b, double minR);
+/*
+Given a Curve, retrive its points.
+*/
+Polyline getPointsFromCurve(Curve curve, int npts);
 
-double compute_angle(VisiLibity::Point a, VisiLibity::Point b);
- 
-Arc get_arc(VisiLibity::Point entrance, VisiLibity::Point exit, double angle_entrance, double angle_exit, double minR);
+/*
+Given a Line, retrive its points.
+*/
+Polyline getPointsLine(VisiLibity::Point p0, VisiLibity::Point p1);
 
-Environment get_environment1();
+/*
+Given two Points, compute the lenght of the Arc created by them.
+*/
+double computeArcLength(VisiLibity::Point point0, VisiLibity::Point point1, double minimumCurvatureRadius);
 
-Environment get_environment2();
+/*
+Given two Points, compute angle between two Vectors.
+*/
+double computeAngle(VisiLibity::Point point0, VisiLibity::Point point1);
 
-Environment get_environment3();
+/*
+Given the entry and exit point plus the related angles, retrieve the Arc.
+*/
+Arc getArc(VisiLibity::Point entrance, VisiLibity::Point exit, double angleEntrance, double angleExit, double minimumCurvatureRadius);
 
+/*
+Build a predefined environment.
+This function can be used to create different scenarios as examples.
+*/
 Environment getEnvironment();
 
-Environment getOffsettedEnvironment(Environment env, double minR, double minH);
+/*
+Given an envirnoment, offsetts and merges all the polygons within it.
+*/
+Environment getOffsettedEnvironment(Environment environment, double minimumCurvatureRadius, double robotSize);
 
-Curve get_first_trait_dubins(Polyline shortest_path, double th0, double minR);
+/*
+Compute the first trait of the robot trajectory using Dubins curves.
+*/
+Curve getFirstTraitDubins(Polyline shortestPath, double theta0, double minimumCurvatureRadius);
 
-Curve get_last_trait_dubins(Polyline shortest_path, double thf, double minR);
+/*
+Compute the last of the robot trajectory using Dubins curves.
+*/
+Curve getLastTraitDubins(Polyline shortestPath, double thetaf, double minimumCurvatureRadius);
 
-vector<Arc> get_arcs_interpolation(Polyline shortest_path, double minR);
+/*
+Given a polygon, finds the minimum angle.
+*/
+double findMinAngle(Polygon points);
 
-double find_min_angle(Polygon points);
+/*
+Compute the offset that has to be applied to a certain polygon.
+*/
+double offsetCalculator(double minAngle, double minimumCurvatureRadius, double robotSize);
 
-double offset_calculator(double minAngle, double minR, double minH);
+/*
+For printing purposes. Prints the minimum angle and related offset of evey polygon in the environment.
+*/
+int environmentHoles(Environment environment);
 
-int env_holes(Environment env);
+/*
+Create the interpolation to pass by the polygon without touching them and without using Dubins curves.
+*/
+vector<Arc> getArcsInterpolation(Polyline shortestPath, double minimumCurvatureRadius);
 
-Polyline interpolation(Polyline shortest_path, double th0, double thf, double minR);
+/*
+Perform the interpolation of the entire shortest path
+*/
+Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, double minimumCurvatureRadius);
 
 #endif
