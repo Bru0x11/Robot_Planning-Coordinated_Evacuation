@@ -637,7 +637,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
         checkIntersections(off_b_poly, polygons, 0);
         
         cout << "Checking all the polygons within the vector at i-th iteration:\n";
-        for (k=0; k<polygons.size(); k++){
+        for (int k=0; k<polygons.size(); k++){
             cout << polygons[k] << '\n';
         }
     }
