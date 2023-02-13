@@ -628,13 +628,14 @@ Environment get_env_offset(Environment env, double minR, double minH){
         float off_value = (float) offset_calculator(min_angle, minR, minH);
 
         PathsD b_poly = createPolygon(poly_points);
-        cout << "Points of the "<< i << "-th normal polygon: " << b_poly << '\n';
+        cout << "\nPoints of the "<< i << "-th normal polygon: " << b_poly << '\n';
         PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
         cout << "Points of the "<< i << "-th offsetted polygon: " << off_b_poly << '\n';
 
         //Check whether there are intersection between the different polygons
-        cout << "Checking intersection of" << i << "-th offsetted polygon\n";
-        checkIntersections(off_b_poly, polygons, 0); 
+        cout << "Checking intersection of " << i << "-th offsetted polygon" << '\n';
+        checkIntersections(off_b_poly, polygons, 0);
+        cout << "Polygons vector after "<< i << "-th iteration: " << polygons << '\n';
     }
 
     cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
