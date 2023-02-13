@@ -56,7 +56,7 @@ void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previo
       checkIntersectionsRec(newPolygon, previousPolygons, i+1);
     }
   }else{
-    if(merged_poly != {}) {
+    if(merged_poly != NULL) {
       previousPolygons.push_back(merged_poly);
     }
   }
