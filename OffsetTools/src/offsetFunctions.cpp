@@ -64,7 +64,19 @@ void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousP
       break;
     }
   }
+
+  std::cout << "OTHER CODE BEFORE RETURN:\n";
+  for (int k=0; k<previousPolygons.size(); k++){
+      std::cout << previousPolygons[k] << '\n';
+  }
+
   previousPolygons.push_back(merged_poly);
+
+  std::cout << "OTHER CODE AFTER RETURN:\n";
+  for (int k=0; k<previousPolygons.size(); k++){
+      std::cout << previousPolygons[k] << '\n';
+  }
+
 }
 
 std::vector<VisiLibity::Point> translatePolygon(const PathsD& originalPolygon){
