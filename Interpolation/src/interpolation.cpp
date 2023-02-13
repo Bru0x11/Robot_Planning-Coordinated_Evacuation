@@ -632,9 +632,8 @@ Environment get_env_offset(Environment env, double minR, double minH){
         PathsD off_b_poly = offsetPolygon(b_poly, off_value, false);
         cout << "Points of the "<< i << "-th offsetted polygon: " << off_b_poly << '\n';
 
-        //polygons.push_back(off_b_poly);
-
         //Check whether there are intersection between the different polygons
+        cout << "Checking intersection of" << i << "-th offsetted polygon\n";
         checkIntersections(off_b_poly, polygons, 0); 
     }
 
