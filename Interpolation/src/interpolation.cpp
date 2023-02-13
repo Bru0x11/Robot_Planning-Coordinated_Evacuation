@@ -164,12 +164,12 @@ ostream & operator << (ostream &out, Line l){
 
 
 VisiLibity::Point findLinesIntersection(Line line1, Line line2){
-    double a1 = l1.a;
-    double b1 = l1.b; 
-    double c1 = l1.c;
-    double a2 = l2.a;
-    double b2 = l2.b;
-    double c2 = l2.c;
+    double a1 = line1.a;
+    double b1 = line1.b; 
+    double c1 = line1.c;
+    double a2 = line2.a;
+    double b2 = line2.b;
+    double c2 = line2.c;
     double x = (b1*c2 - b2*c1)/(a1*b2 - a2*b1);
     double y = (c1*a2 - c2*a1)/(a1*b2 - a2*b1);
 
