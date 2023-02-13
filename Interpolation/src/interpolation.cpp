@@ -517,53 +517,53 @@ Environment get_maze_env(){
 
     vector<VisiLibity::Point> points_obs1;
 
-    // points_obs1.push_back(VisiLibity::Point(-4, -3));
-    // points_obs1.push_back(VisiLibity::Point(-4, -1.5));
-    // points_obs1.push_back(VisiLibity::Point(3, -1.5));
-    // points_obs1.push_back(VisiLibity::Point(3, -3));
+    points_obs1.push_back(VisiLibity::Point(-4, -3));
+    points_obs1.push_back(VisiLibity::Point(-4, -1.5));
+    points_obs1.push_back(VisiLibity::Point(3, -1.5));
+    points_obs1.push_back(VisiLibity::Point(3, -3));
 
     // points_obs1.push_back(VisiLibity::Point(-6, 2));
     // points_obs1.push_back(VisiLibity::Point(-6, 6));
     // points_obs1.push_back(VisiLibity::Point(0, 6));
 
-    points_obs1.push_back(VisiLibity::Point(-6.8,  -7.1));
-    points_obs1.push_back(VisiLibity::Point(6, -1.6));
-    points_obs1.push_back(VisiLibity::Point(6, -7.1));
+    // points_obs1.push_back(VisiLibity::Point(-6.8,  -7.1));
+    // points_obs1.push_back(VisiLibity::Point(6, -1.6));
+    // points_obs1.push_back(VisiLibity::Point(6, -7.1));
 
     Polygon obs1 = Polygon(points_obs1);
 
     vector<VisiLibity::Point> points_obs2;
-    // points_obs2.push_back(VisiLibity::Point(-2, 1));
-    // points_obs2.push_back(VisiLibity::Point(-2, 3));
-    // points_obs2.push_back(VisiLibity::Point(4, 3));
-    // points_obs2.push_back(VisiLibity::Point(4, 1));
+    points_obs2.push_back(VisiLibity::Point(-2, 1));
+    points_obs2.push_back(VisiLibity::Point(-2, 3));
+    points_obs2.push_back(VisiLibity::Point(4, 3));
+    points_obs2.push_back(VisiLibity::Point(4, 1));
 
     // points_obs2.push_back(VisiLibity::Point(2, -3.15));
     // points_obs2.push_back(VisiLibity::Point(2, 4));
     // points_obs2.push_back(VisiLibity::Point(6, 2));
     // points_obs2.push_back(VisiLibity::Point(6, -3.15));
 
-    points_obs2.push_back(VisiLibity::Point(-4, 0));
-    points_obs2.push_back(VisiLibity::Point(-7.3, 2));
-    points_obs2.push_back(VisiLibity::Point(-7.6, 4));
-    points_obs2.push_back(VisiLibity::Point(-2, 4));
-    points_obs2.push_back(VisiLibity::Point(-0.5, 2));
+    // points_obs2.push_back(VisiLibity::Point(-4, 0));
+    // points_obs2.push_back(VisiLibity::Point(-7.3, 2));
+    // points_obs2.push_back(VisiLibity::Point(-7.6, 4));
+    // points_obs2.push_back(VisiLibity::Point(-2, 4));
+    // points_obs2.push_back(VisiLibity::Point(-0.5, 2));
     
     Polygon obs2 = Polygon(points_obs2);
 
     vector<VisiLibity::Point> points_obs3;
-    // points_obs3.push_back(VisiLibity::Point(-4, 1));
-    // points_obs3.push_back(VisiLibity::Point(-4, 5));
-    // points_obs3.push_back(VisiLibity::Point(-1.5, 2));
+    points_obs3.push_back(VisiLibity::Point(-4, 1));
+    points_obs3.push_back(VisiLibity::Point(-4, 5));
+    points_obs3.push_back(VisiLibity::Point(-1.5, 2));
 
     // points_obs3.push_back(VisiLibity::Point(-6, -3.2));
     // points_obs3.push_back(VisiLibity::Point(-4, 2.8));
     // points_obs3.push_back(VisiLibity::Point(-2, -3.2));
 
-    points_obs3.push_back(VisiLibity::Point(6, 2));
-    points_obs3.push_back(VisiLibity::Point(0.5, 6.8));
-    points_obs3.push_back(VisiLibity::Point(6.8, 6.9));
-    points_obs3.push_back(VisiLibity::Point(4.4, 6));
+    // points_obs3.push_back(VisiLibity::Point(6, 2));
+    // points_obs3.push_back(VisiLibity::Point(0.5, 6.8));
+    // points_obs3.push_back(VisiLibity::Point(6.8, 6.9));
+    // points_obs3.push_back(VisiLibity::Point(4.4, 6));
     
     Polygon obs3 = Polygon(points_obs3);
 
@@ -592,7 +592,6 @@ Environment get_env_offset(Environment env, double minR, double minH){
     vector<PathsD> polygons;
 
     //------------------MAP------------------
-    cout << "...CREATING THE MAP...\n";
     int map_pos = 0;
     vector<VisiLibity::Point> boundary_points;
     Polygon boundary = env[0];
@@ -610,7 +609,6 @@ Environment get_env_offset(Environment env, double minR, double minH){
     polygons.push_back(off_boundary);   
 
     //-----------------OBSTACLES----------------
-    cout << "...CREATING THE OBSTACLES...\n";
     for(int i = 1; i<=env.h(); i++){
         
         Polygon poly = env[i];
@@ -642,7 +640,7 @@ Environment get_env_offset(Environment env, double minR, double minH){
     iter_swap(polygons.begin(), polygons.begin() + mapPosition);
 
     cout << "SIZE OF POLYGONS: " << polygons.size() << '\n';
-    cout << "LISTING ALL THE POLYGON WE HAVE:\n";
+    cout << "LISTING ALL THE POLYGONS WE HAVE:\n";
     for(int i=0; i<polygons.size(); i++){
         cout << polygons[i] << '\n';
         svg.AddPaths(polygons[i], false, fr, 0x10AA66FF, 0xAA0066FF, 1, false);
