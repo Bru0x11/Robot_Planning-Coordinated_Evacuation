@@ -659,7 +659,6 @@ Environment get_env_offset(Environment env, double minR, double minH){
     svg.SaveToFile("sample_map.svg", 800, 600, 0);
 
     //-----------------TRANSLATION----------------
-    cout << "...TRANSLATING THE OBSTACLES...\n";
     vector<Polygon> translated_polygons;
 
     for(int i = 0; i<polygons.size(); i++){
@@ -674,13 +673,11 @@ Environment get_env_offset(Environment env, double minR, double minH){
 
             Polygon translated_map = Polygon(translated_map_points);
             translated_polygons.push_back(translated_map);
-            cout << "Point of translated offsetted boundary: " << translated_map << '\n';
         }
         else{
             vector<VisiLibity::Point> poly_points = translatePolygon(polygons[i]);
             Polygon poly = Polygon(poly_points);
             translated_polygons.push_back(poly);
-            cout << "Point of translated offsetted polygon: " << poly << '\n';     
         }
     }
 
