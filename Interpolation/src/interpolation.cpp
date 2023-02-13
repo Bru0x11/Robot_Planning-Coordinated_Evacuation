@@ -517,15 +517,18 @@ Environment get_maze_env(){
 
     vector<VisiLibity::Point> points_obs1;
 
+    //Example 1
     points_obs1.push_back(VisiLibity::Point(-4, -3));
     points_obs1.push_back(VisiLibity::Point(-4, -1.5));
     points_obs1.push_back(VisiLibity::Point(3, -1.5));
     points_obs1.push_back(VisiLibity::Point(3, -3));
 
+    //Example 2
     // points_obs1.push_back(VisiLibity::Point(-6, 2));
     // points_obs1.push_back(VisiLibity::Point(-6, 6));
     // points_obs1.push_back(VisiLibity::Point(0, 6));
 
+    //Example 3
     // points_obs1.push_back(VisiLibity::Point(-6.8,  -7.1));
     // points_obs1.push_back(VisiLibity::Point(6, -1.6));
     // points_obs1.push_back(VisiLibity::Point(6, -7.1));
@@ -533,16 +536,20 @@ Environment get_maze_env(){
     Polygon obs1 = Polygon(points_obs1);
 
     vector<VisiLibity::Point> points_obs2;
+
+    //Example 1
     points_obs2.push_back(VisiLibity::Point(-2, 1));
     points_obs2.push_back(VisiLibity::Point(-2, 3));
     points_obs2.push_back(VisiLibity::Point(4, 3));
     points_obs2.push_back(VisiLibity::Point(4, 1));
 
+    //Example 2
     // points_obs2.push_back(VisiLibity::Point(2, -3.15));
     // points_obs2.push_back(VisiLibity::Point(2, 4));
     // points_obs2.push_back(VisiLibity::Point(6, 2));
     // points_obs2.push_back(VisiLibity::Point(6, -3.15));
 
+    //Example 3
     // points_obs2.push_back(VisiLibity::Point(-4, 0));
     // points_obs2.push_back(VisiLibity::Point(-7.3, 2));
     // points_obs2.push_back(VisiLibity::Point(-7.6, 4));
@@ -552,14 +559,18 @@ Environment get_maze_env(){
     Polygon obs2 = Polygon(points_obs2);
 
     vector<VisiLibity::Point> points_obs3;
+
+    //Example 1
     points_obs3.push_back(VisiLibity::Point(-4, 1));
     points_obs3.push_back(VisiLibity::Point(-4, 5));
     points_obs3.push_back(VisiLibity::Point(-1.5, 2));
 
+    //Example 2
     // points_obs3.push_back(VisiLibity::Point(-6, -3.2));
     // points_obs3.push_back(VisiLibity::Point(-4, 2.8));
     // points_obs3.push_back(VisiLibity::Point(-2, -3.2));
 
+    //Example 3
     // points_obs3.push_back(VisiLibity::Point(6, 2));
     // points_obs3.push_back(VisiLibity::Point(0.5, 6.8));
     // points_obs3.push_back(VisiLibity::Point(6.8, 6.9));
