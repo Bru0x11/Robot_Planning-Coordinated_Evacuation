@@ -36,7 +36,9 @@ the resulting polygon.
 auto mergePolygons(const PathsD& firstPolygon, const PathsD& secondPolygon);
 
 
-void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int from = 0);
+void checkIntersections(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons);
+
+void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previousPolygons, int i = 0);
 
 /*
 Given a PathD, returns list of VisiLibity::Point
