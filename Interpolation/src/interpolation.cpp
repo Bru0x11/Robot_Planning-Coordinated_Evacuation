@@ -648,7 +648,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         pointsFinalPath.append(getPointsFromCurve(secondTrait, 100));
 
         return pointsFinalPath;
-    }else if(shortest_path.size() == 4){
+    }else if(shortestPath.size() == 4){
         VisiLibity::Point start = shortestPath[0];
         VisiLibity::Point middle1 = shortestPath[1];
         VisiLibity::Point middle2 = shortestPath[2];
