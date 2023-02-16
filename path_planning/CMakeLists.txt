@@ -26,6 +26,7 @@ include_directories(
     ../Interpolation
     ../OffsetTools
     ../obstacles_msgs
+    ../CoordinationTask
 )
 
 add_executable(path_planning_node 
@@ -34,6 +35,8 @@ add_executable(path_planning_node
                   ../VisiLibity1/src/visilibity.cpp
                   ../Interpolation/src/dubins.cpp
                   ../OffsetTools/src/offsetFunctions.cpp
+                  ../CoordinationTask/src/coordination.cpp
+                  ../CoordinationTask/src/intersection.cpp
                   ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.engine.cpp 
                   ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.offset.cpp 
                   ../OffsetTools/include/CPP/Clipper2Lib/src/clipper.rectclip.cpp

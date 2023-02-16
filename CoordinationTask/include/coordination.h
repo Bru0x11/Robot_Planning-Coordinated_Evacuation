@@ -16,7 +16,7 @@ struct RobotInitialization{
     int delay {};
 };
 
-std::vector<RobotInitialization> coordination(Visilibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3)
+std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3);
 
 
 #endif

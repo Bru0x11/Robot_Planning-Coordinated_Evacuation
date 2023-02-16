@@ -7,6 +7,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <mutex>
+
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -16,6 +20,7 @@
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "geometry_msgs/msg/quaternion.hpp"
 #include "geometry_msgs/msg/pose.hpp"
+#include "geometry_msgs/msg/pose_array.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 
@@ -34,10 +39,13 @@
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "include/interpolation.h"
 #include "include/dubins.h"
 #include "src/visilibity.hpp"
+#include "include/coordination.h"
 
 #include "obstacles_msgs/msg/obstacle_array_msg.hpp"
 #include "obstacles_msgs/msg/obstacle_msg.hpp"

@@ -1,6 +1,6 @@
-#include "coordination.h"
+#include "../include/coordination.h"
 
-std::vector<RobotInitialization> coordination(Visilibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3){
+std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3){
 
     std::vector<RobotInitialization> robotOrder {}; //final result
 
@@ -11,58 +11,89 @@ std::vector<RobotInitialization> coordination(Visilibity::Polyline& robotPath1, 
 
     std::vector<DeltaTime> allDeltas {};
 
-    allDeltas.push_back(DeltaTime{
-        abs(allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2),
-        (((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2) > 0) ? : 2; 1) //TODO: cambiare > 0 in qualcosa di più coarse (uguale al granularity che sceglierò)
-    }); //delta betweeen robot 1 and 2
+    DeltaTime d; 
+    d.delta = fabs(allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2);
+    d.fasterRobot = (((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2) > 0) ? 2 : 1); //TODO: cambiare > 0 in qualcosa di più coarse (uguale al granularity che sceglierò)
 
-    allDeltas.push_back(DeltaTime{
-        abs(allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2),
-        (((allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2) > 0) ? : 3; 1) //TODO: cambiare > 0 in qualcosa di più coarse
-    }); //delta betweeen robot 1 and 3
+    allDeltas.push_back(d); //delta betweeen robot 1 and 2
 
-    allDeltas.push_back(DeltaTime{
-        abs(allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2),
-        (((allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2) > 0) ? : 3; 2) //TODO: cambiare > 0 in qualcosa di più coarse
-    }); //delta betweeen robot 2 and 3
+    d.delta = fabs(allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2);
+    d.fasterRobot = (((allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2) > 0) ? 3 : 1);//TODO: cambiare > 0 in qualcosa di più coarse);
+    
+    allDeltas.push_back(d); //delta betweeen robot 1 and 3
+    
+    d.delta = (fabs(allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2));
+    d.fasterRobot = (((allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2) > 0) ? 3 : 2); //TODO: cambiare > 0 in qualcosa di più coarse;
 
+    allDeltas.push_back(d); //delta betweeen robot 2 and 3
 
+    RobotInitialization robotInit;
     if (allDeltas[0].delta > 0 && allDeltas[1].delta > 0 && allDeltas[2].delta > 0){ //all at the same time
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 0));
-        robotOrder.push_back(RobotInitialization(3, 0));
-    }else if (allDeltas[0].delta == 0 && allDeltas[1].delta == 0 && allDeltas[2].delta == 0){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 1));
-        robotOrder.push_back(RobotInitialization(3, 2));
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 0};
+        robotOrder.push_back(robotInit);
+    }
+
+    else if (allDeltas[0].delta == 0 && allDeltas[1].delta == 0 && allDeltas[2].delta == 0){
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 1};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 1};
+        robotOrder.push_back(robotInit);
     }else if ((allDeltas[0].delta == 0 && allDeltas[1].delta == 0 && allDeltas[2].delta != 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 1));
-        robotOrder.push_back(RobotInitialization(3, 1));        
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 1};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 0};
+        robotOrder.push_back(robotInit);       
     }else if((allDeltas[0].delta == 0 && allDeltas[1].delta != 0 && allDeltas[2].delta == 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 1));
-        robotOrder.push_back(RobotInitialization(3, 0));
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 1};
+        robotOrder.push_back(robotInit);
+
     }else if((allDeltas[0].delta != 0 && allDeltas[1].delta == 0 && allDeltas[2].delta == 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 0));
-        robotOrder.push_back(RobotInitialization(3, 1));
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 1};
+        robotOrder.push_back(robotInit);
     }else if((allDeltas[0].delta == 0 && allDeltas[1].delta != 0 && allDeltas[2].delta != 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 0};
+        robotOrder.push_back(robotInit);
+        
         if (allDeltas[2].delta != 1){
-            robotOrder.push_back(RobotInitialization(2, 1));
+            robotInit = {2, 1};
+            robotOrder.push_back(robotInit);
         }else if(allDeltas[2].delta == 1){
-            robotOrder.push_back(RobotInitialization(2, 2));
+            robotInit = {2, 2};
+            robotOrder.push_back(robotInit);
         }
-        robotOrder.push_back(RobotInitialization(3, 0));
+
     }else if((allDeltas[0].delta != 0 && allDeltas[1].delta == 0 && allDeltas[3].delta != 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 0));
-        robotOrder.push_back(RobotInitialization(3, 1));
-    }else if((allDeltas[0].delta != 0 && allDeltas[1].delta != 0 && allDeltas[3].delta = 0)){
-        robotOrder.push_back(RobotInitialization(1, 0));
-        robotOrder.push_back(RobotInitialization(2, 0));
-        robotOrder.push_back(RobotInitialization(3, 1));
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 1};
+        robotOrder.push_back(robotInit);
+    }else if((allDeltas[0].delta != 0 && allDeltas[1].delta != 0 && allDeltas[3].delta == 0)){
+        robotInit = {1, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {2, 0};
+        robotOrder.push_back(robotInit);
+        robotInit = {3, 1};
+        robotOrder.push_back(robotInit);
     }
 
     return robotOrder;

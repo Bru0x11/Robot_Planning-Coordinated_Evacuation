@@ -14,8 +14,8 @@ double travelTime(VisiLibity::Point& point, VisiLibity::Polyline& robotPath, dou
 
 bool isWithinRange(double x1, double y1, double x2, double y2, double granularity);
 
-VisiLibity::Point getIntersectionPoint(Visilibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, double granularity);
+VisiLibity::Point getIntersectionPoint(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, double granularity);
 
-Intersection getPathIntersection(Visilibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2);
+Intersection getPathIntersection(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2);
 
 #endif
