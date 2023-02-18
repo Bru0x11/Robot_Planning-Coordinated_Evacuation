@@ -7,138 +7,76 @@ class MinimalPublisher : public rclcpp::Node{
   //PUBLIC METHODS
   public:
     MinimalPublisher(): Node("barba_node"){
-      
+
+      sim = false; 
 
       bordersFlag = false;
       gateFlag = false; 
       obstaclesFlag = false;
 
+      topicFlag = false;
+
       t1Flag = false;
       t2Flag = false; 
       t3Flag = false;
 
-      publisherR1_ = this->create_publisher<nav_msgs::msg::Path>("plan1", 10);
-      publisherR2_ = this->create_publisher<nav_msgs::msg::Path>("plan2", 10);
-      publisherR3_ = this->create_publisher<nav_msgs::msg::Path>("plan3", 10);
+      publisherR1_ = this->create_publisher<nav_msgs::msg::Path>("shelfino1/plan", 10);
+      publisherR2_ = this->create_publisher<nav_msgs::msg::Path>("shelfino2/plan", 10);
+      publisherR3_ = this->create_publisher<nav_msgs::msg::Path>("shelfino3/plan", 10);
 
       auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
 
-      // t1sub = this->create_subscription<geometry_msgs::msg::TransformStamped>(
-      // "shelfino1/transform",qos, std::bind(&MinimalPublisher::t1_topic_callback, this, _1));
-
-      // t2sub = this->create_subscription<geometry_msgs::msg::TransformStamped>(
-      // "shelfino2/transform",qos, std::bind(&MinimalPublisher::t2_topic_callback, this, _1));
-
-      // t3sub = this->create_subscription<geometry_msgs::msg::TransformStamped>(
-      // "shelfino3/transform",qos, std::bind(&MinimalPublisher::t3_topic_callback, this, _1));
-
-      // std::string ns = this->get_namespace();
-      // cout<<"NS: "<<ns<<endl; 
-
 
       //Tranform the frame
-      //std::string target_frame_ = this->declare_parameter<std::string>("target_frame", "shelfino1/base_link");
-      std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
-      std::unique_ptr<tf2_ros::Buffer> tf_buffer;
-      tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
-      tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
-      std::string toFrameRel = "map";
+      if(sim){
+        std::shared_ptr<tf2_ros::TransformListener> tf_listener{nullptr};
+        std::unique_ptr<tf2_ros::Buffer> tf_buffer;
+        tf_buffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+        tf_listener = std::make_shared<tf2_ros::TransformListener>(*tf_buffer);
+        std::string toFrameRel = "map";
 
-      try {
-        rclcpp::Time now = this->get_clock()->now();
-        t1 = tf_buffer->lookupTransform(toFrameRel, "shelfino1/base_link", tf2::TimePointZero, 30s);
-      } 
-      catch (const tf2::TransformException & ex) {
-        RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino1/base_link", ex.what());
-        return;
+        try {
+          rclcpp::Time now = this->get_clock()->now();
+          t1 = tf_buffer->lookupTransform(toFrameRel, "shelfino1/base_link", tf2::TimePointZero, 30s);
+        } 
+        catch (const tf2::TransformException & ex) {
+          RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino1/base_link", ex.what());
+          return;
+        }
+
+        try {
+          rclcpp::Time now = this->get_clock()->now();
+          t2 = tf_buffer->lookupTransform(toFrameRel, "shelfino2/base_link", tf2::TimePointZero, 30s);
+        } 
+        catch (const tf2::TransformException & ex) {
+          RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino2/base_link", ex.what());
+          return;
+        }
+
+        try {
+          rclcpp::Time now = this->get_clock()->now();
+          t3 = tf_buffer->lookupTransform(toFrameRel, "shelfino3/base_link", tf2::TimePointZero, 30s);
+        } 
+        catch (const tf2::TransformException & ex) {
+          RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino3/base_link", ex.what());
+          return;
+        }
       }
-
-      // try {
-      //   rclcpp::Time now = this->get_clock()->now();
-      //   t2 = tf_buffer->lookupTransform(toFrameRel, "shelfino2/base_link", tf2::TimePointZero, 30s);
-      // } 
-      // catch (const tf2::TransformException & ex) {
-      //   RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino2/base_link", ex.what());
-      //   return;
-      // }
-
-      // try {
-      //   rclcpp::Time now = this->get_clock()->now();
-      //   t3 = tf_buffer->lookupTransform(toFrameRel, "shelfino3/base_link", tf2::TimePointZero, 30s);
-      // } 
-      // catch (const tf2::TransformException & ex) {
-      //   RCLCPP_INFO(this->get_logger(), "Could not transform %s to %s: %s",toFrameRel.c_str(), "shelfino3/base_link", ex.what());
-      //   return;
-      // }
 
 
       // auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
 
-      // //TOPIC SUBSCRIPTION TO READ BORDERS
-      // bordersSubscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
-      // "map_borders", qos, std::bind(&MinimalPublisher::border_topic_callback, this, _1));
+      //TOPIC SUBSCRIPTION TO READ BORDERS
+      bordersSubscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
+      "map_borders", qos, std::bind(&MinimalPublisher::border_topic_callback, this, _1));
 
-      // //TOPIC SUBSCRIPTION TO READ GATE
-      // gateSubscription_ = this->create_subscription<geometry_msgs::msg::PoseArray>(
-      // "gate_position", qos, std::bind(&MinimalPublisher::gate_topic_callback, this, _1));
+      //TOPIC SUBSCRIPTION TO READ GATE
+      gateSubscription_ = this->create_subscription<geometry_msgs::msg::PoseArray>(
+      "gate_position", qos, std::bind(&MinimalPublisher::gate_topic_callback, this, _1));
       
-      // // //TOPIC SUBSCRIPTION TO READ OBSTACLES
-      // subscription_ = this->create_subscription<obstacles_msgs::msg::ObstacleArrayMsg>(
-      // "obstacles", qos, std::bind(&MinimalPublisher::topic_callback, this, _1));
-
-
-      // //GATE
-      // geometry_msgs::msg::Pose gate;
-      // VisiLibity::Point gate_position = VisiLibity::Point(gate.position.x, gate.position.y);
-      // double th_gate = gate.orientation.z;
-
-      // //BORDER 
-      // geometry_msgs::msg::Polygon border;
-      // vector<VisiLibity::Point> points_border;
-      // for(int i=0; i<border.points.size(); i++){
-      //   points_border.push_back(VisiLibity::Point(border.points[i].x, border.points[i].y));
-      // }
-
-      // VisiLibity::Environment new_env = VisiLibity::Environment(points_border);
-
-      //OBSTACLES
-      //std::vector<obstacles_msgs::msg::ObstacleMsg> obstacles = msg.obstacles; 
-      // geometry_msgs::msg::Polygon polygon_obs;
-      // geometry_msgs::msg::Point32 vertex;
-
-      // for(int i = 0; i<obstacles.size(); i++){
-      //   polygon_obs = obstacles[i].polygon;
-      //   vector<VisiLibity::Point> points_obs;
-
-      //   for(int j = 0; j<polygon_obs.points.size(); j++){
-      //     vertex = polygon_obs.points[j];
-      //     points_obs.push_back(VisiLibity::Point(vertex.x, vertex.y));
-      //   }
-      //   VisiLibity::Polygon new_obs = Polygon(points_obs);
-      //   new_env.add_hole(new_obs);
-      // }
-
-      
-    
-    
-      // sleep(robotOrder[1].delay); //.delay
-      // std::cout << "\nI'm activating robot 2...\n";
-      // publisherR2_->publish(pathMsgR2);
-          
-       
-           
-      // sleep(robotOrder[2].delay); //.delay
-      // std::cout << "\nI'm activating robot 3...\n";
-      // publisherR3_->publish(pathMsgR3);
-            
-         
-
-      // publisherR1_->publish(pathMsgR1);
-      // sleep(1);
-      // publisherR2_->publish(pathMsgR2);
-      // sleep(1);
-      // publisherR3_->publish(pathMsgR3);
-
+      // //TOPIC SUBSCRIPTION TO READ OBSTACLES
+      subscription_ = this->create_subscription<obstacles_msgs::msg::ObstacleArrayMsg>(
+      "obstacles", qos, std::bind(&MinimalPublisher::topic_callback, this, _1));
 
       /*
       //ACTIVATE THE MOTORS
@@ -170,59 +108,125 @@ class MinimalPublisher : public rclcpp::Node{
       client_->async_send_request(request);
       */
       
-    pathPlan();
-      
     }
 
   void pathPlan(){
 
-      cout<<"bordersMsg.points.size(): "<<bordersMsg.points.size()<<endl;
+      //BORDER 
+      vector<VisiLibity::Point> points_border;
+      for(int i=0; i<bordersMsg.points.size(); i++){
+        points_border.push_back(VisiLibity::Point(bordersMsg.points[i].x, bordersMsg.points[i].y));
+      }
 
+      VisiLibity::Environment new_env = VisiLibity::Environment(points_border);
+
+
+      //OBSTACLES
+      //obstacles_msgs::msg::ObstacleMsg arrayObstacles = obstacles_msgs::msg::ObstacleArrayMsg
+      geometry_msgs::msg::Polygon polygon_obs;
+      geometry_msgs::msg::Point32 vertex;
+
+      for(int i = 0; i<obstaclesMsg.obstacles.size(); i++){
+        polygon_obs = obstaclesMsg.obstacles[i].polygon;
+        vector<VisiLibity::Point> points_obs;
+
+        for(int j = 0; j<polygon_obs.points.size(); j++){
+          vertex = polygon_obs.points[j];
+          points_obs.push_back(VisiLibity::Point(vertex.x, vertex.y));
+        }
+        VisiLibity::Polygon new_obs = Polygon(points_obs);
+        new_env.add_hole(new_obs);
+      }
+
+      //cout<<"bordersMsg.points.size(): "<<bordersMsg.points.size()<<endl;
+
+      //GATE
+      geometry_msgs::msg::Pose gate = gateMsg.poses[0];
+      VisiLibity::Point gatePosition = VisiLibity::Point(gate.position.x, gate.position.y);
+      double thGate = gate.orientation.z;
 
       //Hyperparameters
       double minimumCurvatureRadius = 0.5;
       double robotSize = 0.3; //We divide its size by 2
 
       //Defining the environment
-      Environment environment = getEnvironment();
+      //Environment environment = getEnvironment();
+      Environment environment = new_env;
+      cout<<"Environment isValid: "<<new_env.is_valid(0.1)<<endl;
       Environment offsettedEnvironment = getOffsettedEnvironment(environment, minimumCurvatureRadius, robotSize);
+
+      cout<<"offsettedEnvironment isValid: "<<offsettedEnvironment.is_valid(0.1)<<endl;
 
       //Creating the roadmap
       Visibility_Graph roadmapGraph = Visibility_Graph(offsettedEnvironment, 0.1);
 
       //DEFINE ROBOT MIN_CURVATURE_RADIUS
 
-      cout<<"POSIZIONE ROBOT 1 : X: "<<t1.transform.translation.x<<" Y: "<<t1.transform.translation.y<<endl;
-      // cout<<"POSIZIONE ROBOT 2 : X: "<<t2.transform.translation.x<<" Y: "<<t2.transform.translation.y<<endl;
-      // cout<<"POSIZIONE ROBOT 3 : X: "<<t3.transform.translation.x<<" Y: "<<t3.transform.translation.y<<endl;
-      // cout<<"POSIZIONE ROBOT 2 : X: "<<t2.transform.translation.x<<" Y: "<<t2.transform.translation.y<<endl;
-      // cout<<"POSIZIONE ROBOT 3 : X: "<<t3.transform.translation.x<<" Y: "<<t3.transform.translation.y<<endl;
-      //Defining the start and end point
-      // double startingPointX = t.transform.translation.x;
-      // double startingPointY = t.transform.translation.y;
-      double startingPointXR1 = t1.transform.translation.x;
-      double startingPointYR1 = t1.transform.translation.y;
+      double startingPointXR1;
+      double startingPointYR1;
 
-      double startingPointXR2 = -3;
-      double startingPointYR2 = -6;
+      double startingPointXR2;
+      double startingPointYR2;
 
-      double startingPointXR3 = 1;
-      double startingPointYR3 = -6;
+      double startingPointXR3;
+      double startingPointYR3;
+
+      //Defining start angles
+      double thetaStartingPointR1;
+      double thetaStartingPointR2;
+      double thetaStartingPointR3;
+
+      if(sim){
+        cout<<"POSIZIONE ROBOT 1 : X: "<<t1.transform.translation.x<<" Y: "<<t1.transform.translation.y<<endl;
+        cout<<"POSIZIONE ROBOT 2 : X: "<<t2.transform.translation.x<<" Y: "<<t2.transform.translation.y<<endl;
+        cout<<"POSIZIONE ROBOT 3 : X: "<<t3.transform.translation.x<<" Y: "<<t3.transform.translation.y<<endl;
+
+        startingPointXR1 = t1.transform.translation.x;
+        startingPointYR1 = t1.transform.translation.y;
+
+        startingPointXR2 = t2.transform.translation.x;
+        startingPointYR2 = t2.transform.translation.y;
+
+        startingPointXR3 = t3.transform.translation.x;
+        startingPointYR3 = t3.transform.translation.y;
+
+        //Defining start angles
+        thetaStartingPointR1 = t1.transform.rotation.z;
+        thetaStartingPointR2 = t2.transform.rotation.z;
+        thetaStartingPointR3 = t3.transform.rotation.z;
+      }
+      else{
+
+        startingPointXR1 = -4;
+        startingPointYR1 = -3;
+
+        startingPointXR2 = -4;
+        startingPointYR2 = 0;
+
+        startingPointXR3 = -4;
+        startingPointYR3 = 3;
+
+        thetaStartingPointR1 = 0;
+        thetaStartingPointR2 = 0;
+        thetaStartingPointR3 = 0;
+      }
 
       VisiLibity::Point startingPointR1 = VisiLibity::Point(startingPointXR1, startingPointYR1);
       VisiLibity::Point startingPointR2 = VisiLibity::Point(startingPointXR2, startingPointYR2);
       VisiLibity::Point startingPointR3 = VisiLibity::Point(startingPointXR3, startingPointYR3);
 
-      VisiLibity::Point endingPoint = VisiLibity::Point(4, 6);
+      VisiLibity::Point endingPoint = VisiLibity::Point(4, 0);
+      // VisiLibity::Point endingPoint = gatePosition;
 
-      //Defining start and end angles
-      // double thetaStartingPoint = t.transform.rotation.z;
-      double thetaStartingPoint = 0;
-      double thetaEndingPoint = -3.14/4;
+      double thetaEndingPoint = 0;
+      //double thetaEndingPoint = thGate;
 
       //Finding the shortest path in the map
+      cout << "Compute shortest path R1 " << '\n';
       Polyline shortestPathR1 = offsettedEnvironment.shortest_path(startingPointR1, endingPoint, roadmapGraph, 0.1);
+      cout << "Compute shortest path R2 " << '\n';
       Polyline shortestPathR2 = offsettedEnvironment.shortest_path(startingPointR2, endingPoint, roadmapGraph, 0.1);
+      cout << "Compute shortest path R3 " << '\n';
       Polyline shortestPathR3 = offsettedEnvironment.shortest_path(startingPointR3, endingPoint, roadmapGraph, 0.1);
 
       cout << "Offsetted environment: \n" << offsettedEnvironment << '\n';
@@ -230,12 +234,15 @@ class MinimalPublisher : public rclcpp::Node{
       cout << "Shortest path R2 in the map: " << shortestPathR2 << '\n';
       cout << "Shortest path R3 in the map: " << shortestPathR3 << '\n';    
 
-      Polyline finalPathR1 = interpolation(shortestPathR1, thetaStartingPoint, thetaEndingPoint, minimumCurvatureRadius);
-      Polyline finalPathR2 = interpolation(shortestPathR2, thetaStartingPoint, thetaEndingPoint, minimumCurvatureRadius);
-      Polyline finalPathR3 = interpolation(shortestPathR3, thetaStartingPoint, thetaEndingPoint, minimumCurvatureRadius);
-
+      Polyline finalPathR1 = interpolation(shortestPathR1, thetaStartingPointR1, thetaEndingPoint, minimumCurvatureRadius);
+      Polyline finalPathR2 = interpolation(shortestPathR2, thetaStartingPointR2, thetaEndingPoint, minimumCurvatureRadius);
+      Polyline finalPathR3 = interpolation(shortestPathR3, thetaStartingPointR3, thetaEndingPoint, minimumCurvatureRadius);
 
       std::vector<RobotInitialization> robotOrder = coordination(finalPathR1, finalPathR2, finalPathR3);
+
+      cout<<"Robot 1 activates in "<< robotOrder[0].delay <<" seconds"<<endl;
+      cout<<"Robot 2 activates in "<< robotOrder[1].delay +  robotOrder[0].delay<<" seconds"<<endl;
+      cout<<"Robot 3 activates in "<< robotOrder[2].delay + robotOrder[1].delay + robotOrder[0].delay <<" seconds"<<endl;
 
       nav_msgs::msg::Path pathMsgR1 = getPathMsg(finalPathR1);
       nav_msgs::msg::Path pathMsgR2 = getPathMsg(finalPathR2);
@@ -243,57 +250,71 @@ class MinimalPublisher : public rclcpp::Node{
 
       //sendMessage(robotOrder, pathMsgR1, pathMsgR2, pathMsgR3);
 
-      //sleep(robotOrder[0].delay); //.delay
-      std::cout << "\nI'm activating robot 1...\n";
+      sleep(5);
+
       publisherR1_->publish(pathMsgR1);
+      sleep(1);
+      publisherR2_->publish(pathMsgR2);
+      sleep(1);
+      publisherR3_->publish(pathMsgR3);
 
-      //ACTION 
-
-
-      client_ptrR1 = rclcpp_action::create_client<FollowPath>(this,"shelfino1/follow_path");
-      if (!client_ptrR1->wait_for_action_server()) {
-        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-        rclcpp::shutdown();
-      }
-      auto goalMsgR1 = FollowPath::Goal();
-      goalMsgR1.path = pathMsgR1;
-      goalMsgR1.controller_id = "FollowPath";
-      RCLCPP_INFO(this->get_logger(), "Sending goal");
-
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      client_ptrR1->async_send_goal(goalMsgR1); 
-
-
-      client_ptrR2 = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
-      if (!client_ptrR2->wait_for_action_server()) {
-        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-        rclcpp::shutdown();
-      }
-      auto goalMsgR2 = FollowPath::Goal();
-      goalMsgR2.path = pathMsgR2;
-      goalMsgR2.controller_id = "FollowPath";
-      RCLCPP_INFO(this->get_logger(), "Sending goal");
-
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      client_ptrR2->async_send_goal(goalMsgR2); 
+      //sleep(5);
 
 
 
-      client_ptrR3 = rclcpp_action::create_client<FollowPath>(this,"shelfino3/follow_path");
-      if (!client_ptrR3->wait_for_action_server()) {
-        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-        rclcpp::shutdown();
-      }
-      auto goalMsgR3 = FollowPath::Goal();
-      goalMsgR3.path = pathMsgR3;
-      goalMsgR3.controller_id = "FollowPath";
-      RCLCPP_INFO(this->get_logger(), "Sending goal");
 
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      client_ptrR3->async_send_goal(goalMsgR3); 
+      // sleep(robotOrder[0].delay); //.delay
+      // std::cout << "\nI'm activating robot 1...\n";
+
+      // client_ptrR1 = rclcpp_action::create_client<FollowPath>(this,"shelfino1/follow_path");
+      // if (!client_ptrR1->wait_for_action_server()) {
+      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+      //   rclcpp::shutdown();
+      // }
+      // auto goalMsgR1 = FollowPath::Goal();
+      // goalMsgR1.path = pathMsgR1;
+      // goalMsgR1.controller_id = "FollowPath";
+      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      // client_ptrR1->async_send_goal(goalMsgR1); 
+
+
+      
+      // sleep(robotOrder[1].delay);
+      // std::cout << "\nI'm activating robot 2...\n";
+
+      // client_ptrR2 = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
+      // if (!client_ptrR2->wait_for_action_server()) {
+      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+      //   rclcpp::shutdown();
+      // }
+      // auto goalMsgR2 = FollowPath::Goal();
+      // goalMsgR2.path = pathMsgR2;
+      // goalMsgR2.controller_id = "FollowPath";
+      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+
+      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      // client_ptrR2->async_send_goal(goalMsgR2); 
+
+      
+      // sleep(robotOrder[2].delay);
+      // std::cout << "\nI'm activating robot 3...\n";
+  
+      // client_ptrR3 = rclcpp_action::create_client<FollowPath>(this,"shelfino3/follow_path");
+      // if (!client_ptrR3->wait_for_action_server()) {
+      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+      //   rclcpp::shutdown();
+      // }
+      // auto goalMsgR3 = FollowPath::Goal();
+      // goalMsgR3.path = pathMsgR3;
+      // goalMsgR3.controller_id = "FollowPath";
+      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+
+      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      // client_ptrR3->async_send_goal(goalMsgR3); 
 
 
   }
@@ -402,8 +423,18 @@ class MinimalPublisher : public rclcpp::Node{
   void topic_callback(obstacles_msgs::msg::ObstacleArrayMsg msg){
     RCLCPP_INFO(this->get_logger(), "I heard '%lu' obstacles", msg.obstacles.size());
     obstaclesFlag = true;
+    // if(bordersFlag && gateFlag && !topicFlag){
+      //topicFlag = true
+    //   pathPlan();
+    // }
+    obstaclesMsg = msg;
+    obstaclesFlag = true;
+    
     if(bordersFlag && gateFlag){
-      pathPlan();
+      if(!topicFlag){
+        topicFlag = true;
+        pathPlan();
+      }
     }
   }
 
@@ -411,8 +442,13 @@ class MinimalPublisher : public rclcpp::Node{
   void gate_topic_callback(geometry_msgs::msg::PoseArray msg){
     RCLCPP_INFO(this->get_logger(), "I heard gate ");
     gateFlag = true;
-    if(bordersFlag && obstaclesFlag){
-      pathPlan();
+    gateMsg = msg;
+
+    if(obstaclesFlag && bordersFlag){
+      if(!topicFlag){
+        topicFlag = true;
+        pathPlan();
+      }
     }
   }
 
@@ -421,15 +457,19 @@ class MinimalPublisher : public rclcpp::Node{
     bordersFlag = true;
     bordersMsg = msg; 
 
-    if(gateFlag && obstaclesFlag){
-      pathPlan();
+    if(obstaclesFlag && gateFlag){
+      if(!topicFlag){
+        topicFlag = true;
+        pathPlan();
+      }
     }
   }
 
   
-  rclcpp::Subscription<obstacles_msgs::msg::ObstacleArrayMsg>::SharedPtr subscription_;
+
 
   rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr gateSubscription_;
+  geometry_msgs::msg::PoseArray gateMsg; 
 
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisherR1_;  
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisherR2_;  
@@ -437,6 +477,9 @@ class MinimalPublisher : public rclcpp::Node{
 
   rclcpp::Subscription<geometry_msgs::msg::Polygon>::SharedPtr bordersSubscription_;
   geometry_msgs::msg::Polygon bordersMsg;
+
+  rclcpp::Subscription<obstacles_msgs::msg::ObstacleArrayMsg>::SharedPtr subscription_;
+  obstacles_msgs::msg::ObstacleArrayMsg obstaclesMsg;
 
   rclcpp::Subscription<geometry_msgs::msg::TransformStamped>::SharedPtr t1sub;
   rclcpp::Subscription<geometry_msgs::msg::TransformStamped>::SharedPtr t2sub;
@@ -459,9 +502,13 @@ class MinimalPublisher : public rclcpp::Node{
   bool gateFlag;
   bool obstaclesFlag;
 
+  bool topicFlag;
+
   bool t1Flag;
   bool t2Flag;
   bool t3Flag;
+
+  bool sim = true;
 
   bool tfFlag;
 

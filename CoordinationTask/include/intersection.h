@@ -3,6 +3,7 @@
 
 #include "src/visilibity.hpp"
 #include <vector>
+#include <cmath>
 
 struct Intersection{
     VisiLibity::Point point {};
@@ -17,5 +18,7 @@ bool isWithinRange(double x1, double y1, double x2, double y2, double granularit
 VisiLibity::Point getIntersectionPoint(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, double granularity);
 
 Intersection getPathIntersection(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2);
+
+double myAbs(double x);
 
 #endif

@@ -444,6 +444,8 @@ Environment getOffsettedEnvironment(Environment environment, double minimumCurva
     vector<VisiLibity::Point> boundaryPoints;
     Polygon boundary = environment[0];
 
+    //cout<<"boundary_points: "<<boundaryPoints<<endl;
+
     //Extrapolating the points
     for(int j = 0; j < boundary.n(); j++){
         VisiLibity::Point point = boundary[j];
@@ -508,7 +510,7 @@ Environment getOffsettedEnvironment(Environment environment, double minimumCurva
             for (PointD point : map[1]){
                 translatedMapPoints.push_back(VisiLibity::Point(point.x, point.y));
             }
-
+            std::reverse(translatedMapPoints.begin(),translatedMapPoints.end());
             Polygon translatedMap = Polygon(translatedMapPoints);
             translatedPolygons.push_back(translatedMap);
         }else{
