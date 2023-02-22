@@ -258,7 +258,7 @@ class MinimalPublisher : public rclcpp::Node{
       sleep(1);
       publisherR3_->publish(pathMsgR3);
 
-      //sleep(5);
+      sleep(5);
 
 
 

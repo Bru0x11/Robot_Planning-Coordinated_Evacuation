@@ -6,16 +6,15 @@
 #include <cmath>
 
 struct Intersection{
-    VisiLibity::Point point {};
     double timeRobot1 {};
     double timeRobot2 {};
 };
 
-double travelTime(VisiLibity::Point& point, VisiLibity::Polyline& robotPath, double costantSpeed=0.3);
+double getTravelTime(VisiLibity::Polyline& robotPath, double costantSpeed=0.3);
 
-bool isWithinRange(double x1, double y1, double x2, double y2, double granularity);
+bool arePointsNear(double x1, double y1, double x2, double y2, double distanceThreshold);
 
-VisiLibity::Point getIntersectionPoint(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, double granularity);
+std::vector<VisiLibity::Polyline> getIntersectionPoint(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, double distanceThreshold);
 
 Intersection getPathIntersection(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2);
 

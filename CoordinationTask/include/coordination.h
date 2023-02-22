@@ -13,7 +13,7 @@ struct DeltaTime{
 
 struct RobotInitialization{
     int robot {};
-    int delay {};
+    double delay {};
 };
 
 std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2, VisiLibity::Polyline& robotPath3);
