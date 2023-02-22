@@ -276,7 +276,7 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
     double x1 = point1.x();
 
     if(x1 > x0){
-        for(int i = 1; i < 100; i++){
+        for(int i = 1; i < 30; i++){
             double gamma = i*0.01;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
             double temp_y = line.m*temp_x + line.q;
@@ -286,7 +286,7 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
             points.push_back(p);
         }
     }else if(x1 < x0){
-        for(int i = 1; i < 100; i++){
+        for(int i = 1; i < 30; i++){
             double gamma = i*0.01;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
             double temp_y = line.m*temp_x + line.q;
@@ -297,7 +297,7 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
         }
     }else{
         double temp_x= point0.x();
-        for(int i = 1; i < 100; i++){
+        for(int i = 1; i < 30; i++){
             double gamma = i*0.01;
             double temp_y = (1-gamma)*point0.y() + (gamma*point1.y());
             VisiLibity::Point p = VisiLibity::Point(temp_x, temp_y);
@@ -631,7 +631,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         VisiLibity::Point end = shortestPath[1];
 
         Curve dubinsPath = dubins_shortest_path(start.x(), start.y(), theta0, end.x(), end.y(), thetaF, kmax);
-        pointsFinalPath.append(getPointsFromCurve(dubinsPath, 200));
+        pointsFinalPath.append(getPointsFromCurve(dubinsPath, 30));
 
         return pointsFinalPath;
     }else if(shortestPath.size() == 3){
@@ -644,8 +644,8 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         Curve firstTrait = dubins_shortest_path(start.x(), start.y(), theta0, middle.x(), middle.y(), thetaMiddle, kmax);
         Curve secondTrait = dubins_shortest_path(middle.x(), middle.y(), thetaMiddle, end.x(), end.y(), thetaF, kmax);
 
-        pointsFinalPath.append(getPointsFromCurve(firstTrait, 100));
-        pointsFinalPath.append(getPointsFromCurve(secondTrait, 100));
+        pointsFinalPath.append(getPointsFromCurve(firstTrait, 30));
+        pointsFinalPath.append(getPointsFromCurve(secondTrait, 30));
 
         return pointsFinalPath;
     }else if(shortestPath.size() == 4){
@@ -660,14 +660,14 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         Polyline middleLine = getPointsLine(middle1, middle2);
         Curve lastTrait = dubins_shortest_path(middle2.x(), middle2.y(), thetaM1M2, end.x(), end.y(), thetaF, kmax);
 
-        pointsFinalPath.append(getPointsFromCurve(firstTrait, 100));
+        pointsFinalPath.append(getPointsFromCurve(firstTrait, 30));
         pointsFinalPath.append(middleLine);
-        pointsFinalPath.append(getPointsFromCurve(lastTrait, 100));
+        pointsFinalPath.append(getPointsFromCurve(lastTrait, 30));
 
         return pointsFinalPath;
     }else{
         Curve firstTrait = getFirstTraitDubins(shortestPath, theta0, minimumCurvatureRadius);
-        pointsFinalPath.append(getPointsFromCurve(firstTrait, 100));
+        pointsFinalPath.append(getPointsFromCurve(firstTrait, 30));
 
         vector<Arc> arcVector = getArcsInterpolation(shortestPath, minimumCurvatureRadius);
 
@@ -676,7 +676,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         VisiLibity::Point point2 = VisiLibity::Point(arc0.x0, arc0.y0);     
                 
         pointsFinalPath.append(getPointsLine(point1, point2));
-        pointsFinalPath.append(getPointsFromArc(arc0, 100));
+        pointsFinalPath.append(getPointsFromArc(arc0, 30));
 
         for(int i = 2; i < shortestPath.size()-3; i++){
             Arc firstArc = arcVector[i-2];
@@ -686,7 +686,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
             VisiLibity::Point secondPoint = VisiLibity::Point(secondArc.x0, secondArc.y0);
             
             pointsFinalPath.append(getPointsLine(firstPoint, secondPoint));
-            pointsFinalPath.append(getPointsFromArc(secondArc, 100));
+            pointsFinalPath.append(getPointsFromArc(secondArc, 30));
         }
 
         Arc lastArc = arcVector[arcVector.size()-1];
@@ -696,7 +696,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         pointsFinalPath.append(getPointsLine(finalPoint2, finalPoint1));
 
         Curve lastTrait = getLastTraitDubins(shortestPath, thetaF, minimumCurvatureRadius);
-        pointsFinalPath.append(getPointsFromCurve(lastTrait, 100));
+        pointsFinalPath.append(getPointsFromCurve(lastTrait, 30));
 
         return pointsFinalPath;
     }

@@ -21,7 +21,7 @@ std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, 
     std::vector<DeltaTime> allDeltas {};
 
     double robotSize = 0.5;
-    double rho = 0.1;
+    double rho = 0.3;
     double costantVelocity = 0.3;
     double epsilon = (robotSize + rho)/costantVelocity; //size of the robot divided by costant velocity + a delta for safety
 
