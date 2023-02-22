@@ -17,7 +17,7 @@ std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, 
     allIntersections.push_back(getPathIntersection(robotPath1, robotPath3)); //Intersection between robot 1 and 3
     allIntersections.push_back(getPathIntersection(robotPath2, robotPath3)); //Intersection between robot 2 and 3
 
-    std::cout<<"SIZE: "<<allIntersections.size();
+    //std::cout<<"SIZE: "<<allIntersections.size();
     std::vector<DeltaTime> allDeltas {};
 
     double robotSize = 0.5;
@@ -28,25 +28,27 @@ std::vector<RobotInitialization> coordination(VisiLibity::Polyline& robotPath1, 
     DeltaTime d; 
     double diff;
     diff = (allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2);
-    d.delta = myAbs((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2));
+    // std::cout<<"allIntersections[0].timeRobot1: "<<allIntersections[0].timeRobot1<<std::endl;
+    // std::cout<<"allIntersections[0].timeRobot2: "<<allIntersections[0].timeRobot2<<std::endl;
+    d.delta = myAbs((diff));
     std::cout<<"delta betweeen robot 1 and 2: "<<d.delta<<std::endl;
     d.fasterRobot = (((allIntersections[0].timeRobot1 - allIntersections[0].timeRobot2) > 0) ? 2 : 1); 
-    std::cout<<"fasterRobot betweeen robot 1 and 2: "<<d.fasterRobot<<std::endl;
+    //std::cout<<"fasterRobot betweeen robot 1 and 2: "<<d.fasterRobot<<std::endl;
     allDeltas.push_back(d); //delta betweeen robot 1 and 2
 
     d.delta = myAbs(1.0*(allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2));
     d.fasterRobot = (((allIntersections[1].timeRobot1 - allIntersections[1].timeRobot2) > 0) ? 3 : 1);
-    
+    std::cout<<"delta betweeen robot 1 and 3: "<<d.delta<<std::endl;
     allDeltas.push_back(d); //delta betweeen robot 1 and 3
     
     d.delta = myAbs(1.0*(allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2));
     d.fasterRobot = (((allIntersections[2].timeRobot1 - allIntersections[2].timeRobot2) > 0) ? 3 : 2); 
-
+    std::cout<<"delta betweeen robot 2 and 3: "<<d.delta<<std::endl;
     allDeltas.push_back(d); //delta betweeen robot 2 and 3
 
-    for(int i=0; i<allDeltas.size(); i++){
-        std::cout<<"allDeltas["<<i<<"]: "<<allDeltas[i].delta<<std::endl;
-    }
+    // for(int i=0; i<allDeltas.size(); i++){
+    //     std::cout<<"allDeltas["<<i<<"]: "<<allDeltas[i].delta<<std::endl;
+    // }
 
     RobotInitialization robotInit;
 

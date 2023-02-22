@@ -8,7 +8,7 @@ class MinimalPublisher : public rclcpp::Node{
   public:
     MinimalPublisher(): Node("barba_node"){
 
-      sim = false; 
+      sim = true; 
 
       bordersFlag = false;
       gateFlag = false; 
@@ -146,7 +146,7 @@ class MinimalPublisher : public rclcpp::Node{
       double thGate = gate.orientation.z;
 
       //Hyperparameters
-      double minimumCurvatureRadius = 0.5;
+      double minimumCurvatureRadius = 0.7;
       double robotSize = 0.3; //We divide its size by 2
 
       //Defining the environment
@@ -240,17 +240,13 @@ class MinimalPublisher : public rclcpp::Node{
 
       std::vector<RobotInitialization> robotOrder = coordination(finalPathR1, finalPathR2, finalPathR3);
 
-      cout<<"Robot 1 activates in "<< robotOrder[0].delay <<" seconds"<<endl;
-      cout<<"Robot 2 activates in "<< robotOrder[1].delay +  robotOrder[0].delay<<" seconds"<<endl;
-      cout<<"Robot 3 activates in "<< robotOrder[2].delay + robotOrder[1].delay + robotOrder[0].delay <<" seconds"<<endl;
-
       nav_msgs::msg::Path pathMsgR1 = getPathMsg(finalPathR1);
       nav_msgs::msg::Path pathMsgR2 = getPathMsg(finalPathR2);
       nav_msgs::msg::Path pathMsgR3 = getPathMsg(finalPathR3);
 
       //sendMessage(robotOrder, pathMsgR1, pathMsgR2, pathMsgR3);
 
-      sleep(5);
+      sleep(1);
 
       publisherR1_->publish(pathMsgR1);
       sleep(1);
@@ -258,63 +254,64 @@ class MinimalPublisher : public rclcpp::Node{
       sleep(1);
       publisherR3_->publish(pathMsgR3);
 
-      sleep(5);
+      sleep(1);
 
+      cout<<"Robot 1 activates in "<< robotOrder[0].delay <<" seconds"<<endl;
+      cout<<"Robot 2 activates in "<< robotOrder[1].delay +  robotOrder[0].delay<<" seconds"<<endl;
+      cout<<"Robot 3 activates in "<< robotOrder[2].delay + robotOrder[1].delay + robotOrder[0].delay <<" seconds"<<endl;
 
+      sleep(robotOrder[0].delay); //.delay
+      std::cout << "\nI'm activating robot 1...\n";
 
-
-      // sleep(robotOrder[0].delay); //.delay
-      // std::cout << "\nI'm activating robot 1...\n";
-
-      // client_ptrR1 = rclcpp_action::create_client<FollowPath>(this,"shelfino1/follow_path");
-      // if (!client_ptrR1->wait_for_action_server()) {
-      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-      //   rclcpp::shutdown();
-      // }
-      // auto goalMsgR1 = FollowPath::Goal();
-      // goalMsgR1.path = pathMsgR1;
-      // goalMsgR1.controller_id = "FollowPath";
-      // RCLCPP_INFO(this->get_logger(), "Sending goal");
-      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      // client_ptrR1->async_send_goal(goalMsgR1); 
+      client_ptrR1 = rclcpp_action::create_client<FollowPath>(this,"shelfino1/follow_path");
+      if (!client_ptrR1->wait_for_action_server()) {
+        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+        rclcpp::shutdown();
+      }
+      auto goalMsgR1 = FollowPath::Goal();
+      goalMsgR1.path = pathMsgR1;
+      goalMsgR1.controller_id = "FollowPath";
+      RCLCPP_INFO(this->get_logger(), "Sending goal");
+      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      client_ptrR1->async_send_goal(goalMsgR1); 
 
 
       
-      // sleep(robotOrder[1].delay);
-      // std::cout << "\nI'm activating robot 2...\n";
+      sleep(robotOrder[1].delay);
+      std::cout << "\nI'm activating robot 2...\n";
 
-      // client_ptrR2 = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
-      // if (!client_ptrR2->wait_for_action_server()) {
-      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-      //   rclcpp::shutdown();
-      // }
-      // auto goalMsgR2 = FollowPath::Goal();
-      // goalMsgR2.path = pathMsgR2;
-      // goalMsgR2.controller_id = "FollowPath";
-      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+      client_ptrR2 = rclcpp_action::create_client<FollowPath>(this,"shelfino2/follow_path");
+      if (!client_ptrR2->wait_for_action_server()) {
+        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+        rclcpp::shutdown();
+      }
+      auto goalMsgR2 = FollowPath::Goal();
+      goalMsgR2.path = pathMsgR2;
+      goalMsgR2.controller_id = "FollowPath";
+      RCLCPP_INFO(this->get_logger(), "Sending goal");
 
-      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      // client_ptrR2->async_send_goal(goalMsgR2); 
+      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      client_ptrR2->async_send_goal(goalMsgR2); 
 
       
-      // sleep(robotOrder[2].delay);
-      // std::cout << "\nI'm activating robot 3...\n";
+      sleep(robotOrder[2].delay);
+      std::cout << "\nI'm activating robot 3...\n";
   
-      // client_ptrR3 = rclcpp_action::create_client<FollowPath>(this,"shelfino3/follow_path");
-      // if (!client_ptrR3->wait_for_action_server()) {
-      //   RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
-      //   rclcpp::shutdown();
-      // }
-      // auto goalMsgR3 = FollowPath::Goal();
-      // goalMsgR3.path = pathMsgR3;
-      // goalMsgR3.controller_id = "FollowPath";
-      // RCLCPP_INFO(this->get_logger(), "Sending goal");
+      client_ptrR3 = rclcpp_action::create_client<FollowPath>(this,"shelfino3/follow_path");
+      if (!client_ptrR3->wait_for_action_server()) {
+        RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
+        rclcpp::shutdown();
+      }
+      auto goalMsgR3 = FollowPath::Goal();
+      goalMsgR3.path = pathMsgR3;
+      goalMsgR3.controller_id = "FollowPath";
+      RCLCPP_INFO(this->get_logger(), "Sending goal");
 
-      // //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      // //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
-      // client_ptrR3->async_send_goal(goalMsgR3); 
+      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
+      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
+      client_ptrR3->async_send_goal(goalMsgR3); 
 
 
   }
@@ -421,7 +418,7 @@ class MinimalPublisher : public rclcpp::Node{
   private:
 
   void topic_callback(obstacles_msgs::msg::ObstacleArrayMsg msg){
-    RCLCPP_INFO(this->get_logger(), "I heard '%lu' obstacles", msg.obstacles.size());
+    //RCLCPP_INFO(this->get_logger(), "I heard obstacles", msg.obstacles.size());
     obstaclesFlag = true;
     // if(bordersFlag && gateFlag && !topicFlag){
       //topicFlag = true
@@ -432,6 +429,7 @@ class MinimalPublisher : public rclcpp::Node{
     
     if(bordersFlag && gateFlag){
       if(!topicFlag){
+        
         topicFlag = true;
         pathPlan();
       }
@@ -440,7 +438,7 @@ class MinimalPublisher : public rclcpp::Node{
 
 
   void gate_topic_callback(geometry_msgs::msg::PoseArray msg){
-    RCLCPP_INFO(this->get_logger(), "I heard gate ");
+    //RCLCPP_INFO(this->get_logger(), "I heard gate ");
     gateFlag = true;
     gateMsg = msg;
 
@@ -453,7 +451,7 @@ class MinimalPublisher : public rclcpp::Node{
   }
 
   void border_topic_callback(geometry_msgs::msg::Polygon msg){
-    RCLCPP_INFO(this->get_logger(), "I heard borders ");
+    //RCLCPP_INFO(this->get_logger(), "I heard borders ");
     bordersFlag = true;
     bordersMsg = msg; 
 
