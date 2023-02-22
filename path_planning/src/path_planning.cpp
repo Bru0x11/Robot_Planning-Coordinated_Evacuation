@@ -8,7 +8,7 @@ class MinimalPublisher : public rclcpp::Node{
   public:
     MinimalPublisher(): Node("barba_node"){
 
-      sim = true; 
+      sim = false; 
 
       bordersFlag = false;
       gateFlag = false; 
@@ -109,6 +109,16 @@ class MinimalPublisher : public rclcpp::Node{
       */
       
     }
+
+void writePointsToFile(Polyline points, std::string filename) {
+  std::ofstream outfile;
+  outfile.open(filename.c_str());
+
+  for (int i = 0; i<points.size(); i++) {
+    outfile << points[i] <<endl;
+  }
+  outfile.close();
+}
 
   void pathPlan(){
 
@@ -237,7 +247,9 @@ class MinimalPublisher : public rclcpp::Node{
       Polyline finalPathR1 = interpolation(shortestPathR1, thetaStartingPointR1, thetaEndingPoint, minimumCurvatureRadius);
       Polyline finalPathR2 = interpolation(shortestPathR2, thetaStartingPointR2, thetaEndingPoint, minimumCurvatureRadius);
       Polyline finalPathR3 = interpolation(shortestPathR3, thetaStartingPointR3, thetaEndingPoint, minimumCurvatureRadius);
-
+      writePointsToFile(finalPathR1, "path1");
+      writePointsToFile(finalPathR2, "path2");
+      writePointsToFile(finalPathR3, "path3");
       std::vector<RobotInitialization> robotOrder = coordination(finalPathR1, finalPathR2, finalPathR3);
 
       nav_msgs::msg::Path pathMsgR1 = getPathMsg(finalPathR1);

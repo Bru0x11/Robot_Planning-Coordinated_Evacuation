@@ -49,9 +49,9 @@ std::vector<VisiLibity::Polyline> getIntersectionPoint(VisiLibity::Polyline& rob
 
 Intersection getPathIntersection(VisiLibity::Polyline& robotPath1, VisiLibity::Polyline& robotPath2){
     double robotSize = 0.5;
-    double rho = 0.1;
+    double rho = 0.3;
     //double distanceThreshold = robotSize + rho;
-    double distanceThreshold = 0.01;
+    double distanceThreshold = 0.5;
     
     double costantSpeed = 0.3;
     std::vector<VisiLibity::Polyline> segments = getIntersectionPoint(robotPath1, robotPath2, distanceThreshold);

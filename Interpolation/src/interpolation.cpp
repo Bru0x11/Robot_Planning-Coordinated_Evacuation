@@ -254,9 +254,9 @@ Polyline getPointsFromCurve(Curve curve, int npts){
     Arc arc2 = curve.a2;
     Arc arc3 = curve.a3;
 
-    Polyline line1 = getPointsFromArc(arc1, nptsArc);
-    Polyline line2 = getPointsFromArc(arc2, nptsArc);
-    Polyline line3 = getPointsFromArc(arc3, nptsArc);
+    Polyline line1 = getPointsFromArc(arc1, 10);
+    Polyline line2 = getPointsFromArc(arc2, 30);
+    Polyline line3 = getPointsFromArc(arc3, 10);
     
     Polyline totLine;
     totLine.append(line1);
@@ -276,8 +276,8 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
     double x1 = point1.x();
 
     if(x1 > x0){
-        for(int i = 1; i < 30; i++){
-            double gamma = i*0.01;
+        for(int i = 1; i < 50; i++){
+            double gamma = i*0.02;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
             double temp_y = line.m*temp_x + line.q;
 
@@ -286,8 +286,8 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
             points.push_back(p);
         }
     }else if(x1 < x0){
-        for(int i = 1; i < 30; i++){
-            double gamma = i*0.01;
+        for(int i = 1; i < 50; i++){
+            double gamma = i*0.02;
             double temp_x = (1-gamma)*x0 + (gamma*x1);
             double temp_y = line.m*temp_x + line.q;
 
@@ -297,8 +297,8 @@ Polyline getPointsLine(VisiLibity::Point point0, VisiLibity::Point point1){
         }
     }else{
         double temp_x= point0.x();
-        for(int i = 1; i < 30; i++){
-            double gamma = i*0.01;
+        for(int i = 1; i < 50; i++){
+            double gamma = i*0.02;
             double temp_y = (1-gamma)*point0.y() + (gamma*point1.y());
             VisiLibity::Point p = VisiLibity::Point(temp_x, temp_y);
 
@@ -676,7 +676,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
         VisiLibity::Point point2 = VisiLibity::Point(arc0.x0, arc0.y0);     
                 
         pointsFinalPath.append(getPointsLine(point1, point2));
-        pointsFinalPath.append(getPointsFromArc(arc0, 30));
+        pointsFinalPath.append(getPointsFromArc(arc0, 20));
 
         for(int i = 2; i < shortestPath.size()-3; i++){
             Arc firstArc = arcVector[i-2];
@@ -686,7 +686,7 @@ Polyline interpolation(Polyline shortestPath, double theta0, double thetaF, doub
             VisiLibity::Point secondPoint = VisiLibity::Point(secondArc.x0, secondArc.y0);
             
             pointsFinalPath.append(getPointsLine(firstPoint, secondPoint));
-            pointsFinalPath.append(getPointsFromArc(secondArc, 30));
+            pointsFinalPath.append(getPointsFromArc(secondArc, 20));
         }
 
         Arc lastArc = arcVector[arcVector.size()-1];
