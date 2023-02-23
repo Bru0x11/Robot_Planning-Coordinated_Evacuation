@@ -12,7 +12,6 @@ using namespace std::chrono_literals;
 #include <math.h>
 #include <string.h>
 
-//#include "include/dubins.h"
 #include "../include/dubins.h"
 
 using namespace std;
@@ -82,7 +81,7 @@ bool check(double s1, double k0, double s2, double k1, double s3, double k2, dou
 
 
 /////////////////////////////////////////////////////////////////////
-//Functions to scale and solve Dubins problems
+//          Functions to scale and solve Dubins problems           //
 /////////////////////////////////////////////////////////////////////
 
 //Scale the input problem to standard form (x0: -1, y0: 0, xf: 1, yf: 0)

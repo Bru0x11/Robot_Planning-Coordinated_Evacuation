@@ -16,16 +16,11 @@ class MinimalPublisher : public rclcpp::Node{
 
       topicFlag = false;
 
-      t1Flag = false;
-      t2Flag = false; 
-      t3Flag = false;
-
       publisherR1_ = this->create_publisher<nav_msgs::msg::Path>("shelfino1/plan", 10);
       publisherR2_ = this->create_publisher<nav_msgs::msg::Path>("shelfino2/plan", 10);
       publisherR3_ = this->create_publisher<nav_msgs::msg::Path>("shelfino3/plan", 10);
 
       auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
-
 
       //Tranform the frame
       if(sim){
@@ -62,7 +57,6 @@ class MinimalPublisher : public rclcpp::Node{
           return;
         }
       }
-
 
       // auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
 
@@ -130,7 +124,6 @@ void writePointsToFile(Polyline points, std::string filename) {
 
       VisiLibity::Environment new_env = VisiLibity::Environment(points_border);
 
-
       //OBSTACLES
       //obstacles_msgs::msg::ObstacleMsg arrayObstacles = obstacles_msgs::msg::ObstacleArrayMsg
       geometry_msgs::msg::Polygon polygon_obs;
@@ -148,15 +141,13 @@ void writePointsToFile(Polyline points, std::string filename) {
         new_env.add_hole(new_obs);
       }
 
-      //cout<<"bordersMsg.points.size(): "<<bordersMsg.points.size()<<endl;
-
       //GATE
       geometry_msgs::msg::Pose gate = gateMsg.poses[0];
       VisiLibity::Point gatePosition = VisiLibity::Point(gate.position.x, gate.position.y);
       double thGate = gate.orientation.z;
 
       //Hyperparameters
-      double minimumCurvatureRadius = 0.7;
+      double minimumCurvatureRadius = 0.6;
       double robotSize = 0.3; //We divide its size by 2
 
       //Defining the environment
@@ -284,12 +275,8 @@ void writePointsToFile(Polyline points, std::string filename) {
       goalMsgR1.path = pathMsgR1;
       goalMsgR1.controller_id = "FollowPath";
       RCLCPP_INFO(this->get_logger(), "Sending goal");
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
       client_ptrR1->async_send_goal(goalMsgR1); 
 
-
-      
       sleep(robotOrder[1].delay);
       std::cout << "\nI'm activating robot 2...\n";
 
@@ -302,11 +289,7 @@ void writePointsToFile(Polyline points, std::string filename) {
       goalMsgR2.path = pathMsgR2;
       goalMsgR2.controller_id = "FollowPath";
       RCLCPP_INFO(this->get_logger(), "Sending goal");
-
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
       client_ptrR2->async_send_goal(goalMsgR2); 
-
       
       sleep(robotOrder[2].delay);
       std::cout << "\nI'm activating robot 3...\n";
@@ -321,11 +304,7 @@ void writePointsToFile(Polyline points, std::string filename) {
       goalMsgR3.controller_id = "FollowPath";
       RCLCPP_INFO(this->get_logger(), "Sending goal");
 
-      //auto send_goal_options = rclcpp_action::Client<FollowPath>::SendGoalOptions();
-      //send_goal_options.result_callback = std::bind(&MinimalPublisher::resultCallback, this, _1);
       client_ptrR3->async_send_goal(goalMsgR3); 
-
-
   }
 
   nav_msgs::msg::Path getPathMsg(Polyline finalPath){
@@ -367,47 +346,6 @@ void writePointsToFile(Polyline points, std::string filename) {
       return path;
   }
 
-//   int sendMessage(std::vector<RobotInitialization> robotOrder, nav_msgs::msg::Path pathMsgR1, nav_msgs::msg::Path pathMsgR2, nav_msgs::msg::Path pathMsgR3){  //std::vector<RobotInitialization> robotOrder
-    
-//     publisherR1_ = this->create_publisher<nav_msgs::msg::Path>("plan1", 10);
-//     publisherR2_ = this->create_publisher<nav_msgs::msg::Path>("plan2", 10);
-//     publisherR3_ = this->create_publisher<nav_msgs::msg::Path>("plan3", 10);
-
-//     pid_t pid1, pid2, pid3, wpid;
-//     int status = 0;
-
-//     pid1 = fork();
-
-//     if (pid1 == 0){
-//         sleep(robotOrder[0].delay); //.delay
-//         std::cout << "\nI'm activating robot 1...\n";
-//         publisherR1_->publish(pathMsgR1);
-//         sleep(3);
-//         exit(0);
-//     }else{
-//         pid2 = fork();
-        
-//         if (pid2 == 0){
-//             sleep(robotOrder[1].delay); //.delay
-//             std::cout << "\nI'm activating robot 2...\n";
-//             publisherR2_->publish(pathMsgR2);
-//             exit(0);
-//         }else{
-//             pid3 = fork();
-//             if (pid3 == 0){
-//                 sleep(robotOrder[2].delay); //.delay
-//                 std::cout << "\nI'm activating robot 3...\n";
-//                 publisherR3_->publish(pathMsgR3);
-//                 exit(0);
-//             }
-//          }
-//     }
-
-//     while ((wpid = wait(&status)) > 0);
-//     std::cout << "\nAll processes have ended... turning off the engines... quitting program...\n";
-//     return 0;
-// }
-
   //Receiving the result from the robot
   void resultCallback(const GoalHandle::WrappedResult & result){
     switch (result.code) {
@@ -430,12 +368,7 @@ void writePointsToFile(Polyline points, std::string filename) {
   private:
 
   void topic_callback(obstacles_msgs::msg::ObstacleArrayMsg msg){
-    //RCLCPP_INFO(this->get_logger(), "I heard obstacles", msg.obstacles.size());
     obstaclesFlag = true;
-    // if(bordersFlag && gateFlag && !topicFlag){
-      //topicFlag = true
-    //   pathPlan();
-    // }
     obstaclesMsg = msg;
     obstaclesFlag = true;
     
@@ -448,9 +381,7 @@ void writePointsToFile(Polyline points, std::string filename) {
     }
   }
 
-
   void gate_topic_callback(geometry_msgs::msg::PoseArray msg){
-    //RCLCPP_INFO(this->get_logger(), "I heard gate ");
     gateFlag = true;
     gateMsg = msg;
 
@@ -463,7 +394,6 @@ void writePointsToFile(Polyline points, std::string filename) {
   }
 
   void border_topic_callback(geometry_msgs::msg::Polygon msg){
-    //RCLCPP_INFO(this->get_logger(), "I heard borders ");
     bordersFlag = true;
     bordersMsg = msg; 
 
@@ -474,9 +404,6 @@ void writePointsToFile(Polyline points, std::string filename) {
       }
     }
   }
-
-  
-
 
   rclcpp::Subscription<geometry_msgs::msg::PoseArray>::SharedPtr gateSubscription_;
   geometry_msgs::msg::PoseArray gateMsg; 
@@ -499,93 +426,20 @@ void writePointsToFile(Polyline points, std::string filename) {
   rclcpp_action::Client<FollowPath>::SharedPtr client_ptrR2;
   rclcpp_action::Client<FollowPath>::SharedPtr client_ptrR3;
 
-  // rclcpp::Subscription<geometry_msgs::msg::TransformStamped>::SharedPtr tfsub;
-
   geometry_msgs::msg::TransformStamped t1 ;
   geometry_msgs::msg::TransformStamped t2 ;
   geometry_msgs::msg::TransformStamped t3 ;
 
-
-  // vector<geometry_msgs::msg::TransformStamped> tf;
-
   bool bordersFlag;
   bool gateFlag;
   bool obstaclesFlag;
-
   bool topicFlag;
-
-  bool t1Flag;
-  bool t2Flag;
-  bool t3Flag;
-
   bool sim = true;
-
   bool tfFlag;
-
 };
 
-
-
-
-
-// class MinimalSubscriber : public rclcpp::Node
-// {
-//   public:
-//     MinimalSubscriber()
-//     : Node("minimal_subscriber")
-//     {
-//       //TOPIC SUBSCRIPTION TO READ BORDERS
-//       auto qos = rclcpp::QoS(rclcpp::KeepLast(1), rmw_qos_profile_sensor_data);
-//       bordersSubscription_ = this->create_subscription<geometry_msgs::msg::Polygon>(
-//       "map_borders", qos, std::bind(&MinimalSubscriber::border_topic_callback, this, _1));
-//     }
-
-//   private:
-//     void border_topic_callback(geometry_msgs::msg::Polygon msg){
-//       RCLCPP_INFO(this->get_logger(), "I heard borders ");
-//       bordersMsg = msg;
-//       bordersFlag = true;
-//   }
-// };
-
-
-// void start_ros_node(int argc, char * argv[])
-// {
-//   rclcpp::init(argc, argv);
-//   rclcpp::spin(std::make_shared<MinimalPublisher>());
-// }
-
-// void start_border_read(int argc, char * argv[]){
-  
-//   while(!bordersFlag){
-
-//   }
-//   cout<<"READ!!!!"<<endl;
-
-// }
-
 int main(int argc, char * argv[]){
-
   rclcpp::init(argc, argv);
-  // std::thread border_listener(start_border_read, argc, argv);
-  // std::thread path_planning(start_ros_node, argc, argv);
-
-  // border_listener.join();
-  // path_planning.join();
-
-  // rclcpp::spin(std::make_shared<MinimalSubscriber>());
-  // rclcpp::shutdown();
-
-  // sleep(10);
-  // rclcpp::init(argc, argv);
-  // rclcpp::spin(std::make_shared<MinimalPublisher>());
-
-  // std::thread first (start_ros_node, argc, argv);     // spawn new thread that calls foo()
-  // std::thread second (start_border_read, argc, argv);
-
-  // first.join();                // pauses until first finishes
-  // second.join();   
-
   rclcpp::spin(std::make_shared<MinimalPublisher>());
   rclcpp::shutdown();
   

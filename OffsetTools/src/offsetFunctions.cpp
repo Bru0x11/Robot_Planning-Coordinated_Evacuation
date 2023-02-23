@@ -51,23 +51,13 @@ void checkIntersectionsRec(const PathsD& newPolygon, std::vector<PathsD>& previo
     PathsD ithPoly = previousPolygons.at(i);
 
     if(AreIntersected(newPolygon, ithPoly)){
-      std::cout<<"POLYGONS BEFORE: "<<std::endl;
-      std::cout<<"First: "<<newPolygon<<std::endl;
-      std::cout<<"Second: "<<ithPoly<<std::endl;
       mergedPoly = mergePolygons(newPolygon, ithPoly);
-      std::cout<<"Merge: "<<mergedPoly<<std::endl;
-      std::reverse(mergedPoly[0].begin(), mergedPoly[0].end());
-      std::cout<<"MergeReversed: "<<mergedPoly<<std::endl;
-      std::vector<Clipper2Lib::PathD> reversedMerged;
-      //std::cout<<"mergedPoly.size(): "<<mergedPoly.size()<<std::endl;
-
-
       previousPolygons.erase(previousPolygons.begin() + i);
       checkIntersections(mergedPoly, previousPolygons);
     }else{
       checkIntersectionsRec(newPolygon, previousPolygons, i+1);
     }
-
+    
   }else{
       previousPolygons.push_back(newPolygon);
   }

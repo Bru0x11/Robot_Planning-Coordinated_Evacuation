@@ -444,8 +444,6 @@ Environment getOffsettedEnvironment(Environment environment, double minimumCurva
     vector<VisiLibity::Point> boundaryPoints;
     Polygon boundary = environment[0];
 
-    //cout<<"boundary_points: "<<boundaryPoints<<endl;
-
     //Extrapolating the points
     for(int j = 0; j < boundary.n(); j++){
         VisiLibity::Point point = boundary[j];
@@ -477,6 +475,7 @@ Environment getOffsettedEnvironment(Environment environment, double minimumCurva
         PathsD polygon = createPolygon(polygonPoints);
         PathsD offsettedPolygon = offsetPolygon(polygon, offsetValue, false);
 
+        //Check intersection between new polygon and previous ones
         checkIntersections(offsettedPolygon, polygons);
     }
 

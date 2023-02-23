@@ -7,7 +7,6 @@
 #include <string>
 using namespace std::chrono_literals;
 
-//#include "src/visilibity.hpp"
 #include "../../VisiLibity1/src/visilibity.hpp"
 
 #include <iostream>
@@ -74,7 +73,7 @@ double rangeSymm(double ang);
 bool check(double s1, double k0, double s2, double k1, double s3, double k2, double th0, double thf);
 
 /////////////////////////////////////////////////////////////////////
-//Functions to scale and solve Dubins problems
+//          Functions to scale and solve Dubins problems           //
 /////////////////////////////////////////////////////////////////////
 
 //Scale the input problem to standard form (x0: -1, y0: 0, xf: 1, yf: 0)
